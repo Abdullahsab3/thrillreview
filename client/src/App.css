@@ -7,7 +7,7 @@ body {
 }
 
 .topnav {
-  background-color: cornflowerblue;
+  /*background-color: cornflowerblue;*/
   color:goldenrod;
   display:flex; /* zorg dat je kan doen wat je wil met je layout */
   justify-content:center;
