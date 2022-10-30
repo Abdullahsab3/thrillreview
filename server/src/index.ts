@@ -10,7 +10,14 @@ import {daysToMilliseconds} from './helpers'
 const app = express()
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors())
+
+const corsOptions ={
+    origin: "http://localhost:3000",
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
+
+app.use(cors(corsOptions))
 
 const db = new Database("thrillreview.db")
 
@@ -98,7 +105,6 @@ app.post('/login', async (req, res) => {
         res.status(200).json({email: result.email})
     })
 
-   console.log((req as any).user.email)
 })
 
 app.get('/', (req, res) => {
