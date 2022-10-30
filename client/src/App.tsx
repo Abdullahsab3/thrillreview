@@ -8,6 +8,8 @@ import Home from './Home';
 import Map from './Map'
 import ThemePark from './ThemeParks';
 import Attractions from './Attractions';
+import Login from './login'
+import Register from './register';
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path='/Map' element={<Map/>}/>
         <Route path='/Attractions' element={<Attractions/>}/>
         <Route path='/Themeparks' element={<ThemePark/>}/>
+        <Route path ='/Login' element={<Login/>}/>
+      
         </Routes>
       </Router>
       

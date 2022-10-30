@@ -16,6 +16,16 @@ const db = new Database("thrillreview.db")
 
 app.post('/register', (req, res) => {
     const {username, email, password} = req.body;
+    db.get("SELECT * from users WHERE username = ?", [username], (err, result) => {
+        if(err) {
+            res.status(400).json({error: err})
+        }
+
+        if(result) {
+            res.status(400).json({error: "username already used"})
+            return;
+        }
+    })
     // hashing factor = 15
     bcrypt.hash(password, 15).then((hash) => {
         db.run("INSERT INTO users (username, email, hash) VALUES(? , ?, ?)", [username, email, hash],  (error: Error) => {
@@ -53,7 +63,7 @@ app.post('/login', async (req, res) => {
                         httpOnly: true
                     })
 
-                    res.json("LOGGED IN")
+                    res.json({auth: true, token: accessToken, username: username})
 
                 }
 

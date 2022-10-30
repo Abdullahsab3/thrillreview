@@ -13,7 +13,8 @@ function Navigationbar(){
                 <NavLink className="pageLink" to="/">Home</NavLink>
                 <NavLink className="pageLink" to="/Map">Map</NavLink>  
                 <NavLink className="pageLink" to="/Attractions">Attractions</NavLink>  
-                <NavLink className="pageLink" to="/Themeparks">Themeparks</NavLink>                    
+                <NavLink className="pageLink" to="/Themeparks">Themeparks</NavLink> 
+                <NavLink className="pageLink" to="/login">Login</NavLink>                  
             </Nav>
             </Navbar.Collapse>
         </Navbar>
