@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 const secret: Secret = "sxvQU2HK8x";
 
 function createTokens(user: any) {
-  const accessToken = sign({ username: user.username, id: user.id }, secret);
+  const accessToken = sign({ username: user.username, id: user.id }, secret) /*, {expiresIn: "15m"});*/
 
   return accessToken;
 }
@@ -26,16 +26,13 @@ function validateTokens(req: Request, res: Response, next: Function) {
     return res.status(400)
       .json({ error: "user not authenticated!" });
   }
-
-  try {
-    const validToken = verify(accessToken, secret);
-
-    if (validToken) {
-      req.authenticated = true;
-      return next();
+  verify(accessToken, secret, (err: any, user: any) => {
+    if(err) {
+      return res.status(400).json("token is not valid")
     }
-  } catch (err) {
-    return res.status(400).json({ error: err });
-  }
+
+    (req as any).user = user
+    next();
+  })
 }
 export { createTokens, validateTokens };

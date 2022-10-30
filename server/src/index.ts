@@ -44,7 +44,7 @@ app.post('/login', async (req, res) => {
         if(err) {
             res
             .status(400)
-            .json({error: err});
+            .json({auth: false, error: err});
         }
 
         if(result) {
@@ -53,7 +53,7 @@ app.post('/login', async (req, res) => {
                 if(!same) {
                     res
                     .status(400)
-                    .json({error: "Wrong username and password combination!"})
+                    .json({auth: false, error: "Wrong username and password combination!"})
                 }
                 else {
                     const accessToken = createTokens(result)
@@ -63,7 +63,7 @@ app.post('/login', async (req, res) => {
                         httpOnly: true
                     })
 
-                    res.json({auth: true, token: accessToken, username: username})
+                    res.json({auth: true, username: username, id: result.id})
 
                 }
 
@@ -71,16 +71,35 @@ app.post('/login', async (req, res) => {
         } else {
             res
             .status(400)
-            .json({message: "User does not exist"});
+            .json({auth: false, message: "User does not exist"});
         }
     })
 
 
  })
 
- app.get('/profile', validateTokens, (req, res) => {
-    res.json("profile")
+ /* 
+ app.post('/refreshToken', (req, res) => {
+    const refreshToken = req.body.token
+
+    if(!refreshToken) {
+        return res.status(401).json({error: "You are not authenticated"})
+    }
  })
+*/
+
+ app.get('/profile', validateTokens, (req, res) => {
+    const userid = (req as any).user.id
+    db.get("SELECT * FROM users WHERE id = ?", [userid], (err, result) => {
+        if(err) {
+            return res.status(400).json({error: err})
+        }
+        // hier kan je informatie over de profiel sturen naar de client
+        res.status(200).json({email: result.email})
+    })
+
+   console.log((req as any).user.email)
+})
 
 app.get('/', (req, res) => {
     res.json({"nothing": "yet"})

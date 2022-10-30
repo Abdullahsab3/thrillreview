@@ -9,9 +9,13 @@ import Map from './Map'
 import ThemePark from './ThemeParks';
 import Attractions from './Attractions';
 import Login from './login'
+import Profile from './Profile'
 import Register from './register';
+import Axios from 'axios'
 
 function App() {
+
+
   return (
     // om de een of andere reden geeft het errors als ik het nergens inzet
     
@@ -24,7 +28,8 @@ function App() {
         <Route path='/Attractions' element={<Attractions/>}/>
         <Route path='/Themeparks' element={<ThemePark/>}/>
         <Route path ='/Login' element={<Login/>}/>
-      
+        <Route path='/Profile' element={<Profile/>}/>
+
         </Routes>
       </Router>
       
