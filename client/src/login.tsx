@@ -27,6 +27,8 @@ function Login() {
             const newUser = new User(username, (res as any).data.id)
             setUser(newUser)
             localStorage.setItem('user', '{"username": ' + `"${newUser.username}"` + ', "id": ' + newUser.id + '}')
+            // lelijke tijdelijke oplossing
+            window.location.replace("/")
         }
     }
 
@@ -34,8 +36,8 @@ function Login() {
         return username !== "" && password !== ""
     }
 
-    if (user) {
-        return (<Navigate to="/" />);
+    if (localStorage.getItem('user')) {
+        return (<Navigate replace to="/" />);
     }
 
     return (

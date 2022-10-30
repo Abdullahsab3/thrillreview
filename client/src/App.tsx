@@ -12,16 +12,26 @@ import Login from './login'
 import Profile from './Profile'
 import Register from './register';
 import Axios from 'axios'
+import {useState} from 'react'
+import {User} from './User'
 
 function App() {
+
+  const [user, setUser] = useState<User | null>(null)
 
 
   return (
     // om de een of andere reden geeft het errors als ik het nergens inzet
-    
+
+    /* Abdullah: navigationbar wordt een keer gerenderd. Op zich geen probleem 
+        maar bij het inloggen zou hij opnieuw gerenderd moeten worden zodat de opties
+        verandere. Nu is het tijdelijk opgelost door de pagina te refreshen, maar 
+        het is een lelijke tijdelijke oplossing
+        */
+       
     <div className="Navigation-toolbar">  
-      <Router>   
-      <Navigationbar />     
+      <Router>
+      <Navigationbar/>     
         <Routes>       
         <Route path='/' element={<Home/>}/>
         <Route path='/Map' element={<Map/>}/>

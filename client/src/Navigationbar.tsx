@@ -7,13 +7,15 @@ import { useState } from 'react'
 
 
 function Navigationbar() {
-    var user: User;
+    const [user, setUser] = useState<User | null>(null)
+
 
     const savedUser: string | null = localStorage.getItem("user")
-    if (savedUser) {
+    if (savedUser && !user) {
         const found = JSON.parse(savedUser as string)
-        user = new User(found.username, found.id)
+        setUser(new User(found.username, found.id))
     }
+
 
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -24,10 +26,10 @@ function Navigationbar() {
                     <NavLink className="pageLink" to="/Map">Map</NavLink>
                     <NavLink className="pageLink" to="/Attractions">Attractions</NavLink>
                     <NavLink className="pageLink" to="/Themeparks">Themeparks</NavLink>
-                    {!savedUser && <NavLink className="pageLink" to="/login">Login</NavLink> }             
-                    {! savedUser && <NavLink className="pageLink" to="/register">Register</NavLink>}
-                    {savedUser && <NavLink className="pageLink" to="/Profile">Profile</NavLink>}
-                    
+                    {!user && <NavLink className="pageLink" to="/login">Login</NavLink>}
+                    {!user && <NavLink className="pageLink" to="/register">Register</NavLink>}
+                    {user && <NavLink className="pageLink" to="/Profile">Profile</NavLink>}
+
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
