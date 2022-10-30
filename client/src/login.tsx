@@ -4,8 +4,8 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card'
 import { User } from './User'
-import { RedirectFunction } from 'react-router-dom'
 import { Navigate } from 'react-router-dom';
+import Alert from 'react-bootstrap/Alert';
 
 
 function Login() {
@@ -14,22 +14,31 @@ function Login() {
 
     const [username, setusername] = useState("")
     const [password, setpassword] = useState("")
-
     const [user, setUser] = useState<User>()
 
+    const [error, setError] = useState("")
 
-    async function handleLoginSubmit() {
-        const res = await Axios.post("http://localhost:5000/login", {
+
+    function handleLoginSubmit() {
+        Axios.post("http://localhost:5000/login", {
             username: username,
             password: password,
+        }).then((res) => {
+            if ((res as any).data.auth) {
+                const newUser = new User(username, (res as any).data.id)
+                setUser(newUser)
+                localStorage.setItem('user', '{"username": ' + `"${newUser.username}"` + ', "id": ' + newUser.id + '}')
+                // lelijke tijdelijke oplossing
+                window.location.replace("/")
+            } else {
+                console.log((res as any).data.error)
+                setError((res as any).data.error)
+            }
+        }).catch(function (error) {
+            if (error.response) {
+                setError(error.response.data.error)
+            }
         })
-        if ((res as any).data.auth) {
-            const newUser = new User(username, (res as any).data.id)
-            setUser(newUser)
-            localStorage.setItem('user', '{"username": ' + `"${newUser.username}"` + ', "id": ' + newUser.id + '}')
-            // lelijke tijdelijke oplossing
-            window.location.replace("/")
-        }
     }
 
     function isFormValid(): boolean {
@@ -52,6 +61,7 @@ function Login() {
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" onChange={(e) => setpassword(e.target.value)} placeholder="Enter your password" />
                             <Button onClick={handleLoginSubmit} variant="primary" disabled={!isFormValid()}>Log in</Button>
+                            {error && <Alert key='warning' variant='warning'>{error}</Alert>}
                         </Form.Group>
                     </Form>
                 </Card.Body>

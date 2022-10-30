@@ -13,9 +13,6 @@ body {
   justify-content:center;
   gap: 3rem; /*gap between*/
   padding: 0 2rem; /*edges of screen*/
-
-
-
 }
 
 .pageLink {
@@ -30,4 +27,10 @@ body {
   justify-content: center;
   align-items: center;
   width: '18rem';
+}
+
+.Register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

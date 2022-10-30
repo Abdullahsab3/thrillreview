@@ -11,7 +11,6 @@ import Attractions from './Attractions';
 import Login from './login'
 import Profile from './Profile'
 import Register from './register';
-import Axios from 'axios'
 import {useState} from 'react'
 import {User} from './User'
 
@@ -28,7 +27,7 @@ function App() {
         verandere. Nu is het tijdelijk opgelost door de pagina te refreshen, maar 
         het is een lelijke tijdelijke oplossing
         */
-       
+
     <div className="Navigation-toolbar">  
       <Router>
       <Navigationbar/>     
@@ -38,6 +37,7 @@ function App() {
         <Route path='/Attractions' element={<Attractions/>}/>
         <Route path='/Themeparks' element={<ThemePark/>}/>
         <Route path ='/Login' element={<Login/>}/>
+        <Route path ='/Register' element ={<Register/>}/>
         <Route path='/Profile' element={<Profile/>}/>
 
         </Routes>

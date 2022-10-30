@@ -28,7 +28,7 @@ function validateTokens(req: Request, res: Response, next: Function) {
   }
   verify(accessToken, secret, (err: any, user: any) => {
     if(err) {
-      return res.status(400).json("token is not valid")
+      return res.status(400).json({error: "token is not valid"})
     }
 
     (req as any).user = user
