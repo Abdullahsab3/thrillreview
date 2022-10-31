@@ -20,29 +20,43 @@ app.use(cors(corsOptions));
 
 const db = new Database("thrillreview.db");
 
-app.post("/register", (req, res) => {
-  const { username, email, password } = req.body;
+function checkForUserExistence(
+  username: string,
+  email: string,
+  checkErr: (message: string | null) => void,
+): void {
   db.get(
     "SELECT * from users WHERE username = ?",
     [username],
     (err, result) => {
       if (err) {
-        return res.status(400).json({ error: err });
-      }
-
-      if (result) {
-        return res.status(400).json({ error: "username is already used" });
+        checkErr(err.message);
+      } else if (result) {
+        checkErr("username is already used");
+      } else {
+        db.get(
+          "SELECT * FROM users WHERE email = ?",
+          [email],
+          (err, result) => {
+            if (err) {
+              checkErr(err.message);
+            } else if (result) {
+              checkErr("Email is already used");
+            } else {
+              checkErr(null);
+            }
+          },
+        );
       }
     },
   );
+}
 
-  db.get("SELECT * FROM users WHERE email = ?", [email], (err, result) => {
-    if (err) {
-      return (res.status(400).json({ error: err }));
-    }
-
-    if (result) {
-      return res.status(400).json({ error: "Email is already used" });
+app.post("/register", (req, res) => {
+  const { username, email, password } = req.body;
+  checkForUserExistence(username, email, function (error: string | null) {
+    if (error) {
+      res.status(400).json({ error: error });
     } else {
       // hashing factor = 15
       bcrypt.hash(password, 15).then((hash) => {
@@ -52,10 +66,10 @@ app.post("/register", (req, res) => {
           hash,
         ], (error: Error) => {
           if (error) {
-            return res.status(400).json({ error: error });
+            return res.status(400).json({ error: error.message });
+          } else {
+            return res.json({ registered: true });
           }
-
-          res.json({ registered: true });
         });
       });
     }
