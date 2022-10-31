@@ -13,7 +13,7 @@ import Table from 'react-bootstrap/Table'
 function Profile() {
 
     const [email, setEmail] = useState("")
-    Axios.defaults.withCredentials = true
+    Axios.defaults.withCredentials = true // TEMORARY DISABLED. ENABLE WHEN NEEDED
 
     var user: User | null = null
 
@@ -27,7 +27,7 @@ function Profile() {
     }
 
     async function getuserEmail(id: number) {
-        const res = await Axios.get("http://localhost:5000/profile")
+        const res = await Axios.post("http://localhost:5000/profile", {id: id})
         setEmail(res.data.email)
     }
 

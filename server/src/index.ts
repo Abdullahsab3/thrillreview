@@ -12,7 +12,7 @@ app.use(cookieParser());
 
 const corsOptions = {
   origin: "http://localhost:3000",
-  credentials: true, //access-control-allow-credentials:true
+  credentials: true, //access-control-allow-credentials:true TEMPORARY DISABLE. ENABLE WHEN NEEDED
   optionSuccessStatus: 200,
 };
 
@@ -129,8 +129,9 @@ app.post("/login", async (req, res) => {
  })
 */
 
-app.get("/profile", validateTokens, (req, res) => {
-  const userid = (req as any).user.id;
+app.post("/profile", validateTokens,  //TEMPORARY DISABLED. RE-ENABLE WHEN NEEDED
+(req, res) => {
+  const userid = (req as any).body.id;
   db.get("SELECT * FROM users WHERE id = ?", [userid], (err, result) => {
     if (err) {
       return res.status(400).json({ error: err });
