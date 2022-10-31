@@ -13,6 +13,7 @@ import Profile from './Profile'
 import Register from './register';
 import {useState} from 'react'
 import {User} from './User'
+import { HelmetProvider } from 'react-helmet-async'; // moet om mem leaks te voorkomen
 
 function App() {
 
@@ -20,14 +21,13 @@ function App() {
 
 
   return (
-    // om de een of andere reden geeft het errors als ik het nergens inzet
-
     /* Abdullah: navigationbar wordt een keer gerenderd. Op zich geen probleem 
         maar bij het inloggen zou hij opnieuw gerenderd moeten worden zodat de opties
         verandere. Nu is het tijdelijk opgelost door de pagina te refreshen, maar 
         het is een lelijke tijdelijke oplossing
         */
 
+  <HelmetProvider>
     <div className="Navigation-toolbar">  
       <Router>
       <Navigationbar/>     
@@ -44,10 +44,8 @@ function App() {
       </Router>
       
     </div>
-  
-    //<div className="App">
-    //<Header title='Hello World' color = 'violet' />
-    //</div>
+  </HelmetProvider>
+
   );
 }
 
