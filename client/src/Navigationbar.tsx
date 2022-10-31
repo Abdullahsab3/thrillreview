@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import { NavLink } from 'react-router-dom';
 import { User } from "./User"
 import { useState } from 'react'
+import logo from './logo.png'
 
 
 function Navigationbar() {
@@ -19,10 +20,18 @@ function Navigationbar() {
 
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+            <Navbar.Brand href="/">
+                <img
+                    src={logo}
+                    height="70"
+                    className="d-inline-block align-top"
+                    alt="Thrillreview logo"
+                />
+            </Navbar.Brand>
             <Navbar.Toggle aria-controls='navigationbarscroll' />
             <Navbar.Collapse id="navigationbarscroll" data-bs-target="#navigationbarscroll">
                 <Nav className="topnav" variant="pills">
-                    <NavLink className="pageLink" to="/">Home</NavLink>
+                    {/*<NavLink className="pageLink" to="/">Home</NavLink>*/}
                     <NavLink className="pageLink" to="/Map">Map</NavLink>
                     <NavLink className="pageLink" to="/Attractions">Attractions</NavLink>
                     <NavLink className="pageLink" to="/Themeparks">Themeparks</NavLink>
