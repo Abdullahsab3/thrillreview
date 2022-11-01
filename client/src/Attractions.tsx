@@ -1,6 +1,10 @@
 import { Col } from 'react-bootstrap';
-import Card from 'react-bootstrap/Card'
-import Row from 'react-bootstrap/Row'
+import Card from 'react-bootstrap/Card';
+import Row from 'react-bootstrap/Row';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import {Search} from 'react-bootstrap-icons';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 function Attractions() {
 
@@ -32,7 +36,16 @@ function Attractions() {
             <Card>
                 <Card.Body>
                     <Card.Title>Search Attractions</Card.Title>
-                    <Card.Text> een zoekding, queryen naar serverside </Card.Text>
+                    <Card.Text> een zoekding, queryen naar serverside 
+                        <Form>
+                            <InputGroup>
+                        <Form.Control type="text" placeholder="Search" />
+                        <Button type="submit">
+                        <Search />
+                        </Button>
+                        </InputGroup>
+                        </Form>
+                    </Card.Text>
                 </Card.Body>
             </Card>
         );
