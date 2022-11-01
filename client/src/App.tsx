@@ -2,8 +2,8 @@
 //import logo from './logo.svg';
 import './App.css';
 import Navigationbar from './Navigationbar';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
-import {Routes} from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Routes } from 'react-router-dom'
 import Home from './Home';
 import Map from './Map'
 import ThemePark from './ThemeParks';
@@ -11,10 +11,10 @@ import Attractions from './Attractions';
 import Login from './login'
 import Profile from './Profile'
 import Register from './register';
-import {useState} from 'react'
-import {User} from './User'
+import { useState } from 'react'
+import { User } from './User'
 import { HelmetProvider } from 'react-helmet-async'; // moet om mem leaks te voorkomen
-
+import ChangeUsername from './changeUsername'
 function App() {
 
   const [user, setUser] = useState<User | null>(null)
@@ -27,24 +27,27 @@ function App() {
         het is een lelijke tijdelijke oplossing
         */
 
-  <HelmetProvider>
-    <div className="Navigation-toolbar">  
-      <Router>
-      <Navigationbar/>     
-        <Routes>       
-        <Route path='/' element={<Home/>}/>
-        <Route path='/Map' element={<Map/>}/>
-        <Route path='/Attractions' element={<Attractions/>}/>
-        <Route path='/Themeparks' element={<ThemePark/>}/>
-        <Route path ='/Login' element={<Login/>}/>
-        <Route path ='/Register' element ={<Register/>}/>
-        <Route path='/Profile' element={<Profile/>}/>
+    <HelmetProvider>
+      <div className="Navigation-toolbar">
+        <Router>
+          <Navigationbar />
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/Map' element={<Map />} />
+            <Route path='/Attractions' element={<Attractions />} />
+            <Route path='/Themeparks' element={<ThemePark />} />
+            <Route path='/Login' element={<Login />} />
+            <Route path='/Register' element={<Register />} />
+            <Route path='/Profile' element={<Profile />} />
+            <Route path='/Profile/change-username' element={<ChangeUsername/>} />
+            <Route path='/Profile/change-email' />
+            <Route path='/Profile/change-password' />
 
-        </Routes>
-      </Router>
-      
-    </div>
-  </HelmetProvider>
+          </Routes>
+        </Router>
+
+      </div>
+    </HelmetProvider>
 
   );
 }

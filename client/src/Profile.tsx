@@ -1,27 +1,21 @@
 import Axios from 'axios'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Card from 'react-bootstrap/Card'
 import { User } from './User'
-import { RedirectFunction } from 'react-router-dom'
-import { Navigate } from 'react-router-dom';
+import { Route, Routes, useNavigate} from 'react-router-dom'
 import { Link } from 'react-router-dom';
-import { UserInfo } from 'os';
 import Table from 'react-bootstrap/Table'
+import {fetchUserFromLocalStorage} from './localStorageProcessing'
+import ChangeUsername from './changeUsername'
 
 function Profile() {
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState("")
     Axios.defaults.withCredentials = true
-    var user: User | null = null
+    var user: User | null = fetchUserFromLocalStorage();
 
-
-
-    const savedUser: string | null = localStorage.getItem("user")
-    if (savedUser) {
-        const found = JSON.parse(savedUser as string)
-        user = new User(found.username, found.id)
+    if (user) {
         getuserEmail(user.id)
     }
 
@@ -32,20 +26,42 @@ function Profile() {
 
     if (user) {
         return (
+
             <div className='Profile'>
                 <Table striped bordered hover>
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
+                            <th></th>
+                            <th>Your account information</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         <tr>
+                            <th>ID</th>
                             <td>{user.id}</td>
+                        </tr>
+                        <tr>
+                            <th>Username</th>
                             <td>{user.username}</td>
+                            <td>
+                                <Button onClick={() => navigate("/profile/change-username")}>Change username</Button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
                             <td>{email}</td>
+                            <td>
+                                <Button>Change Email</Button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <Button>Change Password</Button>
+                            </td>
                         </tr>
                     </tbody>
                 </Table>
