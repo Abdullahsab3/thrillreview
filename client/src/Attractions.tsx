@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import {Search} from 'react-bootstrap-icons';
 import InputGroup from 'react-bootstrap/InputGroup';
+import {useState } from 'react';
 
 function Attractions() {
 
@@ -32,14 +33,23 @@ function Attractions() {
     }
 
     function SearchAttractions() {
+        const[query, setquery] = useState("")
+        function handleSubmit () {
+            if(query==''){
+                alert('you have to specify what you\'re looking for if you ever want to find it')
+            } else {
+            alert('you searched for ' + query + ', someday this will become a server request')
+            }
+        }
+
         return(
             <Card>
                 <Card.Body>
                     <Card.Title>Search Attractions</Card.Title>
                     <Card.Text> een zoekding, queryen naar serverside 
-                        <Form>
-                            <InputGroup>
-                        <Form.Control type="text" placeholder="Search" />
+                        <Form onSubmit={handleSubmit}>
+                        <InputGroup>
+                        <Form.Control type="text" onChange={(e) => setquery(e.target.value)} placeholder="Search" />
                         <Button type="submit">
                         <Search />
                         </Button>
