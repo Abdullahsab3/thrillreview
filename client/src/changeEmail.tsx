@@ -7,20 +7,20 @@ import Axios from 'axios'
 import { User } from './User'
 import { fetchUserFromLocalStorage, setUserInLocalstorage } from './localStorageProcessing'
 import { Link } from 'react-router-dom';
+import { isValidEmail } from './helpers';
 
-export default function ChangeUsername() {
+export default function ChangeEmail() {
     const savedUser: User | null = fetchUserFromLocalStorage();
-    const [newUsername, setNewUsername] = useState("")
+    const [newEmail, setNewEmail] = useState("")
     const [error, setError] = useState("")
 
 
-    function handleChangeUsernameSubmit() {
-        Axios.post("http://localhost:5000/updateUsername", {
-            newUsername: newUsername
+    function handleChangeEmail() {
+        Axios.post("http://localhost:5000/updateEmail", {
+            newEmail: newEmail
         }).then((res) => {
             if ((res as any).data.updated) {
-                (savedUser as User).username = newUsername
-                setUserInLocalstorage(savedUser as User);
+
                 // lelijke tijdelijke oplossing
                 window.location.replace("/")
             } else {
@@ -35,21 +35,21 @@ export default function ChangeUsername() {
     }
 
     function isFormValid(): boolean {
-        return newUsername !== "";
+        return newEmail !== "" && isValidEmail(newEmail);
     }
 
     if (savedUser) {
 
         return (
-            <div className='changeUsername'>
-                <Card className='updateUsername'>
+            <div className='changeEmail'>
+                <Card className='updateEmail'>
                     <Card.Body>
                         <Card.Title><strong>Change your username</strong></Card.Title>
                         <Form>
                             <Form.Group className="mb-3">
                                 <Form.Label>New username</Form.Label>
-                                <Form.Control type=" text" onChange={(e) => setNewUsername(e.target.value)} placeholder="Enter your new username" />
-                                <Button onClick={handleChangeUsernameSubmit} variant="primary" disabled={!isFormValid()}>Submit your username!</Button>
+                                <Form.Control type=" text" onChange={(e) => setNewEmail(e.target.value)} placeholder="Enter your new email" />
+                                <Button onClick={handleChangeEmail} variant="primary" disabled={!isFormValid()}>Submit your email!</Button>
                                 {error && <Alert key='warning' variant='warning'>{error}</Alert>}
                             </Form.Group>
                         </Form>
@@ -60,8 +60,8 @@ export default function ChangeUsername() {
         );
     } else {
         return (
-            <div className='changeUsername'>
-                In order to change your username, you have to <Link to="/Login">Log in first</Link>
+            <div className='changeEmail'>
+                In order to change your email, you have to <Link to="/Login">Log in first</Link>
             </div>
         )
     }

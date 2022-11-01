@@ -38,7 +38,7 @@ function Profile() {
 
                     <tbody>
                         <tr>
-                            <th>ID</th>
+                            <th>user ID</th>
                             <td>{user.id}</td>
                         </tr>
                         <tr>
@@ -52,7 +52,7 @@ function Profile() {
                             <th>Email</th>
                             <td>{email}</td>
                             <td>
-                                <Button>Change Email</Button>
+                                <Button  onClick={() => navigate("/profile/change-email")}>Change Email</Button>
                             </td>
                         </tr>
 
@@ -60,7 +60,7 @@ function Profile() {
                             <td></td>
                             <td></td>
                             <td>
-                                <Button>Change Password</Button>
+                                <Button onClick={() => navigate("/profile/change-password")}>Change Password</Button>
                             </td>
                         </tr>
                     </tbody>

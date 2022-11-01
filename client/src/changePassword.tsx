@@ -8,19 +8,19 @@ import { User } from './User'
 import { fetchUserFromLocalStorage, setUserInLocalstorage } from './localStorageProcessing'
 import { Link } from 'react-router-dom';
 
-export default function ChangeUsername() {
+export default function ChangePassword() {
     const savedUser: User | null = fetchUserFromLocalStorage();
-    const [newUsername, setNewUsername] = useState("")
+    const [oldPassword, setOldPassword] = useState("")
+    const [newPassword, setNewPassword] = useState("")
     const [error, setError] = useState("")
 
 
-    function handleChangeUsernameSubmit() {
-        Axios.post("http://localhost:5000/updateUsername", {
-            newUsername: newUsername
+    function handleChangePassword() {
+        Axios.post("http://localhost:5000/updatePassword", {
+            password: oldPassword,
+            newPassword: newPassword
         }).then((res) => {
             if ((res as any).data.updated) {
-                (savedUser as User).username = newUsername
-                setUserInLocalstorage(savedUser as User);
                 // lelijke tijdelijke oplossing
                 window.location.replace("/")
             } else {
@@ -35,21 +35,22 @@ export default function ChangeUsername() {
     }
 
     function isFormValid(): boolean {
-        return newUsername !== "";
+        return oldPassword !== "" && newPassword !== "";
     }
 
     if (savedUser) {
-
         return (
-            <div className='changeUsername'>
-                <Card className='updateUsername'>
+            <div className='changePassword'>
+                <Card className='updatePassword'>
                     <Card.Body>
-                        <Card.Title><strong>Change your username</strong></Card.Title>
+                        <Card.Title><strong>Change your password</strong></Card.Title>
                         <Form>
                             <Form.Group className="mb-3">
-                                <Form.Label>New username</Form.Label>
-                                <Form.Control type=" text" onChange={(e) => setNewUsername(e.target.value)} placeholder="Enter your new username" />
-                                <Button onClick={handleChangeUsernameSubmit} variant="primary" disabled={!isFormValid()}>Submit your username!</Button>
+                                <Form.Label>Your old password</Form.Label>
+                                <Form.Control type="password" onChange={(e) => setOldPassword(e.target.value)} placeholder="Enter your old Password" />
+                                <Form.Label>Your new password</Form.Label>
+                                <Form.Control type="password" onChange={(e) => setNewPassword(e.target.value)} placeholder="Enter your new Password" />
+                                <Button onClick={handleChangePassword} variant="primary" disabled={!isFormValid()}>Submit!</Button>
                                 {error && <Alert key='warning' variant='warning'>{error}</Alert>}
                             </Form.Group>
                         </Form>
@@ -60,8 +61,8 @@ export default function ChangeUsername() {
         );
     } else {
         return (
-            <div className='changeUsername'>
-                In order to change your username, you have to <Link to="/Login">Log in first</Link>
+            <div className='changePassword'>
+                In order to change your password, you have to <Link to="/Login">Log in first</Link>
             </div>
         )
     }

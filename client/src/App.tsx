@@ -15,6 +15,9 @@ import { useState } from 'react'
 import { User } from './User'
 import { HelmetProvider } from 'react-helmet-async'; // moet om mem leaks te voorkomen
 import ChangeUsername from './changeUsername'
+import ChangePassword from './changePassword'
+import ChangeEmail from './changeEmail'
+
 function App() {
 
   const [user, setUser] = useState<User | null>(null)
@@ -40,8 +43,8 @@ function App() {
             <Route path='/Register' element={<Register />} />
             <Route path='/Profile' element={<Profile />} />
             <Route path='/Profile/change-username' element={<ChangeUsername/>} />
-            <Route path='/Profile/change-email' />
-            <Route path='/Profile/change-password' />
+            <Route path='/Profile/change-email' element={<ChangeEmail/>}/>
+            <Route path='/Profile/change-password' element={<ChangePassword/>}/>
 
           </Routes>
         </Router>
