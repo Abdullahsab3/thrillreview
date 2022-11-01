@@ -1,11 +1,12 @@
 import Axios from 'axios'
-import { useEffect, useState } from 'react';
+import {useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card'
 import { User } from './User'
 import { Navigate } from 'react-router-dom';
 import Alert from 'react-bootstrap/Alert';
+import {setUserInLocalstorage} from './localStorageProcessing'
 
 
 function Login() {
@@ -27,7 +28,7 @@ function Login() {
             if ((res as any).data.auth) {
                 const newUser = new User(username, (res as any).data.id)
                 setUser(newUser)
-                localStorage.setItem('user', '{"username": ' + `"${newUser.username}"` + ', "id": ' + newUser.id + '}')
+                setUserInLocalstorage(newUser)
                 // lelijke tijdelijke oplossing
                 window.location.replace("/")
             } else {

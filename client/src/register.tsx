@@ -5,6 +5,7 @@ import Card from 'react-bootstrap/Card'
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert'
+import { isValidEmail } from './helpers';
 
 function Register() {
   const navigate = useNavigate()
@@ -39,11 +40,6 @@ function Register() {
   function isFormValid(): boolean {
     return username !== "" && password !== "" && email !== ""
   }
-
-  function isValidEmail(email: string) {
-    return /\S+@\S+\.\S+/.test(email);
-  }
-
 
 
   return (
