@@ -1,10 +1,10 @@
-import { CardGroup } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
 
 function Attractions() {
 
     function TopTenAttractions() {
-
 
         return(
             <Card>
@@ -40,12 +40,18 @@ function Attractions() {
 
     return (
         <div className='ContentOfPage'>
-        <h1> attractions</h1>
-        <CardGroup>
-        <TopTenAttractions />
-        <SearchAttractions />
-        <NewestAttractions />
-        </CardGroup>
+            <h1>attractions</h1>
+        <Row lg={3} sm={1}>
+            <Col className="AttractionCol">
+            <SearchAttractions />
+            </Col>
+            <Col className="AttractionCol">
+            <TopTenAttractions />
+            </Col>
+            <Col className="AttractionCol">
+            <NewestAttractions />
+            </Col>
+        </Row>
         </div>
 
     );
