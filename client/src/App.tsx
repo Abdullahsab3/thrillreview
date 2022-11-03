@@ -13,10 +13,11 @@ import Profile from './Profile'
 import Register from './register';
 import { useState } from 'react'
 import { User } from './User'
-import { HelmetProvider } from 'react-helmet-async'; // moet om mem leaks te voorkomen
-import ChangeUsername from './changeUsername'
-import ChangePassword from './changePassword'
-import ChangeEmail from './changeEmail'
+import { HelmetProvider } from 'react-helmet-async'; // moet om mem leaks te voorkomen als je met helmet werkt
+import ChangeUsername from './changeUsername';
+import ChangePassword from './changePassword';
+import ChangeEmail from './changeEmail';
+import AddAttraction from './addAttraction';
 
 function App() {
 
@@ -45,6 +46,8 @@ function App() {
             <Route path='/Profile/change-username' element={<ChangeUsername/>} />
             <Route path='/Profile/change-email' element={<ChangeEmail/>}/>
             <Route path='/Profile/change-password' element={<ChangePassword/>}/>
+            <Route path='/addAttraction' element={<AddAttraction />} />
+            
 
           </Routes>
         </Router>

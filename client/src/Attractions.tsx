@@ -61,6 +61,17 @@ function Attractions() {
         );
     }
 
+    function AddAttraction() {
+        return(
+            <Card>
+                <Card.Body>
+                    <Card.Title>Add an attraction</Card.Title>
+                    <Card.Text> hier komt een link naar de add pagina</Card.Text>
+                </Card.Body>
+            </Card>
+        );
+    }   
+
     return (
         <div className='ContentOfPage'>
             <h1>attractions</h1>
@@ -73,6 +84,11 @@ function Attractions() {
             </Col>
             <Col className="AttractionCol">
             <NewestAttractions />
+            </Col>
+        </Row>
+        <Row lg={3} sm={1}>
+            <Col className="AttractionCol">
+                <AddAttraction />
             </Col>
         </Row>
         </div>

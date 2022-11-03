@@ -1,6 +1,5 @@
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import Container from 'react-bootstrap/Container';
 import { NavLink } from 'react-router-dom';
 import { User } from "./User"
 import { useState } from 'react'
@@ -43,7 +42,7 @@ function Navigationbar() {
             </Navbar.Collapse>
         </Navbar>
 
-    )
+    );
 }
 
-export default Navigationbar
+export default Navigationbar;
