@@ -47,7 +47,7 @@ function AddAttraction() {
                             <Form.Control type="text"/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>height (zal nog gevalideerd worden dat echt cijfer is)</Form.Label>
+                            <Form.Label>height (zal nog gevalideerd worden dat echt cijfer is)</Form.Label> /** https://codesandbox.io/s/9zjo1lp86w?file=/src/Components/InputDecimal.jsx */
                             <Form.Control type="text"/>
                         </Form.Group>
                         <Form.Group>
