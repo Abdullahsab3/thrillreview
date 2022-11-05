@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import {Search} from 'react-bootstrap-icons';
 import InputGroup from 'react-bootstrap/InputGroup';
 import {useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function Attractions() {
 
@@ -35,7 +36,7 @@ function Attractions() {
     function SearchAttractions() {
         const[query, setquery] = useState("")
         function handleSubmit () {
-            if(query==''){
+            if(query===''){
                 alert('you have to specify what you\'re looking for if you ever want to find it')
             } else {
             alert('you searched for ' + query + ', someday this will become a server request')
@@ -67,6 +68,11 @@ function Attractions() {
                 <Card.Body>
                     <Card.Title>Add an attraction</Card.Title>
                     <Card.Text> hier komt een link naar de add pagina</Card.Text>
+                    <Link to="/addAttraction">
+                    <Button>Add Attraction</Button>
+                    </Link>
+                    
+
                 </Card.Body>
             </Card>
         );
