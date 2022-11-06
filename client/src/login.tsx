@@ -9,7 +9,7 @@ import Alert from 'react-bootstrap/Alert';
 import { setUserInLocalstorage, fetchUserFromLocalStorage } from './localStorageProcessing'
 import { backendServer } from './helpers'
 import InputGroup from 'react-bootstrap/InputGroup';
-
+import './login.css'
 
 function Login() {
 
@@ -90,48 +90,50 @@ if (error.response) {
     }
 
     return (
-        <div className='Loginpage'>
-            <Card className='Login'>
-                <Card.Body>
-                    <Card.Title><strong>Log in</strong></Card.Title>
-                    <Form noValidate validated={validated} onSubmit={handleLoginSubmit}>
+        <div id='Login'>
+            <div  className="col d-flex justify-content-center">
+                <Card className='card' border='secondary'>
+                    <Card.Body>
+                        <Card.Title ><strong>Log in</strong></Card.Title>
+                        <Form noValidate validated={validated} onSubmit={handleLoginSubmit}>
 
-                        <Form.Group className="mb-3">
-                            <Form.Label>Username</Form.Label>
-                            <InputGroup hasValidation>
-                                <Form.Control
-                                    required
-                                    type=" text"
-                                    onChange={(e) => setusername(e.target.value)}
-                                    placeholder="Enter your username"
-                                    isInvalid={(usernameError as any)} />
-                                <Form.Control.Feedback type="invalid">
-                                    {usernameError}
-                                </Form.Control.Feedback>
-                            </InputGroup>
-                        </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Username</Form.Label>
+                                <InputGroup hasValidation>
+                                    <Form.Control
+                                        required
+                                        type=" text"
+                                        onChange={(e) => setusername(e.target.value)}
+                                        placeholder="Enter your username"
+                                        isInvalid={(usernameError as any)} />
+                                    <Form.Control.Feedback type="invalid">
+                                        {usernameError}
+                                    </Form.Control.Feedback>
+                                </InputGroup>
+                            </Form.Group>
 
-                        <Form.Group className="mb-3">
-                            <Form.Label>Password</Form.Label>
-                            <InputGroup hasValidation>
-                                <Form.Control
-                                    required
-                                    type="password"
-                                    onChange={(e) => setpassword(e.target.value)}
-                                    placeholder="Enter your password"
-                                    isInvalid={(passwordError as any)} />
-                                <Form.Control.Feedback type="invalid">
-                                    {passwordError}
-                                </Form.Control.Feedback>
-                            </InputGroup>
-                            <Button type="submit" variant="primary" disabled={!isFormValid()}>Log in</Button>
-                            {/*error && <Alert key='warning' variant='warning'>{error}</Alert>*/}
-                        </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Password</Form.Label>
+                                <InputGroup hasValidation>
+                                    <Form.Control
+                                        required
+                                        type="password"
+                                        onChange={(e) => setpassword(e.target.value)}
+                                        placeholder="Enter your password"
+                                        isInvalid={(passwordError as any)} />
+                                    <Form.Control.Feedback type="invalid">
+                                        {passwordError}
+                                    </Form.Control.Feedback>
+                                </InputGroup>
+                                <Button id="loginbutton" type="submit" variant="primary" disabled={!isFormValid()}>Log in</Button>
+                                {/*error && <Alert key='warning' variant='warning'>{error}</Alert>*/}
+                            </Form.Group>
 
-                    </Form>
-                </Card.Body>
+                        </Form>
+                    </Card.Body>
 
-            </Card>
+                </Card>
+            </div>
         </div>
 
     )

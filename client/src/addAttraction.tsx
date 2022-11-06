@@ -1,4 +1,4 @@
-import './addAttraction.css'
+//import './addAttraction.css'
 import { useState } from 'react';
 import { Card, Dropdown } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';

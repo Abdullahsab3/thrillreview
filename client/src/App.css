@@ -35,12 +35,6 @@ body {
   align-items: stretch;
 }
 
-.Login {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: '18rem';
-}
 
 .Register {
   display: flex;
