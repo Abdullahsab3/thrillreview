@@ -57,26 +57,26 @@ function checkForUserExistence(
   function validateUserPassword(
     username: string,
     password: string,
-    getError: (error: null | string, user: User | null) => void,
+    getResult: (error: any, user: User | null) => void,
   ) {
     db.get(
       "SELECT * FROM users WHERE username = ?",
       [username],
       (err: Error, result: any) => {
         if (err) {
-          getError(err.message, null);
+          getResult({error: true, username: err.message, password: err.message}, null);
         }
         if (result) {
           const hashed: string = result.hash;
           bcrypt.compare(password, hashed).then((same) => {
             if (!same) {
-              getError("Wrong password!", null);
+              getResult({error: true, username: "", password: "You entered the wrong password!"}, null);
             } else {
-              getError(null, new User(username, result.id));
+              getResult(null, new User(username, result.id));
             }
           });
         } else {
-          getError("User does not exist!", null);
+          getResult({error: true, username: "User does not exist!", password: ""}, null);
         }
       },
     );

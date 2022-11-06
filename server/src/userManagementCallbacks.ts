@@ -43,9 +43,9 @@ function ChangePassword(req: any, res: any) {
   validateUserPassword(
     user.username,
     oldPassword,
-    function (error: string | null, validatedUser: User | null) {
+    function (error: any, validatedUser: User | null) {
       if (error) {
-        return res.status(401).json({ error: error });
+        return res.status(401).json(error);
       } else if (validatedUser) {
         bcrypt.hash(newPassword, 15).then((hash) => {
           db.run(
@@ -73,9 +73,9 @@ function loginUser(req: any, res: any) {
   validateUserPassword(
     username,
     password,
-    function (error: string | null, user: User | null) {
+    function (error: any, user: User | null) {
       if (error) {
-        return res.status(400).json({ auth: false, error: error });
+        return res.status(400).json(error);
       } else {
         const accessToken = createTokens(user as User);
 
@@ -84,7 +84,7 @@ function loginUser(req: any, res: any) {
           httpOnly: false, // temporary false. update later
         });
 
-        res.json({ auth: true, username: username, id: (user as User).id });
+        res.json({ error: false, username: username, id: (user as User).id });
       }
     },
   );
