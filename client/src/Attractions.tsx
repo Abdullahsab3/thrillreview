@@ -41,13 +41,6 @@ function Attractions() {
             } else {
                 alert('you have to specify what you\'re looking for if you ever want to find it')
             }
-            /*
-            if(query==''){
-                alert('you have to specify what you\'re looking for if you ever want to find it')
-            } else {
-            alert('you searched for ' + query + ', someday this will become a server request')
-            }
-            */
         }
 
         return(

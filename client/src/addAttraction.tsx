@@ -42,6 +42,8 @@ function AddAttraction() {
       })
       }
 
+    // length, height, duration : zal nog gevalideerd worden dat echt cijfer is  : https://codesandbox.io/s/9zjo1lp86w?file=/src/Components/InputDecimal.jsx
+
     return (
         <div className="ContentOfPage">
             <h1> Add an Attraction</h1>
@@ -77,11 +79,11 @@ function AddAttraction() {
 
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>length (zal nog gevalideerd worden dat echt cijfer is)</Form.Label>
+                            <Form.Label>length</Form.Label> 
                             <Form.Control type="text" onChange={(e) => setLength(e.target.value)}/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>height (zal nog gevalideerd worden dat echt cijfer is)</Form.Label> /** https://codesandbox.io/s/9zjo1lp86w?file=/src/Components/InputDecimal.jsx */
+                            <Form.Label>height </Form.Label>  
                             <Form.Control type="text" onChange={(e) => setHeight(e.target.value)}/>
                         </Form.Group>
                         <Form.Group>
@@ -89,7 +91,7 @@ function AddAttraction() {
                             <Form.Control type="number" min="0" onChange={(e) => setInversions(e.target.value)}/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Duration (zal nog gevalideerd worden dat echt cijfer is)</Form.Label>
+                            <Form.Label>Duration</Form.Label> 
                             <Form.Control type="duration" onChange={(e) => setDuration(e.target.value)} placeholder="00m00s"/>
                         </Form.Group>
                         <Button onClick={handleSubmit}>Submit</Button>
