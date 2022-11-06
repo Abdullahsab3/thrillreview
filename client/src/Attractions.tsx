@@ -16,7 +16,7 @@ function Attractions() {
             <Card>
                 <Card.Body>
                     <Card.Title>Top Ten Attractions Rated by our users</Card.Title>
-                    <Card.Text> Ik vermoed dat hier dan de top 10 komt, queryen naar serverside wss </Card.Text>
+                    <Card.Text> there will be a top 10, when there are users! </Card.Text>
                 </Card.Body>
             </Card>
         );
@@ -27,7 +27,7 @@ function Attractions() {
             <Card>
                 <Card.Body>
                     <Card.Title>Newest Attractions</Card.Title>
-                    <Card.Text> Ik vermoed dat hier dan de nieuwe komen, queryen naar serverside wss </Card.Text>
+                    <Card.Text> Once we added attractions, we will show you the newest! </Card.Text>
                 </Card.Body>
             </Card>
         );
@@ -47,7 +47,7 @@ function Attractions() {
             <Card>
                 <Card.Body>
                     <Card.Title>Search Attractions</Card.Title>
-                    <Card.Text> een zoekding, queryen naar serverside 
+                    <Card.Text> Find the attraction you are looking for! </Card.Text>
                         <Form onSubmit={handleSubmit}>
                         <InputGroup>
                         <Form.Control type="text" onChange={(e) => setquery(e.target.value)} placeholder="Search" />
@@ -56,7 +56,7 @@ function Attractions() {
                         </Button>
                         </InputGroup>
                         </Form>
-                    </Card.Text>
+                    
                 </Card.Body>
             </Card>
         );
@@ -67,7 +67,6 @@ function Attractions() {
             <Card>
                 <Card.Body>
                     <Card.Title>Add an attraction</Card.Title>
-                    <Card.Text> hier komt een link naar de add pagina</Card.Text>
                     <Link to="/addAttraction">
                     <Button>Add Attraction</Button>
                     </Link>
