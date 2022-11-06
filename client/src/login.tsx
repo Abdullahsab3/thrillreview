@@ -7,6 +7,7 @@ import { User } from './User'
 import { Navigate } from 'react-router-dom';
 import Alert from 'react-bootstrap/Alert';
 import {setUserInLocalstorage} from './localStorageProcessing'
+import {backendServer} from './helpers'
 
 
 function Login() {
@@ -21,7 +22,7 @@ function Login() {
 
 
     function handleLoginSubmit() {
-        Axios.post("http://localhost:5000/login", {
+        Axios.post(backendServer("/login"), {
             username: username,
             password: password,
         }).then((res) => {

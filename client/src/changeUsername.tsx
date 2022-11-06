@@ -7,6 +7,7 @@ import Axios from 'axios'
 import { User } from './User'
 import { fetchUserFromLocalStorage, setUserInLocalstorage } from './localStorageProcessing'
 import { Link } from 'react-router-dom';
+import { backendServer } from './helpers'
 
 export default function ChangeUsername() {
     const savedUser: User | null = fetchUserFromLocalStorage();
@@ -15,7 +16,7 @@ export default function ChangeUsername() {
 
 
     function handleChangeUsernameSubmit() {
-        Axios.post("http://localhost:5000/updateUsername", {
+        Axios.post(backendServer("/updateUsername"), {
             newUsername: newUsername
         }).then((res) => {
             if ((res as any).data.updated) {
