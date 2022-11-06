@@ -35,6 +35,8 @@ function Attractions() {
 
     function SearchAttractions() {
         const[query, setquery] = useState("")
+
+        
         function handleSubmit () {
             if (query) {
                 alert('you searched for ' + query + ', someday this will become a server request')
