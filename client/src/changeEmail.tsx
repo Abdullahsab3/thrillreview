@@ -5,7 +5,7 @@ import Card from 'react-bootstrap/Card'
 import Alert from 'react-bootstrap/Alert';
 import Axios from 'axios'
 import { User } from './User'
-import { fetchUserFromLocalStorage, setUserInLocalstorage } from './localStorageProcessing'
+import { fetchUserFromLocalStorage } from './localStorageProcessing'
 import { Link } from 'react-router-dom';
 import { isValidEmail, backendServer } from './helpers';
 

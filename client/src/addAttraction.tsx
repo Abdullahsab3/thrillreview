@@ -5,6 +5,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Axios from 'axios'
 import { useNavigate } from 'react-router-dom';
+import { backendServer } from './helpers';
 
 function AddAttraction() {
     const navigate = useNavigate()
@@ -20,7 +21,7 @@ function AddAttraction() {
     const [duration, setDuration] = useState("")
     
     function handleSubmit() {
-        Axios.post("http://localhost:5001/addAttraction", {
+        Axios.post(backendServer("/addAttraction"), {
         name: name,
         themepark: themepark,
         opening: opening,
