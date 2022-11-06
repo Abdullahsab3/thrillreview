@@ -5,8 +5,9 @@ import Card from 'react-bootstrap/Card'
 import Alert from 'react-bootstrap/Alert';
 import Axios from 'axios'
 import { User } from './User'
-import { fetchUserFromLocalStorage, setUserInLocalstorage } from './localStorageProcessing'
+import { fetchUserFromLocalStorage } from './localStorageProcessing'
 import { Link } from 'react-router-dom';
+import { backendServer } from './helpers'
 
 export default function ChangePassword() {
     const savedUser: User | null = fetchUserFromLocalStorage();
@@ -16,7 +17,7 @@ export default function ChangePassword() {
 
 
     function handleChangePassword() {
-        Axios.post("http://localhost:5000/updatePassword", {
+        Axios.post(backendServer("/updatePassword"), {
             password: oldPassword,
             newPassword: newPassword
         }).then((res) => {

@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import {validateTokens } from "./JWT";
 import {registerNewUser, updateEmail, updateUsername, sendProfileInformation, loginUser, ChangePassword} from './userManagementCallbacks';
+import {addAttraction} from "./attractionCallbacks"
 
 const app = express();
 app.use(express.json());
@@ -26,6 +27,8 @@ app.use(cors(corsOptions));
  })
 */
 
+
+// usermanagement requests
 app.post("/register", registerNewUser);
 app.post("/login", loginUser);
 app.post("/profile", validateTokens, sendProfileInformation);
@@ -33,10 +36,13 @@ app.post("/updateUsername", validateTokens, updateUsername);
 app.post("/updateEmail", validateTokens, updateEmail);
 app.post("/updatePassword", validateTokens, ChangePassword)
 
+//attrations requests
+app.post("/addAttraction", addAttraction);
+
 app.get("/", (req, res) => {
   res.json({ "nothing": "yet" });
 });
 
-app.listen(5000, () => {
-  console.log("server is running on port 5000");
+app.listen(5001, () => {
+  console.log("server is running on port 5001");
 });

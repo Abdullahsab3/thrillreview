@@ -5,7 +5,7 @@ import Card from 'react-bootstrap/Card'
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert'
-import { isValidEmail } from './helpers';
+import { isValidEmail, backendServer } from './helpers';
 
 function Register() {
   const navigate = useNavigate()
@@ -19,7 +19,7 @@ function Register() {
 
   function handleRegistersubmit() {
     if (isValidEmail(email)) {
-      Axios.post("http://localhost:5000/register", {
+      Axios.post(backendServer("/register"), {
         username: username,
         email: email,
         password: password,

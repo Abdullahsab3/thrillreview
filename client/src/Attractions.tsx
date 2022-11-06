@@ -36,11 +36,18 @@ function Attractions() {
     function SearchAttractions() {
         const[query, setquery] = useState("")
         function handleSubmit () {
-            if(query===''){
+            if (query) {
+                alert('you searched for ' + query + ', someday this will become a server request')
+            } else {
+                alert('you have to specify what you\'re looking for if you ever want to find it')
+            }
+            /*
+            if(query==''){
                 alert('you have to specify what you\'re looking for if you ever want to find it')
             } else {
             alert('you searched for ' + query + ', someday this will become a server request')
             }
+            */
         }
 
         return(

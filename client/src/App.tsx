@@ -11,8 +11,6 @@ import Attractions from './Attractions';
 import Login from './login'
 import Profile from './Profile'
 import Register from './register';
-import { useState } from 'react'
-import { User } from './User'
 import { HelmetProvider } from 'react-helmet-async'; // moet om mem leaks te voorkomen als je met helmet werkt
 import ChangeUsername from './changeUsername';
 import ChangePassword from './changePassword';
@@ -20,8 +18,6 @@ import ChangeEmail from './changeEmail';
 import AddAttraction from './addAttraction';
 
 function App() {
-
-  const [user, setUser] = useState<User | null>(null)
 
 
   return (

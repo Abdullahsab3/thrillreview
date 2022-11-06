@@ -2,11 +2,11 @@ import Axios from 'axios'
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { User } from './User'
-import { Route, Routes, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table'
 import {fetchUserFromLocalStorage} from './localStorageProcessing'
-import ChangeUsername from './changeUsername'
+import {backendServer} from './helpers'
 
 function Profile() {
     const navigate = useNavigate();
@@ -20,7 +20,7 @@ function Profile() {
     }
 
     async function getuserEmail(id: number) {
-        const res = await Axios.post("http://localhost:5000/profile")
+        const res = await Axios.post(backendServer("/profile"))
         setEmail(res.data.email)
     }
 

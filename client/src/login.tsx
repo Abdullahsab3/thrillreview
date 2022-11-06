@@ -6,7 +6,8 @@ import Card from 'react-bootstrap/Card'
 import { User } from './User'
 import { Navigate } from 'react-router-dom';
 import Alert from 'react-bootstrap/Alert';
-import {setUserInLocalstorage} from './localStorageProcessing'
+import {setUserInLocalstorage, fetchUserFromLocalStorage} from './localStorageProcessing'
+import {backendServer} from './helpers'
 
 
 function Login() {
@@ -15,19 +16,17 @@ function Login() {
 
     const [username, setusername] = useState("")
     const [password, setpassword] = useState("")
-    const [user, setUser] = useState<User>()
 
     const [error, setError] = useState("")
 
 
     function handleLoginSubmit() {
-        Axios.post("http://localhost:5000/login", {
+        Axios.post(backendServer("/login"), {
             username: username,
             password: password,
         }).then((res) => {
             if ((res as any).data.auth) {
                 const newUser = new User(username, (res as any).data.id)
-                setUser(newUser)
                 setUserInLocalstorage(newUser)
                 // lelijke tijdelijke oplossing
                 window.location.replace("/")
@@ -46,7 +45,7 @@ function Login() {
         return username !== "" && password !== ""
     }
 
-    if (localStorage.getItem('user')) {
+    if (fetchUserFromLocalStorage()) {
         return (<Navigate replace to="/" />);
     }
 

@@ -5,9 +5,10 @@ import Card from 'react-bootstrap/Card'
 import Alert from 'react-bootstrap/Alert';
 import Axios from 'axios'
 import { User } from './User'
-import { fetchUserFromLocalStorage, setUserInLocalstorage } from './localStorageProcessing'
+import { fetchUserFromLocalStorage } from './localStorageProcessing'
 import { Link } from 'react-router-dom';
-import { isValidEmail } from './helpers';
+import { isValidEmail, backendServer } from './helpers';
+
 
 export default function ChangeEmail() {
     const savedUser: User | null = fetchUserFromLocalStorage();
@@ -16,7 +17,7 @@ export default function ChangeEmail() {
 
 
     function handleChangeEmail() {
-        Axios.post("http://localhost:5000/updateEmail", {
+        Axios.post(backendServer("/updateEmail"), {
             newEmail: newEmail
         }).then((res) => {
             if ((res as any).data.updated) {
