@@ -37,12 +37,12 @@ app.post("/updateEmail", validateTokens, updateEmail);
 app.post("/updatePassword", validateTokens, ChangePassword)
 
 //attrations requests
-app.post("/addAttraction", addAttraction);
+app.post("/addAttraction", validateTokens, addAttraction);
 
 app.get("/", (req, res) => {
   res.json({ "nothing": "yet" });
 });
 
 app.listen(5001, () => {
-  console.log("server is running on port 5001");
+  console.log("server is running on port 5000");
 });
