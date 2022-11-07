@@ -6,34 +6,34 @@ const db = new Database("thrillreview.db");
 
 function checkForUsernameExistence(
   username: string,
-  checkErr: (message: string | null) => void,
+  getResult: (error: any) => void,
 ): void {
   db.get(
     "SELECT * from users WHERE username = ?",
     [username],
     (err, result) => {
       if (err) {
-        checkErr(err.message);
+        getResult({error: true, username: err.message});
       } else if (result) {
-        checkErr("username is already used");
-      } else checkErr(null);
+        getResult({error: true, username: "username is already used"});
+      } else getResult(null);
     },
   );
 }
 
 function checkForEmailExistence(
   email: string,
-  checkErr: (message: string | null) => void,
+  getResult: (error: any) => void,
 ): void {
   db.get(
     "SELECT * from users WHERE email = ?",
     [email],
     (err, result) => {
       if (err) {
-        checkErr(err.message);
+        getResult({error: true, email: err.message});
       } else if (result) {
-        checkErr("Email is already used");
-      } else checkErr(null);
+        getResult({error: true, email: "Email is already used"});
+      } else getResult(null);
     },
   );
 }
@@ -41,14 +41,14 @@ function checkForEmailExistence(
 function checkForUserExistence(
     username: string,
     email: string,
-    checkErr: (message: string | null) => void,
+    getResult: (error: any) => void,
   ): void {
-    checkForUsernameExistence(username, function (usernameError: string | null) {
+    checkForUsernameExistence(username, function (usernameError: any) {
       if (usernameError) {
-        checkErr(usernameError);
+        getResult(usernameError);
       } else {
-        checkForEmailExistence(email, function (emailError: string | null) {
-          checkErr(emailError);
+        checkForEmailExistence(email, function (emailError: any) {
+          getResult(emailError);
         });
       }
     });
@@ -70,13 +70,13 @@ function checkForUserExistence(
           const hashed: string = result.hash;
           bcrypt.compare(password, hashed).then((same) => {
             if (!same) {
-              getResult({error: true, username: "", password: "You entered the wrong password!"}, null);
+              getResult({error: true, password: "You entered the wrong password!"}, null);
             } else {
               getResult(null, new User(username, result.id));
             }
           });
         } else {
-          getResult({error: true, username: "User does not exist!", password: ""}, null);
+          getResult({error: true, username: "User does not exist!"}, null);
         }
       },
     );

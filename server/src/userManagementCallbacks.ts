@@ -14,7 +14,7 @@ function registerNewUser(req: any, res: any) {
   const { username, email, password } = req.body;
   checkForUserExistence(username, email, function (error: string | null) {
     if (error) {
-      res.status(400).json({ error: error });
+      res.status(400).json(error);
     } else {
       // hashing factor = 15
       bcrypt.hash(password, 15).then((hash) => {
@@ -24,9 +24,12 @@ function registerNewUser(req: any, res: any) {
           hash,
         ], (error: Error) => {
           if (error) {
-            return res.status(400).json({ error: error.message });
+            return res.status(400).json({
+              error: true,
+              username: error.message,
+            });
           } else {
-            return res.json({ registered: true });
+            return res.json({ error: false });
           }
         });
       });
@@ -53,12 +56,12 @@ function ChangePassword(req: any, res: any) {
             [hash, id],
             function (error: Error) {
               if (error) {
-                res.status(400).json({ error: error.message });
+                res.status(400).json({ error: true, password: error.message });
               } else {[
-                /* TODO: zorg ervoor dat de gebruiker afgemeld wordt en dat een
+                  /* TODO: zorg ervoor dat de gebruiker afgemeld wordt en dat een
                     token gegenereerd moet worden.
                 */
-                  res.status(200).json({ updated: true }),
+                  res.status(200).json({ error: false }),
                 ];}
             },
           );
@@ -114,22 +117,25 @@ function sendProfileInformation(req: any, res: any) {
 function updateUsername(req: any, res: any) {
   const user: User = (req as any).user;
   const userid: number = user.id;
-  const newUsername: string = (req as any).body.newUsername;
+  const newUsername: string = (req as any).body.username;
   if (!newUsername) {
-    return res.status(400).json({ error: "No username provided" });
+    return res.status(400).json({
+      error: true,
+      username: "No username provided",
+    });
   }
-  checkForUsernameExistence(newUsername, function (error: null | string) {
+  checkForUsernameExistence(newUsername, function (error: any) {
     if (error) {
-      res.status(400).json({ error: error });
+      res.status(400).json(error);
     } else {
       db.run("UPDATE users SET username = ? WHERE id = ?", [
         newUsername,
         userid,
       ], function (error: Error) {
         if (error) {
-          res.status(400).json({ error: error.message });
+          res.status(400).json({ error: true, username: error.message });
         } else {
-          res.status(200).json({ updated: true });
+          res.status(200).json({ error: false });
         }
       });
     }
@@ -142,20 +148,20 @@ function updateEmail(req: any, res: any) {
   const newEmail: string = (req as any).body.newEmail;
 
   if (!newEmail) {
-    return res.status(400).json({ error: "No email provided" });
+    return res.status(400).json({ error: true, newEmail: "No email provided" });
   }
-  checkForEmailExistence(newEmail, function (error: null | string) {
+  checkForEmailExistence(newEmail, function (error: any) {
     if (error) {
-      res.status(400).json({ error: error });
+      res.status(400).json(error);
     } else {
       db.run(
         "UPDATE users set email = ? WHERE id = ?",
         [newEmail, userid],
         function (error: Error) {
           if (error) {
-            res.status(400).json({ error: error.message });
+            res.status(400).json({ error: true, newEmail: error.message });
           } else {
-            res.status(200).json({ updated: true });
+            res.status(200).json({ error: false });
           }
         },
       );

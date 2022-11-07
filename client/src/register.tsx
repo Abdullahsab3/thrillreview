@@ -4,38 +4,83 @@ import { useNavigate } from 'react-router-dom';
 import Card from 'react-bootstrap/Card'
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert'
 import { isValidEmail, backendServer } from './helpers';
+import "./register.css"
+import InputGroup from 'react-bootstrap/InputGroup';
 
 function Register() {
   const navigate = useNavigate()
 
   const [username, setusername] = useState("")
+  const [usernameError, setusernameError] = useState("")
   const [password, setpassword] = useState("")
+  const [passwordError, setPasswordError] = useState("")
   const [email, setemail] = useState("")
+  const [emailError, setEmailError] = useState("")
+  const [validated, setValidated] = useState(false);
 
-  const [error, setError] = useState("")
+  function checkForErrors(data: any): boolean {
+    console.log(data.error)
+    if (data.error) {
+      const receivedUsernameError: string = data.username
+      const receivedEmailError: string = data.email
+      const receivedPasswordError: string = data.password
+      console.log(receivedUsernameError)
+      if (receivedUsernameError) {
+        setusernameError(receivedUsernameError);
+      }
+      if (receivedPasswordError) {
+        setPasswordError(receivedPasswordError);
+      }
+      if (receivedEmailError) {
+        setEmailError(receivedEmailError)
+      }
 
-
-  function handleRegistersubmit() {
-    if (isValidEmail(email)) {
-      Axios.post(backendServer("/register"), {
-        username: username,
-        email: email,
-        password: password,
-      }).then((response) => {
-        if (response.data.registered) {
-          navigate("/login")
-        }
-      }).catch(function (error) {
-        if(error.response) {
-          setError(error.response.data.error)
-        }
-      })
+      return true;
     } else {
-      setError("Email is invalid")
+      return false;
     }
   }
+
+  function checkForInputError(): boolean {
+    if (isValidEmail(email)) {
+      return false;
+    } else {
+      setEmailError("Email is not correctly formatted.")
+      return true;
+    }
+  }
+
+
+  const handleRegisterSubmit: React.FormEventHandler<HTMLFormElement> =
+    (event: React.FormEvent<HTMLFormElement>) => {
+      setPasswordError("")
+      setusernameError("")
+      setEmailError("")
+      event.preventDefault();
+      event.stopPropagation();
+      if (checkForInputError()) {
+        setValidated(false);
+      }
+      else {
+        Axios.post(backendServer("/register"), {
+          username: username,
+          email: email,
+          password: password,
+        }).then((res) => {
+          if (checkForErrors((res as any).data)) {
+            setValidated(false)
+          } else {
+            navigate("/login")
+          }
+        }).catch(function (error) {
+          if (checkForErrors(error.response.data)) {
+            setValidated(false)
+          }
+        })
+      }
+    }
+
 
   function isFormValid(): boolean {
     return username !== "" && password !== "" && email !== ""
@@ -43,25 +88,65 @@ function Register() {
 
 
   return (
-    <div className='RegisterPage'>
-      <Card className='Register'>
-        <Card.Body>
-          <Card.Title><strong>Register</strong></Card.Title>
-          <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>Username</Form.Label>
-              <Form.Control type=" text" onChange={(e) => setusername(e.target.value)} placeholder="Enter your username" />
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" onChange={(e) => setemail(e.target.value)} placeholder="someone@example.com" />
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" onChange={(e) => setpassword(e.target.value)} placeholder="Enter your password" />
-              <Button onClick={handleRegistersubmit} variant="primary" disabled={!isFormValid()}>Register</Button>
-              {error && <Alert key='warning' variant='warning'>{error}</Alert>}
-            </Form.Group>
-          </Form>
-        </Card.Body>
+    <div id='register'>
+      <div className="col d-flex justify-content-center">
+        <Card className='card'>
+          <Card.Body>
+            <Card.Title><strong>Register</strong></Card.Title>
+            <Form noValidate validated={validated} onSubmit={handleRegisterSubmit}>
 
-      </Card>
+              <Form.Group className="mb-3">
+                <Form.Label>Username</Form.Label>
+                <InputGroup hasValidation>
+                  <Form.Control
+                    required
+                    type=" text"
+                    onChange={(e) => setusername(e.target.value)}
+                    placeholder="Enter your username"
+                    isInvalid={(usernameError as any)} />
+                  <Form.Control.Feedback type="invalid">
+                    {usernameError}
+                  </Form.Control.Feedback>
+                </InputGroup>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Email</Form.Label>
+                <InputGroup hasValidation>
+                  <Form.Control
+                    required
+                    type="email"
+                    onChange={(e) => setemail(e.target.value)}
+                    placeholder="Enter your email"
+                    isInvalid={(emailError as any)} />
+                  <Form.Control.Feedback type="invalid">
+                    {emailError}
+                  </Form.Control.Feedback>
+                </InputGroup>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Password</Form.Label>
+                <InputGroup hasValidation>
+                  <Form.Control
+                    required
+                    type="password"
+                    onChange={(e) => setpassword(e.target.value)}
+                    placeholder="Enter your password"
+                    isInvalid={(passwordError as any)} />
+                  <Form.Control.Feedback type="invalid">
+                    {passwordError}
+                  </Form.Control.Feedback>
+                </InputGroup>
+              </Form.Group>
+
+              <Button className="submitbutton" type="submit" variant="primary" disabled={!isFormValid()}>Register</Button>
+              {/*error && <Alert key='warning' variant='warning'>{error}</Alert>*/}
+            </Form>
+          </Card.Body>
+
+        </Card>
+      </div>
     </div>
 
   );

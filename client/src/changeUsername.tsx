@@ -2,38 +2,56 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card'
-import Alert from 'react-bootstrap/Alert';
 import Axios from 'axios'
 import { User } from './User'
 import { fetchUserFromLocalStorage, setUserInLocalstorage } from './localStorageProcessing'
 import { Link } from 'react-router-dom';
 import { backendServer } from './helpers'
+import InputGroup from 'react-bootstrap/InputGroup';
 
 export default function ChangeUsername() {
     const savedUser: User | null = fetchUserFromLocalStorage();
     const [newUsername, setNewUsername] = useState("")
-    const [error, setError] = useState("")
+    const [newUsernameError, setNewUsernameError] = useState("")
+    const [validated, setValidated] = useState(false)
 
-
-    function handleChangeUsernameSubmit() {
-        Axios.post(backendServer("/updateUsername"), {
-            newUsername: newUsername
-        }).then((res) => {
-            if ((res as any).data.updated) {
-                (savedUser as User).username = newUsername
-                setUserInLocalstorage(savedUser as User);
-                // lelijke tijdelijke oplossing
-                window.location.replace("/")
-            } else {
-                console.log((res as any).data.error)
-                setError((res as any).data.error)
+    function checkForErrors(data: any): boolean {
+        console.log(data)
+        if (data.error) {
+            const receviedNewUsernameError: string = data.username
+            if (receviedNewUsernameError) {
+                setNewUsernameError(receviedNewUsernameError)
             }
-        }).catch(function (error) {
-            if (error.response) {
-                setError(error.response.data.error)
-            }
-        })
+            return true;
+        } else {
+            return false;
+        }
     }
+
+    const handleChangeUsernameSubmit: React.FormEventHandler<HTMLFormElement> =
+        (event: React.FormEvent<HTMLFormElement>) => {
+            setNewUsernameError("");
+            event.preventDefault();
+            event.stopPropagation();
+            Axios.post(backendServer("/updateUsername"), {
+                username: newUsername
+            }).then((res) => {
+                if (checkForErrors((res as any).data)) {
+                    setValidated(false)
+                } else {
+                    (savedUser as User).username = newUsername
+                    setUserInLocalstorage(savedUser as User);
+                    setValidated(true)
+                    // lelijke tijdelijke oplossing
+                    window.location.replace("/")
+                }
+            }).catch(function (error) {
+                if (checkForErrors(error.response.data)) {
+                    setValidated(false)
+                }
+            })
+        };
+
 
     function isFormValid(): boolean {
         return newUsername !== "";
@@ -42,16 +60,26 @@ export default function ChangeUsername() {
     if (savedUser) {
 
         return (
-            <div className='changeUsername'>
-                <Card className='updateUsername'>
+            <div className='col d-flex justify-content-center'>
+                <Card className='card'>
                     <Card.Body>
                         <Card.Title><strong>Change your username</strong></Card.Title>
-                        <Form>
+                        <Form noValidate validated={validated} onSubmit={handleChangeUsernameSubmit}>
+
                             <Form.Group className="mb-3">
                                 <Form.Label>New username</Form.Label>
-                                <Form.Control type=" text" onChange={(e) => setNewUsername(e.target.value)} placeholder="Enter your new username" />
-                                <Button onClick={handleChangeUsernameSubmit} variant="primary" disabled={!isFormValid()}>Submit your username!</Button>
-                                {error && <Alert key='warning' variant='warning'>{error}</Alert>}
+                                <InputGroup hasValidation>
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        onChange={(e) => setNewUsername(e.target.value)}
+                                        placeholder="Enter your new username"
+                                        isInvalid={(newUsernameError as any)} />
+                                    <Form.Control.Feedback type="invalid">
+                                        {newUsernameError}
+                                    </Form.Control.Feedback>
+                                </InputGroup>
+                                <Button className="submitbutton" variant="primary" disabled={!isFormValid()}>Submit your username!</Button>
                             </Form.Group>
                         </Form>
                     </Card.Body>

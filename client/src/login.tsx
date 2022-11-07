@@ -5,7 +5,6 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card'
 import { User } from './User'
 import { Navigate } from 'react-router-dom';
-import Alert from 'react-bootstrap/Alert';
 import { setUserInLocalstorage, fetchUserFromLocalStorage } from './localStorageProcessing'
 import { backendServer } from './helpers'
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -63,24 +62,6 @@ function Login() {
             })
         };
 
-
-    /*
-    const newUser = new User(username, (res as any).data.id)
-    setUserInLocalstorage(newUser)
-    // lelijke tijdelijke oplossing
-    window.location.replace("/")
-} else {
-    console.log((res as any).data.error)
-    setError((res as any).data.error)
-}
-}).catch(function (error) {
-if (error.response) {
-    setError(error.response.data.error)
-}
-})
-}
-*/
-
     function isFormValid(): boolean {
         return username !== "" && password !== ""
     }
@@ -125,7 +106,7 @@ if (error.response) {
                                         {passwordError}
                                     </Form.Control.Feedback>
                                 </InputGroup>
-                                <Button id="loginbutton" type="submit" variant="primary" disabled={!isFormValid()}>Log in</Button>
+                                <Button className="submitbutton" type="submit" variant="primary" disabled={!isFormValid()}>Log in</Button>
                                 {/*error && <Alert key='warning' variant='warning'>{error}</Alert>*/}
                             </Form.Group>
 

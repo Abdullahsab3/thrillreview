@@ -1,39 +1,56 @@
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Card from 'react-bootstrap/Card'
-import Alert from 'react-bootstrap/Alert';
+import Card from 'react-bootstrap/Card';
 import Axios from 'axios'
 import { User } from './User'
 import { fetchUserFromLocalStorage } from './localStorageProcessing'
 import { Link } from 'react-router-dom';
 import { isValidEmail, backendServer } from './helpers';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 
 export default function ChangeEmail() {
     const savedUser: User | null = fetchUserFromLocalStorage();
     const [newEmail, setNewEmail] = useState("")
-    const [error, setError] = useState("")
+    const [emailError, setEmailError] = useState("")
+    const [validated, setValidated] = useState(false);
 
-
-    function handleChangeEmail() {
-        Axios.post(backendServer("/updateEmail"), {
-            newEmail: newEmail
-        }).then((res) => {
-            if ((res as any).data.updated) {
-
-                // lelijke tijdelijke oplossing
-                window.location.replace("/")
-            } else {
-                console.log((res as any).data.error)
-                setError((res as any).data.error)
+    function checkForErrors(data: any): boolean {
+        console.log(data)
+        if (data.error) {
+            const receievedEmailError: string = data.email
+            if (receievedEmailError) {
+                setEmailError(receievedEmailError)
             }
-        }).catch(function (error) {
-            if (error.response) {
-                setError(error.response.data.error)
-            }
-        })
+            return true;
+        } else {
+            return false;
+        }
     }
+
+    const handleChangeEmail: React.FormEventHandler<HTMLFormElement> =
+        (event: React.FormEvent<HTMLFormElement>) => {
+            setEmailError("")
+            event.preventDefault();
+            event.stopPropagation();
+            Axios.post(backendServer("/updateEmail"), {
+                newEmail: newEmail
+            }).then((res) => {
+                if (checkForErrors((res as any).data)) {
+                    setValidated(false)
+                } else {
+                    setValidated(true)
+                    // lelijke tijdelijke oplossing
+                    window.location.replace("/")
+                }
+            }).catch(function (error) {
+                if (checkForErrors(error.response.data)) {
+                    setValidated(false)
+                }
+            })
+        };
+
 
     function isFormValid(): boolean {
         return newEmail !== "" && isValidEmail(newEmail);
@@ -42,17 +59,30 @@ export default function ChangeEmail() {
     if (savedUser) {
 
         return (
-            <div className='changeEmail'>
-                <Card className='updateEmail'>
+            <div className='col d-flex justify-content-center'>
+                <Card className='card'>
                     <Card.Body>
-                        <Card.Title><strong>Change your username</strong></Card.Title>
-                        <Form>
+                        <Card.Title><strong>Change your email</strong></Card.Title>
+                        <Form noValidate validated={validated} onSubmit={handleChangeEmail}>
                             <Form.Group className="mb-3">
-                                <Form.Label>New username</Form.Label>
-                                <Form.Control type=" text" onChange={(e) => setNewEmail(e.target.value)} placeholder="Enter your new email" />
-                                <Button onClick={handleChangeEmail} variant="primary" disabled={!isFormValid()}>Submit your email!</Button>
-                                {error && <Alert key='warning' variant='warning'>{error}</Alert>}
+                                <Form.Label>New Email</Form.Label>
+                                <InputGroup hasValidation>
+                                    <Form.Control
+                                        required
+                                        type="email"
+                                        onChange={(e) => setNewEmail(e.target.value)}
+                                        placeholder="Enter your new email"
+                                        isInvalid={(emailError as any)} />
+                                    <Form.Control.Feedback type="invalid">
+                                        {emailError}
+                                    </Form.Control.Feedback>
+                                </InputGroup>
                             </Form.Group>
+
+                            <Form.Group className="mb-3">
+                                <Button type="submit" variant="primary" disabled={!isFormValid()}>Submit your email!</Button>
+                            </Form.Group>
+
                         </Form>
                     </Card.Body>
 
