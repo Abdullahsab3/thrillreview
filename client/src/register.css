@@ -1,0 +1,7 @@
+#register {
+    position:fixed;
+    width:100%;
+    height:100%;
+    background-image: url(/public/registerbg.jpeg);
+    background-size: cover;
+  }
