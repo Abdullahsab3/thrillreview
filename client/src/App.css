@@ -9,13 +9,13 @@ body {
 .ContentOfPage{
   width: 95%;
   justify-content: center;
+  align-items: center;
   margin:auto;
   text-align: center;
 }
 
 
 .topnav {
-  /*background-color: cornflowerblue;*/
   color:goldenrod;
   display:flex; /* zorg dat je kan doen wat je wil met je layout */
   justify-content:center;

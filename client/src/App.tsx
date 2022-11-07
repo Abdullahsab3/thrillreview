@@ -43,8 +43,6 @@ function App() {
             <Route path='/Profile/change-email' element={<ChangeEmail/>}/>
             <Route path='/Profile/change-password' element={<ChangePassword/>}/>
             <Route path='/addAttraction' element={<AddAttraction />} />
-            
-
           </Routes>
         </Router>
 

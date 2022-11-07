@@ -8,14 +8,14 @@ import { useState, useEffect } from 'react';
 
 function SetToUserLocation() {
   var map = useMap();
-  map.locate({setView: true, maxZoom: 11});
+  map.locate({setView: true, maxZoom: 15});
   return null;
 }
 
 const LeafletMap = () => {
 
   return(
-  <MapContainer id="map" center={[51.505, -0.09]} zoom={11} scrollWheelZoom={false}>
+  <MapContainer id="map" center={[50.823010, 4.392620]} zoom={15} scrollWheelZoom={false}>
             
        <TileLayer
            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
