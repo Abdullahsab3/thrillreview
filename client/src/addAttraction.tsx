@@ -28,7 +28,7 @@ function AddAttraction() {
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         const form = event.currentTarget
-        if (form.checkValidity() == false) {
+        if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
         } else {
@@ -117,13 +117,19 @@ function AddAttraction() {
                                     <Row>
                                         <Form.Group>
                                             <Form.Label>Length</Form.Label>
-                                            <Form.Control type="text" onChange={(e) => setLength(e.target.value)} />
+                                            <Form.Control type="text" pattern="[0-9]*?(:[.|,][0-9]*)?" placeholder="13,13" onChange={(e) => setLength(e.target.value)} />
+                                            <Form.Control.Feedback type="invalid">
+                                                The attraction's length should consist of only numbers (you can write decimals by using . or ,).
+                                            </Form.Control.Feedback>
                                         </Form.Group>
                                     </Row>
                                     <Row>
                                         <Form.Group>
                                             <Form.Label>Height </Form.Label>
-                                            <Form.Control type="text" onChange={(e) => setHeight(e.target.value)} />
+                                            <Form.Control type="text" pattern="[0-9]*?(:[.|,][0-9]*)?" placeholder="13,13" onChange={(e) => setHeight(e.target.value)} />
+                                            <Form.Control.Feedback type="invalid">
+                                                The attraction's height should consist of only numbers (you can write decimals by using . or ,).
+                                            </Form.Control.Feedback>
                                         </Form.Group>
                                     </Row>
                                 </Col>
@@ -139,7 +145,10 @@ function AddAttraction() {
                                 <Col>
                                     <Form.Group>
                                         <Form.Label>Duration</Form.Label>
-                                        <Form.Control type="duration" onChange={(e) => setDuration(e.target.value)} placeholder="00m00s" />
+                                        <Form.Control type="duration" pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}" placeholder="hh:mm:ss" onChange={(e) => setDuration(e.target.value)} />
+                                        <Form.Control.Feedback type="invalid">
+                                            The attraction's duration should be in terms of hours, minutes and seconds (you can write it like this: 00:00:00).
+                                        </Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -147,8 +156,8 @@ function AddAttraction() {
                         </Form>
                     </Card.Body>
                 </Card>
-            </Row>
-        </div>);
+            </Row >
+        </div >);
 }
 
 export default AddAttraction;

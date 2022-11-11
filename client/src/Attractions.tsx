@@ -52,7 +52,7 @@ function Attractions() {
                     <Card.Text> Find the attraction you are looking for! </Card.Text>
                         <Form onSubmit={handleSubmit}>
                         <InputGroup>
-                        <Form.Control type="text" onChange={(e) => setquery(e.target.value)} placeholder="Search" />
+                        <Form.Control type="search" onChange={(e) => setquery(e.target.value)} placeholder="Search" />
                         <Button type="submit">
                         <Search />
                         </Button>
