@@ -14,7 +14,6 @@ body {
   text-align: center;
 }
 
-
 .topnav {
   color:goldenrod;
   display:flex; /* zorg dat je kan doen wat je wil met je layout */
@@ -24,10 +23,9 @@ body {
 }
 
 .pageLink {
-  color: inherit;
+  color: goldenrod;
   text-decoration: none;
   font-size: 2rem;
-  
 }
 
 .col-md-4{

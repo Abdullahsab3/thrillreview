@@ -1,0 +1,7 @@
+.topnav {
+    color:goldenrod;
+    display:flex; /* zorg dat je kan doen wat je wil met je layout */
+    justify-content:center;
+    gap: 3rem; /*gap between*/
+    padding: 0 2rem; /*edges of screen*/
+  }

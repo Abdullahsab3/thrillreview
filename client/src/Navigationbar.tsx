@@ -1,6 +1,7 @@
+import './Navigationbar.css';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import { NavLink } from 'react-router-dom';
+import { NavLink as RouterLink } from 'react-router-dom';
 import { User } from "./User"
 import { useState } from 'react'
 import logo from './logo.png'
@@ -16,7 +17,7 @@ function Navigationbar() {
         setUser(new User(found.username, found.id))
     }
 
-
+    // why I use both navlink from bootstrap & router : https://stackoverflow.com/questions/56464444/collapseonselect-in-react-bootstrap-navbars-with-react-router-dom-navlinks 
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Navbar.Brand href="/">
@@ -30,14 +31,13 @@ function Navigationbar() {
             <Navbar.Toggle aria-controls='navigationbarscroll' />
             <Navbar.Collapse id="navigationbarscroll" data-bs-target="#navigationbarscroll">
                 <Nav className="topnav" variant="pills">
-                    <NavLink className="pageLink" to="/">Home</NavLink>
-                    <NavLink className="pageLink" to="/Map">Map</NavLink>
-                    <NavLink className="pageLink" to="/Attractions">Attractions</NavLink>
-                    <NavLink className="pageLink" to="/Themeparks">Themeparks</NavLink>
-                    {!user && <NavLink className="pageLink" to="/login">Login</NavLink>}
-                    {!user && <NavLink className="pageLink" to="/register">Register</NavLink>}
-                    {user && <NavLink className="pageLink" to="/Profile">Profile</NavLink>}
-
+                    <Nav.Link as={RouterLink} className="pageLink" eventKey="1" to="/">Home</Nav.Link>
+                    <Nav.Link as={RouterLink} className="pageLink" eventKey="2" to="/Map">Map</Nav.Link>
+                    <Nav.Link as={RouterLink} className="pageLink" eventKey="3" to="/Attractions">Attractions</Nav.Link>
+                    <Nav.Link as={RouterLink} className="pageLink" eventKey="4" to="/Themeparks">Themeparks</Nav.Link>
+                    {!user && <Nav.Link as={RouterLink} className="pageLink" eventKey="5" to="/login">Login</Nav.Link>}
+                    {!user && <Nav.Link as={RouterLink} className="pageLink" eventKey="6" to="/register">Register</Nav.Link>}
+                    {user && <Nav.Link as={RouterLink} className="pageLink" eventKey="7" to="/Profile">Profile</Nav.Link>}
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
