@@ -1,7 +1,36 @@
 .topnav {
-    color:goldenrod;
-    display:flex; /* zorg dat je kan doen wat je wil met je layout */
-    justify-content:center;
-    gap: 3rem; /*gap between*/
-    padding: 0 2rem; /*edges of screen*/
-  }
+  color:goldenrod;
+  display:flex; /* zorg dat je kan doen wat je wil met je layout */
+  justify-content:center;
+  gap: 3rem; /*gap between*/
+  padding: 0 2rem; /*edges of screen*/
+}
+
+.pageLink {
+  color: inherit;
+  text-decoration: none;
+  font-size: 2rem;
+ 
+}
+.pageLink:active{
+  color:greenyellow;
+}
+.pageLink:checked{
+  color:chocolate;
+}
+
+.nav-pills{
+  color: goldenrod;
+
+}
+
+.nav-pills:active{
+  color:red;
+}
+
+
+
+
+
+
+
