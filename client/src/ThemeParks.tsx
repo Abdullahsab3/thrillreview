@@ -1,11 +1,17 @@
-
+import CardWithLinkTo from './HigherOrderComponents';
 
 
 function ThemePark() {
     return (
-        <h1> themeparks</h1>
+        <div>
+            <h1> themeparks</h1>
+            <CardWithLinkTo to="/addThemePark" title="Add a ThemePark" />
 
-    
+        </div>
+
+
+
+
 
     );
 }

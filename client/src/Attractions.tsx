@@ -3,16 +3,16 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import {Search} from 'react-bootstrap-icons';
+import { Search } from 'react-bootstrap-icons';
 import InputGroup from 'react-bootstrap/InputGroup';
-import {useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import CardWithLinkTo from './HigherOrderComponents';
 
 function Attractions() {
 
     function TopTenAttractions() {
 
-        return(
+        return (
             <Card>
                 <Card.Body>
                     <Card.Title>Top Ten Attractions Rated by our users</Card.Title>
@@ -23,7 +23,7 @@ function Attractions() {
     }
 
     function NewestAttractions() {
-        return(
+        return (
             <Card>
                 <Card.Body>
                     <Card.Title>Newest Attractions</Card.Title>
@@ -34,10 +34,10 @@ function Attractions() {
     }
 
     function SearchAttractions() {
-        const[query, setquery] = useState("")
+        const [query, setquery] = useState("")
 
-        
-        function handleSubmit () {
+
+        function handleSubmit() {
             if (query) {
                 alert('you searched for ' + query + ', someday this will become a server request')
             } else {
@@ -45,59 +45,44 @@ function Attractions() {
             }
         }
 
-        return(
+        return (
             <Card>
                 <Card.Body>
                     <Card.Title>Search Attractions</Card.Title>
                     <Card.Text> Find the attraction you are looking for! </Card.Text>
-                        <Form onSubmit={handleSubmit}>
+                    <Form onSubmit={handleSubmit}>
                         <InputGroup>
-                        <Form.Control type="search" onChange={(e) => setquery(e.target.value)} placeholder="Search" />
-                        <Button type="submit">
-                        <Search />
-                        </Button>
+                            <Form.Control type="search" onChange={(e) => setquery(e.target.value)} placeholder="Search" />
+                            <Button type="submit">
+                                <Search />
+                            </Button>
                         </InputGroup>
-                        </Form>
-                    
+                    </Form>
+
                 </Card.Body>
             </Card>
         );
     }
 
-    function AddAttraction() {
-        return(
-            <Card>
-                <Card.Body>
-                    <Card.Title>Add an attraction</Card.Title>
-                    <Link to="/addAttraction">
-                    <Button>Add Attraction</Button>
-                    </Link>
-                    
-
-                </Card.Body>
-            </Card>
-        );
-    }   
-
     return (
         <div className='ContentOfPage'>
             <h1>attractions</h1>
-        <Row lg={3} sm={1}>
-            <Col className="AttractionCol">
-            <SearchAttractions />
-            </Col>
-            <Col className="AttractionCol">
-            <TopTenAttractions />
-            </Col>
-            <Col className="AttractionCol">
-            <NewestAttractions />
-            </Col>
-        </Row>
-        <Row lg={3} sm={1}>
-            <Col className="AttractionCol">
-                <AddAttraction />
-            </Col>
-        </Row>
+            <Row lg={3} sm={1}>
+                <Col className="AttractionCol">
+                    <SearchAttractions />
+                </Col>
+                <Col className="AttractionCol">
+                    <TopTenAttractions />
+                </Col>
+                <Col className="AttractionCol">
+                    <NewestAttractions />
+                </Col>
+            </Row>
+            <Row lg={3} sm={1}>
+                <Col className="AttractionCol">
+                    <CardWithLinkTo to="/addAttraction" title="Add an attraction" />
+                </Col>
+            </Row>
         </div>
 
     );

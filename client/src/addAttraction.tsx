@@ -55,6 +55,21 @@ function AddAttraction() {
         setValidated(true);
     }
 
+    interface textField{
+        label:string;
+        required:boolean;
+        invalidFeedback:string;
+    }
+
+    function InputText(props:textField){
+        <Form.Group>
+        <Form.Label> {props.label}</Form.Label>
+        <Form.Control required={props.required} type="text" />
+        <Form.Control.Feedback type="invalid">
+            Name is required
+        </Form.Control.Feedback>
+    </Form.Group>
+    }
 
     // length, height, duration : zal nog gevalideerd worden dat echt cijfer is  : https://codesandbox.io/s/9zjo1lp86w?file=/src/Components/InputDecimal.jsx
     // row moet rond card want anders krijg je een lelijke gap tussen header en de card
