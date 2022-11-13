@@ -55,20 +55,24 @@ function AddAttraction() {
         setValidated(true);
     }
 
-    interface textField{
-        label:string;
-        required:boolean;
-        invalidFeedback:string;
+    interface textField {
+        label: string;
+        required: boolean;
+        invalidFeedback: string;
+        onChange: (e: string) => void;
     }
 
-    function InputText(props:textField){
-        <Form.Group>
-        <Form.Label> {props.label}</Form.Label>
-        <Form.Control required={props.required} type="text" />
-        <Form.Control.Feedback type="invalid">
-            Name is required
-        </Form.Control.Feedback>
-    </Form.Group>
+    function InputText(props: textField) {
+
+        return (
+            <Form.Group>
+                <Form.Label> {props.label}</Form.Label>
+                <Form.Control required={props.required} type="text" onChange={(e) => { props.onChange(e.target.value) }} />
+                <Form.Control.Feedback type="invalid">
+                    {props.invalidFeedback}
+                </Form.Control.Feedback>
+            </Form.Group>
+        );
     }
 
     // length, height, duration : zal nog gevalideerd worden dat echt cijfer is  : https://codesandbox.io/s/9zjo1lp86w?file=/src/Components/InputDecimal.jsx
@@ -84,6 +88,7 @@ function AddAttraction() {
                         <Form className="align-items-center" noValidate validated={validated} onSubmit={handleSubmit}>
                             <Row lg={2} sm={1}>
                                 <Col>
+                                    <InputText label="Name*" required={true} invalidFeedback="Name is required" onChange={(e) => setName(e)} />
                                     <Form.Group>
                                         <Form.Label> Name* </Form.Label>
                                         <Form.Control required type="text" onChange={(e) => setName(e.target.value)} />
