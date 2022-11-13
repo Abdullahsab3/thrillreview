@@ -14,6 +14,7 @@ import ChangeUsername from './changeUsername';
 import ChangePassword from './changePassword';
 import ChangeEmail from './changeEmail';
 import AddAttraction from './addAttraction';
+import AttractionPage from './attractionPage';
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
             <Route path='/Profile/change-email' element={<ChangeEmail/>}/>
             <Route path='/Profile/change-password' element={<ChangePassword/>}/>
             <Route path='/addAttraction' element={<AddAttraction />} />
+            <Route path='/Attractions/:attractionID' element={<AttractionPage/>}/>
           </Routes>
         </Router>
 

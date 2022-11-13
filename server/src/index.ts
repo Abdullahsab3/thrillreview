@@ -3,7 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import {validateTokens } from "./JWT";
 import {registerNewUser, updateEmail, updateUsername, sendProfileInformation, loginUser, ChangePassword} from './userManagementCallbacks';
-import {addAttraction} from "./attractionCallbacks"
+import {addAttraction, findAttractionById} from "./attractionCallbacks"
 
 const app = express();
 app.use(express.json());
@@ -38,6 +38,7 @@ app.post("/updatePassword", validateTokens, ChangePassword)
 
 //attrations requests
 app.post("/addAttraction", validateTokens, addAttraction);
+app.post("/getAttraction", findAttractionById)
 
 app.get("/", (req, res) => {
   res.json({ "nothing": "yet" });

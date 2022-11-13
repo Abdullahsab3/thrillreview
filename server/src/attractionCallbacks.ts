@@ -1,5 +1,5 @@
 import { Attraction } from "./Attraction";
-import { db } from "./database";
+import { db, getAttraction } from "./database";
 
 function addAttraction(req: any, res: any) {
     const { name, themepark, opening, Builder, type, length, height, inversions, duration,} = req.body;
@@ -22,4 +22,18 @@ function addAttraction(req: any, res: any) {
       });
 }
 
-export{addAttraction};
+function findAttractionById(req: any, res: any) {
+  const id = req.body.attractionID
+  getAttraction(id, function (error: any, attraction: Attraction | null) {
+    if(error) {
+      return res.status(400).json(error)
+    }
+    if(attraction) {
+      return res.status(200).json(attraction.toJSON())
+    } else {
+      return res.status(200).json({error: true, attractionID: "No attraction found with the given ID"})
+    }
+  })
+}
+
+export{addAttraction, findAttractionById};
