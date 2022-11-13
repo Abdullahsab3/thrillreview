@@ -10,6 +10,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import './login.css'
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import ButtonWithLoading from './buttonWithLoading'
+import { Link } from 'react-router-dom';
 
 function Login() {
 
@@ -117,8 +118,9 @@ function Login() {
                             </Form.Group>
 
                         </Form>
+                        Or register <Link to="/register"> here </Link>
                     </Card.Body>
-
+                    
                 </Card>
             </div>
         </div>

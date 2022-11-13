@@ -1,0 +1,32 @@
+#address{
+    display:flex;
+    flex-direction: column;
+}
+
+#address-components{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+@media (min-width:900px){
+    #address-components{
+        flex-wrap: nowrap;
+    }
+
+}
+
+#street{
+    min-width: 20rem;
+}
+
+#streetNr{
+    min-width: 5rem;
+}
+
+#postalCode{
+    min-width: 10rem;
+}
+
