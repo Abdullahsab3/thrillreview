@@ -8,6 +8,8 @@ import { fetchUserFromLocalStorage } from './localStorageProcessing'
 import { Link } from 'react-router-dom';
 import { backendServer } from './helpers';
 import InputGroup from 'react-bootstrap/InputGroup';
+import { usePromiseTracker, trackPromise } from "react-promise-tracker";
+import ButtonWithLoading from './buttonWithLoading';
 
 export default function ChangePassword() {
     const savedUser: User | null = fetchUserFromLocalStorage();
@@ -17,8 +19,9 @@ export default function ChangePassword() {
     const [newPasswordError, setNewPasswordError] = useState("")
     const [validated, setValidated] = useState(false)
 
+    const { promiseInProgress } = usePromiseTracker()
+
     function checkForErrors(data: any): boolean {
-        console.log(data)
         if (data.error) {
             const receievedOldPasswordError: string = data.password
             const receievdNewPasswordError: string = data.newPassword
@@ -41,6 +44,7 @@ export default function ChangePassword() {
             setNewPasswordError("")
             event.preventDefault();
             event.stopPropagation();
+            trackPromise(
             Axios.post(backendServer("/updatePassword"), {
                 password: oldPassword,
                 newPassword: newPassword
@@ -57,6 +61,7 @@ export default function ChangePassword() {
                     setValidated(false)
                 }
             })
+            )
         };
 
     function isFormValid(): boolean {
@@ -96,8 +101,7 @@ export default function ChangePassword() {
                                         {newPasswordError}
                                     </Form.Control.Feedback>
                                 </InputGroup>
-                                <Button className="submitbutton" type="submit" variant="primary" disabled={!isFormValid()}>Submit!</Button>
-                               
+                                <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Submit!"/>
                             </Form.Group>
                         </Form>
                     </Card.Body>

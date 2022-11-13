@@ -14,6 +14,7 @@ import ChangeUsername from './changeUsername';
 import ChangePassword from './changePassword';
 import ChangeEmail from './changeEmail';
 import AddAttraction from './addAttraction';
+import AttractionPage from './attractionPage';
 import AddThemePark from './addThemePark';
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
             <Route path='/Profile/change-password' element={<ChangePassword/>}/>
             <Route path='/addAttraction' element={<AddAttraction />} />
             <Route path="/addThemePark" element={<AddThemePark />}/>
+            <Route path='/Attractions/:attractionID' element={<AttractionPage/>}/>
           </Routes>
         </Router>
 

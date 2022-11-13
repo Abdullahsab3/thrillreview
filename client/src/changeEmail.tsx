@@ -8,6 +8,8 @@ import { fetchUserFromLocalStorage } from './localStorageProcessing'
 import { Link } from 'react-router-dom';
 import { isValidEmail, backendServer } from './helpers';
 import InputGroup from 'react-bootstrap/InputGroup';
+import ButtonWithLoading from './buttonWithLoading';
+import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 
 
 export default function ChangeEmail() {
@@ -15,6 +17,9 @@ export default function ChangeEmail() {
     const [newEmail, setNewEmail] = useState("")
     const [emailError, setEmailError] = useState("")
     const [validated, setValidated] = useState(false);
+
+
+  const { promiseInProgress } = usePromiseTracker()
 
     function checkForErrors(data: any): boolean {
         console.log(data)
@@ -34,6 +39,7 @@ export default function ChangeEmail() {
             setEmailError("")
             event.preventDefault();
             event.stopPropagation();
+            trackPromise(
             Axios.post(backendServer("/updateEmail"), {
                 newEmail: newEmail
             }).then((res) => {
@@ -49,6 +55,7 @@ export default function ChangeEmail() {
                     setValidated(false)
                 }
             })
+            )
         };
 
 
@@ -80,7 +87,7 @@ export default function ChangeEmail() {
                             </Form.Group>
 
                             <Form.Group className="mb-3">
-                                <Button type="submit" variant="primary" disabled={!isFormValid()}>Submit your email!</Button>
+                                <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Submit your email!"/>
                             </Form.Group>
 
                         </Form>

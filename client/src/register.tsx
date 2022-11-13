@@ -3,13 +3,16 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from 'react-bootstrap/Card'
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import { isValidEmail, backendServer } from './helpers';
 import "./register.css"
 import InputGroup from 'react-bootstrap/InputGroup';
+import { usePromiseTracker, trackPromise } from "react-promise-tracker";
+import ButtonWithLoading from './buttonWithLoading';
 
 function Register() {
   const navigate = useNavigate()
+
+  const { promiseInProgress } = usePromiseTracker()
 
   const [username, setusername] = useState("")
   const [usernameError, setusernameError] = useState("")
@@ -63,6 +66,7 @@ function Register() {
         setValidated(false);
       }
       else {
+        trackPromise(
         Axios.post(backendServer("/register"), {
           username: username,
           email: email,
@@ -78,6 +82,7 @@ function Register() {
             setValidated(false)
           }
         })
+        )
       }
     }
 
@@ -139,9 +144,7 @@ function Register() {
                   </Form.Control.Feedback>
                 </InputGroup>
               </Form.Group>
-
-              <Button className="submitbutton" type="submit" variant="primary" disabled={!isFormValid()}>Register</Button>
-              {/*error && <Alert key='warning' variant='warning'>{error}</Alert>*/}
+              <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Register" />
             </Form>
           </Card.Body>
 
