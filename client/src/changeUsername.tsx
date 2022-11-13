@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card'
 import Axios from 'axios'
@@ -8,8 +7,12 @@ import { fetchUserFromLocalStorage, setUserInLocalstorage } from './localStorage
 import { Link } from 'react-router-dom';
 import { backendServer } from './helpers'
 import InputGroup from 'react-bootstrap/InputGroup';
+import { usePromiseTracker, trackPromise } from "react-promise-tracker";
+import ButtonWithLoading from './buttonWithLoading';
 
 export default function ChangeUsername() {
+    const { promiseInProgress } = usePromiseTracker()
+
     const savedUser: User | null = fetchUserFromLocalStorage();
     const [newUsername, setNewUsername] = useState("")
     const [newUsernameError, setNewUsernameError] = useState("")
@@ -33,6 +36,7 @@ export default function ChangeUsername() {
             setNewUsernameError("");
             event.preventDefault();
             event.stopPropagation();
+            trackPromise(
             Axios.post(backendServer("/updateUsername"), {
                 username: newUsername
             }).then((res) => {
@@ -50,6 +54,7 @@ export default function ChangeUsername() {
                     setValidated(false)
                 }
             })
+            )
         };
 
 
@@ -79,7 +84,7 @@ export default function ChangeUsername() {
                                         {newUsernameError}
                                     </Form.Control.Feedback>
                                 </InputGroup>
-                                <Button className="submitbutton" variant="primary" disabled={!isFormValid()}>Submit your username!</Button>
+                                <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Submit your username!"/>
                             </Form.Group>
                         </Form>
                     </Card.Body>
