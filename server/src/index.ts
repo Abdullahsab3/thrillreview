@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser";
 import {validateTokens } from "./JWT";
 import {registerNewUser, updateEmail, updateUsername, sendProfileInformation, loginUser, ChangePassword} from './userManagementCallbacks';
 import {addAttraction, findAttractionById} from "./attractionCallbacks"
+import multer from 'multer'
+
 
 const app = express();
 app.use(express.json());

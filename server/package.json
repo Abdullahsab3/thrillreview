@@ -19,6 +19,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.5-lts.1",
     "sqlite3": "^5.1.2",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
