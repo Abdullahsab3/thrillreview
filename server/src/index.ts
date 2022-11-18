@@ -1,13 +1,33 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import {validateTokens } from "./JWT";
-import {registerNewUser, updateEmail, updateUsername, sendProfileInformation, loginUser, ChangePassword} from './userManagementCallbacks';
-import {addAttraction, findAttractionById} from "./attractionCallbacks"
-import multer from 'multer'
-
+import { validateTokens } from "./JWT";
+import {
+  ChangePassword,
+  loginUser,
+  registerNewUser,
+  sendProfileInformation,
+  updateEmail,
+  updateUsername,
+  addAvatar,
+  getAvatar
+} from "./userManagementCallbacks";
+import { addAttraction, findAttractionById } from "./attractionCallbacks";
+import multer from "multer";
 
 const app = express();
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 8 * 1024 * 1024,
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
+      cb(new Error("please upload an Image"));
+    }
+    cb(null, true);
+  },
+});
 app.use(express.json());
 app.use(cookieParser());
 
@@ -29,18 +49,19 @@ app.use(cors(corsOptions));
  })
 */
 
-
 // usermanagement requests
 app.post("/register", registerNewUser);
+app.post("/upload-avatar", [validateTokens, upload.single("avatar")], addAvatar);
+app.post("/get-avatar", validateTokens, getAvatar)
 app.post("/login", loginUser);
 app.post("/profile", validateTokens, sendProfileInformation);
 app.post("/updateUsername", validateTokens, updateUsername);
 app.post("/updateEmail", validateTokens, updateEmail);
-app.post("/updatePassword", validateTokens, ChangePassword)
+app.post("/updatePassword", validateTokens, ChangePassword);
 
 //attrations requests
 app.post("/addAttraction", validateTokens, addAttraction);
-app.post("/getAttraction", findAttractionById)
+app.post("/getAttraction", findAttractionById);
 
 app.get("/", (req, res) => {
   res.json({ "nothing": "yet" });

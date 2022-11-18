@@ -5,6 +5,10 @@ import { Attraction } from "./Attraction";
 
 const db = new Database("thrillreview.db");
 
+// TODO: zorg ervoor dat de andere tables ook automatisch gemaakt kunnen worden
+db.run('CREATE TABLE IF NOT EXISTS avatars \
+(id INTEGER UNIQUE, filename TEXT, type TEXT, content BLOB)')
+
 function checkForUsernameExistence(
   username: string,
   getResult: (error: any) => void,
