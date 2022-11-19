@@ -34,6 +34,7 @@ export default function ChangeAvatar() {
     function sendAvatar(uploadedFile: File | null, setFileError: React.Dispatch<SetStateAction<string>>): React.FormEventHandler<HTMLFormElement> {
         const sendAvatar: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
+                event.preventDefault();
                 if (uploadedFile) {
                     const formData = new FormData();
                     formData.append('avatar', uploadedFile)
@@ -47,7 +48,7 @@ export default function ChangeAvatar() {
                                 setValidated(false)
                             } else {
                                 setValidated(true);
-                                navigate("/home")
+                                navigate("/profile")
                             }
 
                         })
@@ -67,6 +68,7 @@ export default function ChangeAvatar() {
                     title="Change your avatar"
                     description="Drag and drop your avatar image here or choose a file to upload"
                     onSubmit={sendAvatar}
+                    
                     serverValidated={validated}
                     imageMaxSize={8 * 1024 * 1024}
                     imageWidth={360}

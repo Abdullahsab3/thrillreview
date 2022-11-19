@@ -5,13 +5,15 @@ import Card from 'react-bootstrap/Card';
 import Axios from 'axios'
 import { User } from './User'
 import { fetchUserFromLocalStorage } from './localStorageProcessing'
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { backendServer } from './helpers';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import ButtonWithLoading from './buttonWithLoading';
 
 export default function ChangePassword() {
+
+    const navigate = useNavigate()
     const savedUser: User | null = fetchUserFromLocalStorage();
     const [oldPassword, setOldPassword] = useState("")
     const [oldPasswordError, setOldPasswordError] = useState("")
@@ -53,8 +55,7 @@ export default function ChangePassword() {
                     setValidated(false)
                 } else {
                     setValidated(true)
-                    // lelijke tijdelijke oplossing
-                    window.location.replace("/")
+                    navigate("/profile")
                 }
             }).catch(function (error) {
                 if (checkForErrors(error.response.data)) {

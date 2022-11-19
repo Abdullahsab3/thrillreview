@@ -5,7 +5,7 @@ import Card from 'react-bootstrap/Card';
 import Axios from 'axios'
 import { User } from './User'
 import { fetchUserFromLocalStorage } from './localStorageProcessing'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { isValidEmail, backendServer } from './helpers';
 import InputGroup from 'react-bootstrap/InputGroup';
 import ButtonWithLoading from './buttonWithLoading';
@@ -13,6 +13,8 @@ import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 
 
 export default function ChangeEmail() {
+    const navigate = useNavigate()
+
     const savedUser: User | null = fetchUserFromLocalStorage();
     const [newEmail, setNewEmail] = useState("")
     const [emailError, setEmailError] = useState("")
@@ -36,6 +38,7 @@ export default function ChangeEmail() {
 
     const handleChangeEmail: React.FormEventHandler<HTMLFormElement> =
         (event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
             setEmailError("")
             event.preventDefault();
             event.stopPropagation();
@@ -47,8 +50,7 @@ export default function ChangeEmail() {
                     setValidated(false)
                 } else {
                     setValidated(true)
-                    // lelijke tijdelijke oplossing
-                    window.location.replace("/")
+                    navigate("/profile")
                 }
             }).catch(function (error) {
                 if (checkForErrors(error.response.data)) {
