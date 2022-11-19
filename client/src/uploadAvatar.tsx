@@ -1,117 +1,85 @@
-import React, { useState } from 'react';
-import Form from 'react-bootstrap/Form';
-import Card from 'react-bootstrap/Card'
+import React, { SetStateAction, useState } from 'react';
 import Axios from 'axios'
 import { User } from './User'
 import { fetchUserFromLocalStorage, setUserInLocalstorage } from './localStorageProcessing'
-import { Link } from 'react-router-dom';
+import CardWithImageUpload from './cardWithImageUpload';
+import { Link, useNavigate } from 'react-router-dom';
 import { backendServer } from './helpers'
-import InputGroup from 'react-bootstrap/InputGroup';
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
-import ButtonWithLoading from './buttonWithLoading';
-import "./uploadAvatar.css"
+import "./uploadAvatar.css";
+
+
+
 
 export default function UploadAvatar() {
+    const navigate = useNavigate()
 
     const { promiseInProgress } = usePromiseTracker()
-
     const savedUser: User | null = fetchUserFromLocalStorage();
-    const [uploadedFile, setUploadedFile] = useState<File | null>()
-    const [preview, setPreview] = useState("")
-    const [fileError, setFileError] = useState("")
+    const [validated, setValidated] = useState(false)
 
 
-    function sendAvatar(file: File | null) {
-        if (file) {
-            const formData = new FormData();
-            formData.append('avatar', file)
-            Axios.post(backendServer("/upload-avatar"), formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-        }
-    }
-
-    function setUploadedAvatar(f: File | null) {
-        setUploadedFile(f);
-        const objectUrl = URL.createObjectURL((f as File))
-        setPreview(objectUrl)
-    }
-
-    function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-        if (e.target.files) {
-            setUploadedAvatar(e.target.files[0]);
-        }
-    };
-    function dropHandler(e: any): void {
-        console.log('File(s) dropped');
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (e.dataTransfer.items) {
-            const file = [...e.dataTransfer.items][0].getAsFile()
-            setUploadedAvatar(file)
+    function checkForErrors(data: any, setFileError: React.Dispatch<SetStateAction<string>>): boolean {
+        if (data.error) {
+            const avatarError: string = data.error.avatar
+            if (avatarError) {
+                setFileError(avatarError);
+            } else {
+                setFileError(data.error)
+            }
+            return true;
 
         } else {
-            const file = [...e.dataTransfer.files][0]
-            setUploadedAvatar(file)
+            return false
         }
-
     }
 
-    function dragOverhandler(e: any): void {
-        e.preventDefault();
-        e.stopPropagation();
+    function sendAvatar(uploadedFile: File | null, setFileError: React.Dispatch<SetStateAction<string>>): React.FormEventHandler<HTMLFormElement> {
+        const sendAvatar: React.FormEventHandler<HTMLFormElement> =
+            (event: React.FormEvent<HTMLFormElement>) => {
+                if (uploadedFile) {
+                    const formData = new FormData();
+                    formData.append('avatar', uploadedFile)
+                    trackPromise(
+                        Axios.post(backendServer("/upload-avatar"), formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }).then((res) => {
+                            if (checkForErrors(res.data, setFileError)) {
+                                setValidated(false)
+                            } else {
+                                setValidated(true);
+                                navigate("/home")
+                            }
 
+                        })
+                    )
+                }
+
+            }
+        return sendAvatar;
     }
-
-    function isFormValid() {
-        return uploadedFile;
-    }
-
-
-
 
 
     if (savedUser) {
 
         return (
             <div className='col d-flex justify-content-center'>
-              
-                <Card className='card' border='secondary'
-                    onDrop={dropHandler}
-                    onDragOver={dragOverhandler}>
-                    <Card.Body>
-                        <Card.Title ><strong>Upload your avatar</strong></Card.Title>
-                        
-                        <Form.Group className="mb-3">
-                            <Form.Label>Drag and drop your avatar image here or choose a file to upload</Form.Label>
-                            <InputGroup hasValidation>
-
-                                <Form.Control
-                                    required
-                                    type="file"
-                                    id="file"
-                                    onChange={handleFileChange}
-                                    isInvalid={(fileError as any)} />
-                                <Form.Control.Feedback type="invalid">
-                                    {fileError}
-                                </Form.Control.Feedback>
-                            </InputGroup>
-                            
-                            <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Submit" />
-
-                        </Form.Group>
-                        {preview && <Card.Img variant="bottom" className="preview" src={preview}/>}
-                    </Card.Body>
-                </Card>
-
+                <CardWithImageUpload
+                    title="Upload your avatar"
+                    description="Drag and drop your avatar image here or choose a file to upload"
+                    onSubmit={sendAvatar}
+                    serverValidated={validated}
+                    imageMaxSize={8 * 1024 * 1024}
+                    imageWidth={360}
+                    imageHeight={360}
+                    promiseInProgress={promiseInProgress} />
             </div>
         );
     } else {
         return (
-            <div className='changeUsername'>
+            <div className='changeAvatar'>
                 In order to change your avatar, you have to <Link to="/Login">Log in first</Link>
             </div>
         )
