@@ -8,8 +8,7 @@ import { backendServer } from './helpers'
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 
 
-
-export default function UploadAvatar() {
+export default function ChangeAvatar() {
     const navigate = useNavigate()
 
     const { promiseInProgress } = usePromiseTracker()
@@ -39,7 +38,7 @@ export default function UploadAvatar() {
                     const formData = new FormData();
                     formData.append('avatar', uploadedFile)
                     trackPromise(
-                        Axios.post(backendServer("/upload-avatar"), formData, {
+                        Axios.post(backendServer("/change-avatar"), formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             }
@@ -65,7 +64,7 @@ export default function UploadAvatar() {
         return (
             <div className='col d-flex justify-content-center'>
                 <CardWithImageUpload
-                    title="Upload your avatar"
+                    title="Change your avatar"
                     description="Drag and drop your avatar image here or choose a file to upload"
                     onSubmit={sendAvatar}
                     serverValidated={validated}
@@ -77,7 +76,7 @@ export default function UploadAvatar() {
         );
     } else {
         return (
-            <div className='uploadAvatar'>
+            <div className='changeAvatar'>
                 In order to change your avatar, you have to <Link to="/Login">Log in first</Link>
             </div>
         )

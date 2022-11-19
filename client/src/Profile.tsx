@@ -58,7 +58,7 @@ function Profile() {
 
                         <tr><th><img src={avatar} id="profileAvatar" /></th></tr>
                         <tr><th>Your profile avatar</th></tr>
-                        <tr><th><Button onClick={() => navigate("/profile/change-username")}>Change your avatar</Button></th></tr>
+                        <tr><th><Button onClick={() => navigate("/profile/change-avatar")}>Change your avatar</Button></th></tr>
                     </tbody>
                 </Table>
 

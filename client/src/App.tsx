@@ -17,6 +17,7 @@ import AddAttraction from './addAttraction';
 import AttractionPage from './attractionPage';
 import AddThemePark from './addThemePark';
 import UploadAvatar from './uploadAvatar';
+import ChangeAvatar from './changeAvatar';
 
 function App() {
 
@@ -43,10 +44,11 @@ function App() {
             <Route path='/Profile/change-username' element={<ChangeUsername/>} />
             <Route path='/Profile/change-email' element={<ChangeEmail/>}/>
             <Route path='/Profile/change-password' element={<ChangePassword/>}/>
+            <Route path="/profile/change-avatar" element={<ChangeAvatar/>}/>
             <Route path='/upload-avatar' element={<UploadAvatar/>}/>
             <Route path='/addAttraction' element={<AddAttraction />} />
             <Route path="/addThemePark" element={<AddThemePark />}/>
-            <Route path='/Attractions/:attractionID' element={<AttractionPage/>}/>
+            <Route path='/Attractions/:attractionID' element={<AttractionPage/>}/>x
           </Routes>
         </Router>
 
