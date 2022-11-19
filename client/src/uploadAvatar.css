@@ -1,0 +1,8 @@
+.preview {
+    display:block;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 10%;
+    height: auto;
+}

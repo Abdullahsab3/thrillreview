@@ -10,7 +10,8 @@ import {
   updateEmail,
   updateUsername,
   addAvatar,
-  getAvatar
+  getAvatar,
+  updateAvatar
 } from "./userManagementCallbacks";
 import { addAttraction, findAttractionById } from "./attractionCallbacks";
 import multer from "multer";
@@ -52,6 +53,7 @@ app.use(cors(corsOptions));
 // usermanagement requests
 app.post("/register", registerNewUser);
 app.post("/upload-avatar", [validateTokens, upload.single("avatar")], addAvatar);
+app.post("/change-avatar", [validateTokens, upload.single("avatar")], updateAvatar)
 app.post("/get-avatar", validateTokens, getAvatar)
 app.post("/login", loginUser);
 app.post("/profile", validateTokens, sendProfileInformation);

@@ -211,10 +211,28 @@ function getAvatar(req: any, res: any) {
   );
 }
 
+function updateAvatar(req: any, res: any) {
+  const user: User = req.user;
+  const userid: number = user.id;
+  const { originalname, mimetype, buffer } = req.file;
+  db.run(
+    "UPDATE avatars set filename = ?, type = ?, content = ? WHERE id = ?",
+    [originalname, mimetype, buffer, userid],
+    function (error: Error) {
+      if (error) {
+        res.status(400).json({ error: true, file: error.message});
+      } else {
+        res.status(200).json({ error: false });
+      }
+    },
+  );
+}
+
 export {
   addAvatar,
-  getAvatar,
+  updateAvatar,
   ChangePassword,
+  getAvatar,
   loginUser,
   registerNewUser,
   sendProfileInformation,
