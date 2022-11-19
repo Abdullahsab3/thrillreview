@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Axios from 'axios'
 import { User } from './User'
-import { fetchUserFromLocalStorage } from './localStorageProcessing'
+import { fetchUserFromLocalStorage } from '../localStorageProcessing'
 import { Link, useNavigate } from 'react-router-dom';
-import { isValidEmail, backendServer } from './helpers';
+import { isValidEmail, backendServer } from '../helpers';
 import InputGroup from 'react-bootstrap/InputGroup';
-import ButtonWithLoading from './buttonWithLoading';
+import ButtonWithLoading from '../higherOrderComponents/buttonWithLoading';
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 
 

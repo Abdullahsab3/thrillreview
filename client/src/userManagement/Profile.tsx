@@ -5,9 +5,9 @@ import { User } from './User'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table'
-import { fetchUserFromLocalStorage } from './localStorageProcessing'
-import { backendServer } from './helpers'
-import './profile.css'
+import { fetchUserFromLocalStorage } from '../localStorageProcessing'
+import { backendServer } from '../helpers'
+import './styling/profile.css'
 
 import { Buffer } from "buffer";
 

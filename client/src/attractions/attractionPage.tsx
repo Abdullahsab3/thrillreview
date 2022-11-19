@@ -2,7 +2,7 @@ import Axios from "axios"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import { Attraction } from "./Attraction"
-import { backendServer } from "./helpers"
+import { backendServer } from "../helpers"
 
 export default function AttractionPage() {
     const [attraction, setAttraction] = useState<Attraction>()
@@ -24,7 +24,6 @@ export default function AttractionPage() {
         console.log(error)
         setError(error.response.data)
     })
-
     return (
         <div>
             {error ? error : JSON.stringify(attraction)}

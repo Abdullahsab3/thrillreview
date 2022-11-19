@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import InputGroup from 'react-bootstrap/InputGroup';
 import ButtonWithLoading from './buttonWithLoading';
-import "./cardWithImageUpload.css"
+import "./styling/cardWithImageUpload.css"
 import { Button } from 'react-bootstrap';
 
 /* 

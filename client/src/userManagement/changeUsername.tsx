@@ -3,12 +3,12 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card'
 import Axios from 'axios'
 import { User } from './User'
-import { fetchUserFromLocalStorage, setUserInLocalstorage } from './localStorageProcessing'
+import { fetchUserFromLocalStorage, setUserInLocalstorage } from '../localStorageProcessing'
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { backendServer } from './helpers'
+import { backendServer } from '../helpers'
 import InputGroup from 'react-bootstrap/InputGroup';
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
-import ButtonWithLoading from './buttonWithLoading';
+import ButtonWithLoading from '../higherOrderComponents/buttonWithLoading';
 
 export default function ChangeUsername() {
     const navigate = useNavigate();

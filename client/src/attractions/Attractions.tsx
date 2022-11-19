@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import { Search } from 'react-bootstrap-icons';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useState } from 'react';
-import CardWithLinkTo from './HigherOrderComponents';
+import CardWithLinkTo from '../higherOrderComponents/HigherOrderComponents';
 
 function Attractions() {
 

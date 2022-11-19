@@ -1,4 +1,4 @@
-import CardWithLinkTo from './HigherOrderComponents';
+import CardWithLinkTo from '../higherOrderComponents/HigherOrderComponents';
 
 
 function ThemePark() {

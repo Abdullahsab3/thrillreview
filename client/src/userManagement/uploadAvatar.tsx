@@ -1,10 +1,10 @@
 import React, { SetStateAction, useState } from 'react';
 import Axios from 'axios'
 import { User } from './User'
-import { fetchUserFromLocalStorage, setUserInLocalstorage } from './localStorageProcessing'
-import CardWithImageUpload from './cardWithImageUpload';
+import { fetchUserFromLocalStorage, setUserInLocalstorage } from '../localStorageProcessing'
+import CardWithImageUpload from '../higherOrderComponents/cardWithImageUpload';
 import { Link, useNavigate } from 'react-router-dom';
-import { backendServer } from './helpers'
+import { backendServer } from '../helpers'
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 
 
