@@ -211,6 +211,26 @@ function getAvatar(req: any, res: any) {
   );
 }
 
+function checkForUserAvatar(
+  id: number,
+  getErr: (error: string | null, res: number | null) => void,
+) {
+  db.get(
+    "SELECT id FROM avatars WHERE id = ?",
+    id,
+    (err: Error, result: any) => {
+      if (err) {
+        getErr(err.message, null);
+      }
+      if (result) {
+        getErr(null, result.id);
+      } else {
+        getErr(null, null);
+      }
+    },
+  );
+}
+
 function updateAvatar(req: any, res: any) {
   const user: User = req.user;
   const userid: number = user.id;
@@ -220,7 +240,7 @@ function updateAvatar(req: any, res: any) {
     [originalname, mimetype, buffer, userid],
     function (error: Error) {
       if (error) {
-        res.status(400).json({ error: true, file: error.message});
+        res.status(400).json({ error: true, avatar: error.message });
       } else {
         res.status(200).json({ error: false });
       }
@@ -228,14 +248,29 @@ function updateAvatar(req: any, res: any) {
   );
 }
 
+function setAvatar(req: any, res: any) {
+  const user: User = req.user;
+  const userid: number = user.id;
+  checkForUserAvatar(userid, (error, result) => {
+    if(error) {
+      res.status(400).json({error: true, avatar: error})
+    } else if (result) {
+      updateAvatar(req, res)
+    } else {
+      addAvatar(req, res)
+    }
+  })
+}
+
 export {
   addAvatar,
-  updateAvatar,
   ChangePassword,
   getAvatar,
   loginUser,
   registerNewUser,
   sendProfileInformation,
+  updateAvatar,
   updateEmail,
   updateUsername,
+  setAvatar
 };

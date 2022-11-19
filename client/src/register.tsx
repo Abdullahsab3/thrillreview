@@ -147,7 +147,6 @@ function Register() {
               <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Register" />
             </Form>
           </Card.Body>
-
         </Card>
       </div>
     </div>

@@ -16,6 +16,7 @@ interface cardProps {
     title: string;
     description: string;
     onSubmit: (uploadedFile: File, setFileError: React.Dispatch<SetStateAction<string>>) => React.FormEventHandler<HTMLFormElement>;
+    
     serverValidated: boolean;
     imageMaxSize: number;
     imageWidth?: number;
