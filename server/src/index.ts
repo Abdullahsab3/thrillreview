@@ -14,7 +14,7 @@ import {
   updateAvatar,
   setAvatar
 } from "./userManagementCallbacks";
-import { addAttraction, findAttractionById } from "./attractionCallbacks";
+import { addAttraction, findAttractionById, findReview, setAttractionReview } from "./attractionCallbacks";
 import multer from "multer";
 
 const app = express();
@@ -65,6 +65,8 @@ app.post("/updatePassword", validateTokens, ChangePassword);
 //attrations requests
 app.post("/addAttraction", validateTokens, addAttraction);
 app.post("/getAttraction", findAttractionById);
+app.post("/upload-review", validateTokens, setAttractionReview)
+app.post("/get-review", findReview)
 
 app.get("/", (req, res) => {
   res.json({ "nothing": "yet" });

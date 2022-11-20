@@ -2,12 +2,20 @@ import { Database } from "sqlite3";
 import { User } from "./User";
 import bcrypt from "bcrypt";
 import { Attraction } from "./Attraction";
+import { AnyARecord } from "dns";
+import Review from "./Review";
 
 const db = new Database("thrillreview.db");
 
 // TODO: zorg ervoor dat de andere tables ook automatisch gemaakt kunnen worden
-db.run('CREATE TABLE IF NOT EXISTS avatars \
-(id INTEGER UNIQUE, filename TEXT, type TEXT, content BLOB)')
+db.run(
+"CREATE TABLE IF NOT EXISTS avatars \
+(id INTEGER UNIQUE, filename TEXT, type TEXT, content BLOB)",
+);
+db.run(
+"CREATE TABLE IF NOT EXISTS attractionreview \
+(attractionID INTEGER, userID INTEGER, review TEXT)",
+);
 
 function checkForUsernameExistence(
   username: string,
@@ -121,6 +129,26 @@ function getAttraction(
           ),
         );
       } else {
+        getResult(null, null);
+      }
+    },
+  );
+}
+
+function getReview(
+  attractionID: number,
+  userID: number,
+  getResult: (error: any, review: Review | null) => void,
+) {
+  db.get(
+    "SELECT * FROM attractionreview WHERE attractionID = ? AND userID = ?",
+    [attractionID, userID],
+    function (error: any, result: any) {
+      if(error) {
+        getResult({error: true, review: error.message}, null)
+      } else if(result) {
+        getResult(null, new Review(attractionID, userID, result.review))
+      } else {
         getResult(null, null)
       }
     },
@@ -132,6 +160,7 @@ export {
   checkForUserExistence,
   checkForUsernameExistence,
   db,
+  getAttraction,
   validateUserPassword,
-  getAttraction
+  getReview
 };
