@@ -1,4 +1,4 @@
-import '../attractions/styling/addThemePark.css'
+import './styling/addThemePark.css'
 import React, { useState } from 'react';
 import { Card, Dropdown } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
