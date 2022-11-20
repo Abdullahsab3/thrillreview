@@ -19,7 +19,10 @@ function AddThemePark() {
     const [street, setStreet] = useState("")
     const [streetNr, setStreetNr] = useState("")
     const [postalCode, setPostalCode] = useState("")
-
+    const [indoor, setIndoor] = useState(false)
+    const [outdoor, setOutdoor] = useState(false)
+    const [url, setUrl] = useState("")
+    
 
     const [validated, setValidated] = useState(false);
 
@@ -99,6 +102,24 @@ function AddThemePark() {
                             </Row>
                             <Row>
                                 <AddressFormGroup />
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Form.Group>
+                                        <Form.Label >Type</Form.Label>
+                                        <InputGroup><Form.Check label="Indoor park" onChange={(e) => indoor ? setIndoor(false) : setIndoor(true)}/> </InputGroup>
+                                        <InputGroup><Form.Check label="Outdoor park" onChange={(e) => outdoor ? setOutdoor(true) : setOutdoor(false)}/> </InputGroup>
+                                    </Form.Group>
+                                </Col>  
+                                <Col>
+                                <Form.Group>
+                                        <Form.Label> Link to themeparks website </Form.Label>
+                                        <Form.Control type="url" onChange={(e) => setUrl(e.target.value)} />
+                                        <Form.Control.Feedback type="invalid">
+                                            A valid url should be given.
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                </Col>  
                             </Row>
                             <Button type="submit">Submit</Button>
                         </Form>
