@@ -14,7 +14,7 @@ db.run(
 );
 db.run(
 "CREATE TABLE IF NOT EXISTS attractionreview \
-(attractionID INTEGER, userID INTEGER, review TEXT)",
+(attractionID INTEGER, userID INTEGER, review TEXT, date TEXT)",
 );
 
 function checkForUsernameExistence(
@@ -147,12 +147,25 @@ function getReview(
       if(error) {
         getResult({error: true, review: error.message}, null)
       } else if(result) {
-        getResult(null, new Review(attractionID, userID, result.review))
+        getResult(null, new Review(attractionID, userID, result.review, result.date))
       } else {
         getResult(null, null)
       }
     },
   );
+}
+
+function getAttractionReviews(attractionID: number, getResult: (error: any | null, result: any | null) => void) {
+  db.all("SELECT * FROM attractionreview WHERE attractionID = ?", [attractionID], function (error, result){
+    if(error) {
+      getResult({error: true, reviews: error.message}, null)
+    } else if(result) {
+      getResult(null, {reviews: result})
+    } else {
+      getResult(null, null)
+    }
+  } )
+
 }
 
 export {
@@ -162,5 +175,6 @@ export {
   db,
   getAttraction,
   validateUserPassword,
-  getReview
+  getReview,
+  getAttractionReviews
 };

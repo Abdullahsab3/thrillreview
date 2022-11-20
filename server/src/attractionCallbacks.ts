@@ -1,5 +1,5 @@
 import { Attraction } from "./Attraction";
-import { db, getAttraction, getReview } from "./database";
+import { db, getAttraction, getAttractionReviews, getReview } from "./database";
 import { User } from "./User";
 
 function addAttraction(req: any, res: any) {
@@ -61,7 +61,7 @@ function addAttractionReview(
   getErr: (error: any) => void,
 ) {
   db.run(
-    "INSERT INTO attractionreview (attractionID, userID, review) VALUES(?, ?, ?)",
+    "INSERT INTO attractionreview (attractionID, userID, review, date) VALUES(?, ?, ?, datetime(\'now\'))",
     [attractionID, userID, review],
     (error: Error) => {
       if (error) {
@@ -80,7 +80,7 @@ function updateAttractionReview(
   getErr: (error: any) => void,
 ) {
   db.run(
-    "UPDATE  attractionreview SET review = ? WHERE attractionID = ? AND userID = ?",
+    "UPDATE  attractionreview SET review = ?, date = datetime(\'now\') WHERE attractionID = ? AND userID = ?",
     [review, attractionID, userID],
     (error: Error) => {
       if (error) {
@@ -139,10 +139,23 @@ function findReview(req: any, res: any) {
     if (error) {
       res.status(400).json(error);
     } else if (result) {
-      res.status(200).json({ error: false, review: result.review });
+      res.status(200).json({ error: false, review: result.review, date: result.date });
     } else {
       res.json({ error: true, review: "No review is found" });
     }
   });
 }
-export { addAttraction, findAttractionById, findReview, setAttractionReview };
+
+function findAttractionReviews(req: any, res: any) {
+  const attractionID = req.body.attractionID
+  getAttractionReviews(attractionID, function (error, result) {
+    if(error) {
+      res.status(400).json(error)
+    } else if(result) {
+      res.status(200).json(result)
+    } else {
+      res.status(400).json({error: true, reviews: "No reviews found"})
+    }
+  })
+}
+export { addAttraction, findAttractionById, findReview, setAttractionReview, findAttractionReviews };
