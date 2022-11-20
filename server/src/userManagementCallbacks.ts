@@ -143,7 +143,7 @@ function updateUsername(req: any, res: any) {
 }
 
 function updateEmail(req: any, res: any) {
-  const user: User = (req as any).user;
+  const user: User = req.user;
   const userid: number = user.id;
   const newEmail: string = (req as any).body.newEmail;
 
@@ -169,11 +169,108 @@ function updateEmail(req: any, res: any) {
   });
 }
 
+function addAvatar(req: any, res: any) {
+  if (!req.file) {
+    return res.status(400).json({ error: true, file: "please provide a file" });
+  } else {
+    const user: User = req.user;
+    const userid: number = user.id;
+    const { originalname, mimetype, buffer } = req.file;
+    db.run(
+      "INSERT INTO avatars (id, filename, type, content) VALUES(?, ?, ?, ?)",
+      [userid, originalname, mimetype, buffer],
+      function (error: Error) {
+        if (error) {
+          res.status(400).json({ error: true, file: error.message });
+        } else {[
+            res.status(200).json({ error: false }),
+          ];}
+      },
+    );
+  }
+}
+
+function getAvatar(req: any, res: any) {
+  const user: User = req.user;
+  const userid: number = user.id;
+  db.get(
+    "SELECT * FROM avatars WHERE id = ?",
+    [userid],
+    (err: Error, result: any) => {
+      if (err) {
+        return res.status(400).json({ error: err.message });
+      }
+      if (result) {
+        res.set("Content-Type", result.type);
+        // hier kan je informatie over de profiel sturen naar de client
+        res.status(200).send(result.content);
+      } else {
+        res.status(400).json({ error: "Something went wrong." });
+      }
+    },
+  );
+}
+
+function checkForUserAvatar(
+  id: number,
+  getErr: (error: string | null, res: number | null) => void,
+) {
+  db.get(
+    "SELECT id FROM avatars WHERE id = ?",
+    id,
+    (err: Error, result: any) => {
+      if (err) {
+        getErr(err.message, null);
+      }
+      if (result) {
+        getErr(null, result.id);
+      } else {
+        getErr(null, null);
+      }
+    },
+  );
+}
+
+function updateAvatar(req: any, res: any) {
+  const user: User = req.user;
+  const userid: number = user.id;
+  const { originalname, mimetype, buffer } = req.file;
+  db.run(
+    "UPDATE avatars set filename = ?, type = ?, content = ? WHERE id = ?",
+    [originalname, mimetype, buffer, userid],
+    function (error: Error) {
+      if (error) {
+        res.status(400).json({ error: true, avatar: error.message });
+      } else {
+        res.status(200).json({ error: false });
+      }
+    },
+  );
+}
+
+function setAvatar(req: any, res: any) {
+  const user: User = req.user;
+  const userid: number = user.id;
+  checkForUserAvatar(userid, (error, result) => {
+    if(error) {
+      res.status(400).json({error: true, avatar: error})
+    } else if (result) {
+      updateAvatar(req, res)
+    } else {
+      addAvatar(req, res)
+    }
+  })
+}
+
 export {
+  addAvatar,
   ChangePassword,
+  getAvatar,
   loginUser,
   registerNewUser,
   sendProfileInformation,
+  updateAvatar,
   updateEmail,
   updateUsername,
+  setAvatar
 };

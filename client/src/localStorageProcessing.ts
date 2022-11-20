@@ -1,4 +1,4 @@
-import {User} from './User'
+import {User} from './userManagement/User'
 
 export function fetchUserFromLocalStorage(): User | null {
     const savedUser: string | null = localStorage.getItem("user")

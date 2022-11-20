@@ -1,21 +1,22 @@
-import './App.css';
+import './styling/App.css';
 import Navigationbar from './Navigationbar';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Routes } from 'react-router-dom'
 import Home from './Home';
 import Map from './Map'
-import ThemePark from './ThemeParks';
-import Attractions from './Attractions';
-import Login from './login'
-import Profile from './Profile'
-import Register from './register';
+import ThemePark from './themeParks/ThemeParks';
+import Attractions from './attractions/Attractions';
+import Login from './userManagement/login'
+import Profile from './userManagement/Profile'
+import Register from './userManagement/register';
 import { HelmetProvider } from 'react-helmet-async'; // moet om mem leaks te voorkomen als je met helmet werkt
-import ChangeUsername from './changeUsername';
-import ChangePassword from './changePassword';
-import ChangeEmail from './changeEmail';
-import AddAttraction from './addAttraction';
-import AttractionPage from './attractionPage';
-import AddThemePark from './addThemePark';
+import ChangeUsername from './userManagement/changeUsername';
+import ChangePassword from './userManagement/changePassword';
+import ChangeEmail from './userManagement/changeEmail';
+import AddAttraction from './attractions/addAttraction';
+import AttractionPage from './attractions/attractionPage';
+import AddThemePark from './themeParks/addThemePark';
+import UploadAvatar from './userManagement/uploadAvatar';
 
 function App() {
 
@@ -42,9 +43,10 @@ function App() {
             <Route path='/Profile/change-username' element={<ChangeUsername/>} />
             <Route path='/Profile/change-email' element={<ChangeEmail/>}/>
             <Route path='/Profile/change-password' element={<ChangePassword/>}/>
+            <Route path='/profile/upload-avatar' element={<UploadAvatar/>}/>
             <Route path='/addAttraction' element={<AddAttraction />} />
             <Route path="/addThemePark" element={<AddThemePark />}/>
-            <Route path='/Attractions/:attractionID' element={<AttractionPage/>}/>
+            <Route path='/Attractions/:attractionID' element={<AttractionPage/>}/>x
           </Routes>
         </Router>
 

@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from 'react-bootstrap/Card'
 import Form from 'react-bootstrap/Form';
-import { isValidEmail, backendServer } from './helpers';
-import "./register.css"
+import { isValidEmail, backendServer } from '../helpers';
+import "./styling/register.css"
 import InputGroup from 'react-bootstrap/InputGroup';
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
-import ButtonWithLoading from './buttonWithLoading';
+import ButtonWithLoading from '../higherOrderComponents/buttonWithLoading';
 
 function Register() {
   const navigate = useNavigate()
@@ -147,7 +147,6 @@ function Register() {
               <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Register" />
             </Form>
           </Card.Body>
-
         </Card>
       </div>
     </div>

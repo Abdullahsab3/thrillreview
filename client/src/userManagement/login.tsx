@@ -4,12 +4,12 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card'
 import { User } from './User'
 import { Navigate } from 'react-router-dom';
-import { setUserInLocalstorage, fetchUserFromLocalStorage } from './localStorageProcessing'
-import { backendServer } from './helpers'
+import { setUserInLocalstorage, fetchUserFromLocalStorage } from '../localStorageProcessing'
+import { backendServer } from '../helpers'
 import InputGroup from 'react-bootstrap/InputGroup';
-import './login.css'
+import './styling/login.css'
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
-import ButtonWithLoading from './buttonWithLoading'
+import ButtonWithLoading from '../higherOrderComponents/buttonWithLoading'
 import { Link } from 'react-router-dom';
 
 function Login() {

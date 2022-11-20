@@ -1,10 +1,10 @@
-import './Navigationbar.css';
+import './styling/Navigationbar.css';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import { NavLink as RouterLink } from 'react-router-dom';
-import { User } from "./User"
+import { User } from "./userManagement/User"
 import { useState } from 'react'
-import logo from './logo.png'
+import logo from './media/logo.png'
 
 
 function Navigationbar() {

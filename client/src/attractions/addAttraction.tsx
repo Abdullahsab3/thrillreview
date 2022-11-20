@@ -1,4 +1,4 @@
-import './addAttraction.css'
+import './styling/addAttraction.css'
 import React, { useState } from 'react';
 import { Card, Dropdown } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
@@ -6,7 +6,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Axios from 'axios'
 import { useNavigate } from 'react-router-dom';
-import { backendServer } from './helpers';
+import { backendServer } from '../helpers';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { Grid } from 'react-bootstrap-icons';
