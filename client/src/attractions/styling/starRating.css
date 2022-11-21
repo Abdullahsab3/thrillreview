@@ -1,0 +1,12 @@
+#starButton {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+  .on {
+    color: #fa9a0a;
+  }
+  .off {
+    color: #ccc;
+  }

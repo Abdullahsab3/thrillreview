@@ -14,7 +14,7 @@ db.run(
 );
 db.run(
 "CREATE TABLE IF NOT EXISTS attractionreview \
-(attractionID INTEGER, userID INTEGER, review TEXT, date TEXT)",
+(attractionID INTEGER, userID INTEGER, review TEXT, stars INTEGERS, date TEXT)",
 );
 
 function checkForUsernameExistence(
@@ -147,7 +147,7 @@ function getReview(
       if(error) {
         getResult({error: true, review: error.message}, null)
       } else if(result) {
-        getResult(null, new Review(attractionID, userID, result.review, result.date))
+        getResult(null, new Review(attractionID, userID, result.review, result.rating, result.date))
       } else {
         getResult(null, null)
       }

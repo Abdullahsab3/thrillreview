@@ -5,12 +5,14 @@ import { backendServer } from "../helpers"
 import { fetchUserFromLocalStorage } from "../localStorageProcessing"
 import { getuserAvatar, getUsername, User } from "../userManagement/User"
 import WriteReview from "./reviewForm"
+import StarRating from "./starRating"
 import "./styling/review.css"
 
 interface ReviewProps {
     userID: number
     attractionID: string
     reviewText: string
+    rating: number
     date: string
 }
 export default function Review(props: ReviewProps) {
@@ -62,9 +64,13 @@ export default function Review(props: ReviewProps) {
                 <Card.Subtitle>{props.date}</Card.Subtitle>
                 {editedClicked ?
                     <WriteReview attractionID={props.attractionID} edit /> :
-                    <Card.Text>
-                        {props.reviewText}
-                    </Card.Text>}
+                    <div>
+                        <StarRating rating={props.rating}/>
+                        <Card.Text>
+                            {props.reviewText}
+                        </Card.Text>
+                    </div>}
+
             </Card>
 
         </div>

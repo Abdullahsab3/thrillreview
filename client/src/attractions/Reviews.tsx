@@ -34,7 +34,7 @@ export default function Reviews(props: ReviewsProps) {
             <h1>Reviews</h1>
             <WriteReview attractionID={props.attractionID}/>
             {reviews.map(review => {
-                return(<Review attractionID={props.attractionID} userID={(review as any).userID} reviewText={(review as any).review} date={(review as any).date}/>)
+                return(<Review attractionID={props.attractionID} userID={(review as any).userID} reviewText={(review as any).review} rating={(review as any).stars} date={(review as any).date}/>)
             })}
         </div>
     )

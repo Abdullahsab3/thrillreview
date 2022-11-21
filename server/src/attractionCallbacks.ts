@@ -58,11 +58,12 @@ function addAttractionReview(
   attractionID: number,
   userID: number,
   review: string,
+  stars: number,
   getErr: (error: any | null) => void,
 ) {
   db.run(
-    "INSERT INTO attractionreview (attractionID, userID, review, date) VALUES(?, ?, ?, datetime(\'now\'))",
-    [attractionID, userID, review],
+    "INSERT INTO attractionreview (attractionID, userID, review, stars, date) VALUES(?, ?, ?, ?, datetime(\'now\'))",
+    [attractionID, userID, review, stars],
     (error: Error) => {
       if (error) {
         getErr({error: true, review: error.message});
@@ -77,11 +78,12 @@ function updateAttractionReview(
   attractionID: number,
   userID: number,
   review: string,
+  stars: number,
   getErr: (error: any) => void,
 ) {
   db.run(
-    "UPDATE  attractionreview SET review = ?, date = datetime(\'now\') WHERE attractionID = ? AND userID = ?",
-    [review, attractionID, userID],
+    "UPDATE  attractionreview SET review = ?, stars = ?, date = datetime(\'now\') WHERE attractionID = ? AND userID = ?",
+    [review, stars, attractionID, userID],
     (error: Error) => {
       if (error) {
         getErr({ error: true, review: error.message });
@@ -95,6 +97,7 @@ function updateAttractionReview(
 function setAttractionReview(req: any, res: any) {
   const attractionID = req.body.attractionID;
   const review = req.body.review;
+  const stars = req.body.stars
   const user: User = req.user;
   const userID: number = user.id;
   getAttraction(attractionID, function (error, result) {
@@ -109,6 +112,7 @@ function setAttractionReview(req: any, res: any) {
             attractionID,
             userID,
             review,
+            stars,
             function (error) {
               if (error) {
                 return res.status(400).json(error);
@@ -118,7 +122,7 @@ function setAttractionReview(req: any, res: any) {
             },
           );
         } else {
-          addAttractionReview(attractionID, userID, review, function (error) {
+          addAttractionReview(attractionID, userID, review, stars, function (error) {
             if (error) {
               return res.status(400).json(error);
             } else {
@@ -143,7 +147,7 @@ function findReview(req: any, res: any) {
     if (error) {
       res.status(400).json(error);
     } else if (result) {
-      res.status(200).json({ error: false, review: result.review, date: result.date });
+      res.status(200).json({ error: false, review: result.review, rating: result.rating, date: result.date });
     } else {
       res.json({ error: false, review: "" });
     }

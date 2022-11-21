@@ -6,6 +6,7 @@ import { backendServer } from "../helpers";
 import ButtonWithLoading from "../higherOrderComponents/buttonWithLoading";
 import { fetchUserFromLocalStorage } from "../localStorageProcessing";
 import { User } from "../userManagement/User";
+import StarRatingForm from "./starRatingForm";
 import "./styling/reviewForm.css"
 
 interface writReviewProps {
@@ -18,6 +19,7 @@ export default function WriteReview(props: writReviewProps) {
 
 
     const [review, setReview] = useState("")
+    const [rating, setRating] = useState<number | null>(null)
     const [reviewError, setReviewError] = useState("")
     const [validated, setValidated] = useState(false)
     const [notAllowed, setnotAllowed] = useState(false)
@@ -25,7 +27,7 @@ export default function WriteReview(props: writReviewProps) {
     const { promiseInProgress } = usePromiseTracker()
 
     function isFormValid() {
-        return review;
+        return review && rating;
     }
 
     function checkForErrors(data: any) {
@@ -45,7 +47,11 @@ export default function WriteReview(props: writReviewProps) {
                         setValidated(false)
                     } else if (res.data.review) {
                         setReview(res.data.review)
-                        setnotAllowed(true)
+                        if (props.edit) {
+                            setnotAllowed(false)
+                        } else {
+                            setnotAllowed(true)
+                        }
                     }
                 }
             }).catch((error) => {
@@ -61,7 +67,8 @@ export default function WriteReview(props: writReviewProps) {
             trackPromise(
                 Axios.post(backendServer("/upload-review"), {
                     attractionID: props.attractionID,
-                    review: review
+                    review: review,
+                    stars: rating
                 }).then((res) => {
                     if (checkForErrors((res as any).data)) {
                         setValidated(false)
@@ -70,6 +77,7 @@ export default function WriteReview(props: writReviewProps) {
 
                     }
                 }).catch(function (error) {
+                    console.log(error)
                     if (checkForErrors(error.response.data)) {
                         setValidated(false)
                     }
@@ -79,15 +87,10 @@ export default function WriteReview(props: writReviewProps) {
 
     useEffect(() => {
         if (user) {
-
             getUserReview()
-            if (props.edit) {
-                setnotAllowed(false)
-            }
 
         }
     }, [])
-
 
     return (<div>
         <Form noValidate validated={validated} onSubmit={handleUploadingReview} className="comment">
@@ -99,14 +102,31 @@ export default function WriteReview(props: writReviewProps) {
                     cols={100}
                     onChange={(e) => setReview(e.target.value)}
                     placeholder="Write a review"
-                    value={notAllowed ? "You already posted a review for this attraction. You can edit your review" : review}
+                    value={review}
                     disabled={notAllowed}
                     isInvalid={(reviewError as any)} />
                 <Form.Control.Feedback type="invalid">
                     {reviewError}
                 </Form.Control.Feedback>
             </InputGroup>
-            {notAllowed ? <Button className="submitreview" onClick={() => { setnotAllowed(false) }}>Edit my review</Button> :
+            {!notAllowed &&
+
+                <InputGroup>
+                <div className="d-flex flex-column">
+                    <Form.Label>Rate this attraction: </Form.Label>
+                    <StarRatingForm getRating={function (rating: number) {
+                        if (rating === -1) {
+                            setRating(null)
+                        } else {
+                            setRating(rating)
+                        }
+                    }} />
+                    </div>
+
+                </InputGroup>}
+            {notAllowed ?
+                <Button className="submitreview"
+                    onClick={() => { setnotAllowed(false) }}>Edit my review</Button> :
                 <ButtonWithLoading className="submitreview" disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Post" />}
         </Form>
 
