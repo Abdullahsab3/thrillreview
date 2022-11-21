@@ -5,3 +5,9 @@
     background-image: url(/public/registerbg.jpeg);
     background-size: cover;
   }
+
+.Register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

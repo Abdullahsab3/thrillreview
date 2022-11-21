@@ -58,16 +58,16 @@ function addAttractionReview(
   attractionID: number,
   userID: number,
   review: string,
-  getErr: (error: any) => void,
+  getErr: (error: any | null) => void,
 ) {
   db.run(
     "INSERT INTO attractionreview (attractionID, userID, review, date) VALUES(?, ?, ?, datetime(\'now\'))",
     [attractionID, userID, review],
     (error: Error) => {
       if (error) {
-        getErr({ error: true, review: error.message });
+        getErr({error: true, review: error.message});
       } else {
-        getErr({ error: false });
+        getErr(null);
       }
     },
   );
@@ -86,7 +86,7 @@ function updateAttractionReview(
       if (error) {
         getErr({ error: true, review: error.message });
       } else {
-        getErr({ error: false });
+        getErr(null);
       }
     },
   );
@@ -112,6 +112,8 @@ function setAttractionReview(req: any, res: any) {
             function (error) {
               if (error) {
                 return res.status(400).json(error);
+              } else {
+                return res.status(200).json({error: false})
               }
             },
           );
@@ -119,6 +121,8 @@ function setAttractionReview(req: any, res: any) {
           addAttractionReview(attractionID, userID, review, function (error) {
             if (error) {
               return res.status(400).json(error);
+            } else {
+              return res.status(200).json({error: false})
             }
           });
         }

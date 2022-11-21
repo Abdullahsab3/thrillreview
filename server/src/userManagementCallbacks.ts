@@ -211,15 +211,15 @@ function getAvatar(req: any, res: any) {
 }
 
 function getUserName(req: any, res: any) {
-  const id = req.id;
+  const id = req.body.id;
   db.get(
-    "SELECT username FROM users WHERE id = ?",
+    "SELECT * FROM users WHERE id = ?",
     id,
     function (error, result) {
       if (error) {
         res.status(400).json({ error: true, username: error.message });
       } else if (result) {
-        res.status(200).json({ error: false, username: result });
+        res.status(200).json({ error: false, username: result.username });
       } else {
         res.status(400).json({ error: true, username: "username not found" });
       }

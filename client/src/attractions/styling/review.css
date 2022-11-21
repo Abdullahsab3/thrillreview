@@ -1,0 +1,55 @@
+.commentAvatar {
+    width: 15%;
+    margin-right: 2%;
+}
+
+@media (min-wdith: 768px) {
+    .commentAvatar {
+        width: 5%;
+    }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .commentAvatar {
+        width: 15%;
+    }
+    .comment {
+        margin-top: 1%;
+        width: auto;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    .commentAvatar {
+        width: 10%;
+    }
+    .comment {
+        margin-top: 1%;
+        width: 100%;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .commentAvatar {
+        width: 7%;
+    }    
+    .comment {
+        margin-top: 1%;
+        width: 50%;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .commentAvatar {
+        width: 5%;
+    }
+    .comment{
+        margin-top: 0.5%;
+        width: 50%
+    }
+    
+}

@@ -19,12 +19,11 @@ body {
   align-items: stretch;
 }
 
-
-.Register {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.title {
+  margin-top: 2%;
+  text-align: center;
 }
+
 
 .submitbutton {
   margin-top: 10%;
