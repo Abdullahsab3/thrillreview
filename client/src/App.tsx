@@ -29,9 +29,10 @@ function App() {
         */
 
     <HelmetProvider>
-      <div className="Navigation-toolbar">
+      <div className="whole website">
         <Router>
           <Navigationbar />
+          <div className="middle">
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/Map' element={<Map />} />
@@ -48,6 +49,7 @@ function App() {
             <Route path="/addThemePark" element={<AddThemePark />}/>
             <Route path='/Attractions/:attractionID' element={<AttractionPage/>}/>x
           </Routes>
+          </div>
         </Router>
 
       </div>

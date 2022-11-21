@@ -26,6 +26,7 @@ function AddThemePark() {
     const [url, setUrl] = useState("")
 
 
+
     const [validated, setValidated] = useState(false);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -35,10 +36,29 @@ function AddThemePark() {
             event.preventDefault();
             event.stopPropagation();
         } else {
-            alert("test")
-            const url = "https://www.overpass-api.de/api/interpreter?data=[out:json];node[addr:country=BE][addr:street=De Pannelaan][addr:postcode=8660][addr:housenumber=68];out%20meta;"
-            //const test = await axios.get(url).then(res => alert(res.data))
-            alert("WHOOOHHHHWWWWOOOOW" + url);
+            alert("test");
+            const streetNr = 21;
+            const street ="Zwaluwenstraat";
+            const postalCode = 8400;
+            const url=`https://nominatim.openstreetmap.org/search?street=${streetNr}%20${street.replaceAll(' ', '%20')}&postalcode=${postalCode}&&format=json`;
+            let lat = 0;
+            let long = 0;
+             axios.get(url).then(res =>
+                {
+                    // https://stackoverflow.com/questions/64736789/react-leaflet-map-doesnt-update
+                    const data = res.data
+                    console.log(data);
+                    if (data === undefined || data.length === 0) {
+                        alert("Address is not recognised!")
+                    } else {           
+                        lat = data[0].lat
+                        long = data[0].lon
+                    }                   
+                    alert("WHOOOHHHHWWWWOOOOW" + url + "lat "+ lat + "lon " + long);  
+                }
+            )
+            
+            event.preventDefault(); // prevent reloading
         }
         setValidated(true);
     }
@@ -117,7 +137,7 @@ function AddThemePark() {
                                     <Form.Label> Address </Form.Label>
                                     <div id="address-components">
                                         <div id="street">
-                                            Street
+                                            Street*
                                             <Form.Control required type="text" onChange={(e) => setStreet(e.target.value)} placeholder="Street" value={street} />
                                             <Form.Control.Feedback type="invalid">
                                                 Street is required
@@ -125,21 +145,21 @@ function AddThemePark() {
                                         </div>
 
                                         <div id="streetNr">
-                                            Street Number
+                                            Street Number*
                                             <Form.Control required type="text" placeholder="Street number" pattern="[0-9]*" onChange={(e) => setStreetNr(e.target.value)} />
                                             <Form.Control.Feedback type="invalid">
                                                 Street number is required and should be a number.
                                             </Form.Control.Feedback>
                                         </div>
                                         <div id="postalCode">
-                                            Postal Code
+                                            Postal Code*
                                             <Form.Control required type="text" placeholder="Postal code" pattern="[0-9]*" onChange={(e) => setPostalCode(e.target.value)} />
                                             <Form.Control.Feedback type="invalid">
                                                 Postal code is required and should be a number.
                                             </Form.Control.Feedback>
                                         </div>
                                         <div id="country">
-                                            Country
+                                            Country*
                                             <Form.Control required type="text" placeholder="Country" onChange={(e) => setCountry(e.target.value)} />
                                             <Form.Control.Feedback type="invalid">
                                                 Country is required.
