@@ -88,7 +88,6 @@ function AddAttraction() {
                         <Form className="align-items-center" noValidate validated={validated} onSubmit={handleSubmit}>
                             <Row lg={2} sm={1}>
                                 <Col>
-                                    <InputText label="Name*" required={true} invalidFeedback="Name is required" onChange={(e) => setName(e)} />
                                     <Form.Group>
                                         <Form.Label> Name* </Form.Label>
                                         <Form.Control required type="text" onChange={(e) => setName(e.target.value)} />

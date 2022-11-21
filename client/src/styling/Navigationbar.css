@@ -12,22 +12,9 @@
   font-size: 2rem;
  
 }
-.pageLink:active{
-  color:greenyellow;
+a.pageLink.nav-link.active{
+  background-color: goldenrod;
 }
-.pageLink:checked{
-  color:chocolate;
-}
-
-.nav-pills{
-  color: goldenrod;
-
-}
-
-.nav-pills:active{
-  color:red;
-}
-
 
 
 
