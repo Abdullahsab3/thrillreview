@@ -12,7 +12,8 @@ import {
   addAvatar,
   getAvatar,
   updateAvatar,
-  setAvatar
+  setAvatar,
+  getUserName
 } from "./userManagementCallbacks";
 import { addAttraction, findAttractionById, findAttractionReviews, findReview, setAttractionReview } from "./attractionCallbacks";
 import multer from "multer";
@@ -55,7 +56,7 @@ app.use(cors(corsOptions));
 app.post("/register", registerNewUser);
 app.post("/upload-avatar", [validateTokens, upload.single("avatar")], addAvatar);
 app.post("/change-avatar", [validateTokens, upload.single("avatar")], setAvatar)
-app.post("/get-avatar", validateTokens, getAvatar)
+app.post("/get-avatar", getAvatar)
 app.post("/login", loginUser);
 app.post("/profile", validateTokens, sendProfileInformation);
 app.post("/updateUsername", validateTokens, updateUsername);
@@ -67,6 +68,7 @@ app.post("/addAttraction", validateTokens, addAttraction);
 app.post("/getAttraction", findAttractionById);
 app.post("/upload-review", validateTokens, setAttractionReview)
 app.post("/get-review", findReview)
+app.post("/get-username", getUserName)
 app.post("/get-attraction-reviews", findAttractionReviews)
 
 app.get("/", (req, res) => {

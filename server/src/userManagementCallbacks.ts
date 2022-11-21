@@ -191,8 +191,7 @@ function addAvatar(req: any, res: any) {
 }
 
 function getAvatar(req: any, res: any) {
-  const user: User = req.user;
-  const userid: number = user.id;
+  const userid: number = req.body.id;
   db.get(
     "SELECT * FROM avatars WHERE id = ?",
     [userid],
@@ -206,6 +205,23 @@ function getAvatar(req: any, res: any) {
         res.status(200).send(result.content);
       } else {
         res.status(400).json({ error: "Something went wrong." });
+      }
+    },
+  );
+}
+
+function getUserName(req: any, res: any) {
+  const id = req.id;
+  db.get(
+    "SELECT username FROM users WHERE id = ?",
+    id,
+    function (error, result) {
+      if (error) {
+        res.status(400).json({ error: true, username: error.message });
+      } else if (result) {
+        res.status(200).json({ error: false, username: result });
+      } else {
+        res.status(400).json({ error: true, username: "username not found" });
       }
     },
   );
@@ -252,14 +268,14 @@ function setAvatar(req: any, res: any) {
   const user: User = req.user;
   const userid: number = user.id;
   checkForUserAvatar(userid, (error, result) => {
-    if(error) {
-      res.status(400).json({error: true, avatar: error})
+    if (error) {
+      res.status(400).json({ error: true, avatar: error });
     } else if (result) {
-      updateAvatar(req, res)
+      updateAvatar(req, res);
     } else {
-      addAvatar(req, res)
+      addAvatar(req, res);
     }
-  })
+  });
 }
 
 export {
@@ -269,8 +285,9 @@ export {
   loginUser,
   registerNewUser,
   sendProfileInformation,
+  setAvatar,
   updateAvatar,
   updateEmail,
   updateUsername,
-  setAvatar
+  getUserName
 };

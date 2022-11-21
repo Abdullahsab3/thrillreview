@@ -26,9 +26,7 @@ export default function AttractionPage() {
         setError(error.response.data)
     })
 
-    function Reviews() {
-        
-    }
+
 
     function getInformationCard() {
         return (

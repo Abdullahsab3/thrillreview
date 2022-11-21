@@ -1,7 +1,7 @@
 import Axios from 'axios'
 import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import { User } from './User'
+import { getuserAvatar, getuserEmail, User } from './User'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table'
@@ -20,33 +20,18 @@ function Profile() {
     Axios.defaults.withCredentials = true
     var user: User | null = fetchUserFromLocalStorage();
 
-    if (user) {
-        getuserEmail()
-    }
 
-    async function getuserEmail() {
-        const res = await Axios.post(backendServer("/profile"))
-        setEmail(res.data.email)
-    }
-
-    async function getuserAvatar() {
-        const res = await Axios({
-            method: "post",
-            responseType: "blob",
-            url: backendServer("/get-avatar")
-        });
-        let reader = new window.FileReader();
-        reader.readAsDataURL(res.data);
-        reader.onload = function () {
-            let imageDataUrl = reader.result;
-            //console.log(imageDataUrl);
-            setAvatar((imageDataUrl as string));
-        }
-    }
 
     useEffect(() => {
-        getuserAvatar();
-
+        if (user) {
+            getuserEmail(function (res: string) {
+                setEmail(res)
+            });
+            getuserAvatar(user.id,
+                function (res: string) {
+                    setAvatar(res)
+                });
+        }
     }, [])
 
     if (user) {
