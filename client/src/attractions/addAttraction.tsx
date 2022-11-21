@@ -165,9 +165,9 @@ function AddAttraction() {
                                 <Col>
                                     <Form.Group>
                                         <Form.Label>Duration</Form.Label>
-                                        <Form.Control type="duration" pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}" placeholder="hh:mm:ss" onChange={(e) => setDuration(e.target.value)} />
+                                        <Form.Control type="duration" pattern="[0-9]{2}:[0-5][0-9]:[0-5][0-9]" placeholder="hh:mm:ss" onChange={(e) => setDuration(e.target.value)} />
                                         <Form.Control.Feedback type="invalid">
-                                            The attraction's duration should be in terms of hours, minutes and seconds (you can write it like this: 00:00:00).
+                                            The attraction's duration should be in terms of hours, minutes and seconds (you can write it like this: 99:59:59).
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
