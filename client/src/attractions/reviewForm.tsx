@@ -20,7 +20,7 @@ export default function WriteReview(props: writReviewProps) {
     const [review, setReview] = useState("")
     const [reviewError, setReviewError] = useState("")
     const [validated, setValidated] = useState(false)
-    const [allowed, setAllowed] = useState(false)
+    const [notAllowed, setnotAllowed] = useState(false)
 
     const { promiseInProgress } = usePromiseTracker()
 
@@ -45,6 +45,7 @@ export default function WriteReview(props: writReviewProps) {
                         setValidated(false)
                     } else if (res.data.review) {
                         setReview(res.data.review)
+                        setnotAllowed(true)
                     }
                 }
             }).catch((error) => {
@@ -78,10 +79,10 @@ export default function WriteReview(props: writReviewProps) {
 
     useEffect(() => {
         if (user) {
-            setAllowed(true)
+
             getUserReview()
             if (props.edit) {
-                setAllowed(false)
+                setnotAllowed(false)
             }
 
         }
@@ -98,15 +99,15 @@ export default function WriteReview(props: writReviewProps) {
                     cols={100}
                     onChange={(e) => setReview(e.target.value)}
                     placeholder="Write a review"
-                    value={allowed ? "You already posted a review for this attraction. You can edit your review" : review}
-                    disabled={allowed}
+                    value={notAllowed ? "You already posted a review for this attraction. You can edit your review" : review}
+                    disabled={notAllowed}
                     isInvalid={(reviewError as any)} />
                 <Form.Control.Feedback type="invalid">
                     {reviewError}
                 </Form.Control.Feedback>
             </InputGroup>
-            {allowed ? <Button className="submitreview" onClick={() =>{setAllowed(false)}}>Edit my review</Button>:
-            <ButtonWithLoading className="submitreview" disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Post" />}
+            {notAllowed ? <Button className="submitreview" onClick={() => { setnotAllowed(false) }}>Edit my review</Button> :
+                <ButtonWithLoading className="submitreview" disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Post" />}
         </Form>
 
     </div>)
