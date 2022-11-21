@@ -10,6 +10,7 @@ import { backendServer } from '../helpers';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { setSyntheticTrailingComments } from 'typescript';
+import axios from 'axios';
 
 function AddThemePark() {
     const navigate = useNavigate()
@@ -19,20 +20,25 @@ function AddThemePark() {
     const [street, setStreet] = useState("")
     const [streetNr, setStreetNr] = useState("")
     const [postalCode, setPostalCode] = useState("")
+    const [country, setCountry] = useState("")
     const [indoor, setIndoor] = useState(false)
     const [outdoor, setOutdoor] = useState(false)
     const [url, setUrl] = useState("")
-    
+
 
     const [validated, setValidated] = useState(false);
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         const form = event.currentTarget
+        
         if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
         } else {
-            alert("WHOOOHHHHWWWWOOOOW");
+            alert("test")
+            const url = "https://www.overpass-api.de/api/interpreter?data=[out:json];node[addr:country=BE][addr:street=De Pannelaan][addr:postcode=8660][addr:housenumber=68];out%20meta;"
+            //const test = await axios.get(url).then(res => alert(res.data))
+            alert("WHOOOHHHHWWWWOOOOW" + url);
         }
         setValidated(true);
     }
@@ -45,7 +51,7 @@ function AddThemePark() {
                 <div id="address-components">
                     <div id="street">
                         Street
-                        <Form.Control required type="text" onChange={(e) => setStreet(e.target.value)} placeholder="Street" />
+                        <Form.Control required type="text" onChange={(e) => setStreet(e.target.value)} placeholder="Street" value={street} />
                         <Form.Control.Feedback type="invalid">
                             Street is required
                         </Form.Control.Feedback>
@@ -58,12 +64,18 @@ function AddThemePark() {
                             Street number is required and should be a number.
                         </Form.Control.Feedback>
                     </div>
-
                     <div id="postalCode">
                         Postal Code
                         <Form.Control required type="text" placeholder="Postal code" pattern="[0-9]*" onChange={(e) => setPostalCode(e.target.value)} />
                         <Form.Control.Feedback type="invalid">
                             Postal code is required and should be a number.
+                        </Form.Control.Feedback>
+                    </div>
+                    <div id="country">
+                        Country
+                        <Form.Control required type="text" placeholder="Country" onChange={(e) => setCountry(e.target.value)} />
+                        <Form.Control.Feedback type="invalid">
+                            Country is required.
                         </Form.Control.Feedback>
                     </div>
                 </div>
@@ -101,27 +113,60 @@ function AddThemePark() {
                                 </Col>
                             </Row>
                             <Row>
-                                <AddressFormGroup />
+                                <Form.Group id="address">
+                                    <Form.Label> Address </Form.Label>
+                                    <div id="address-components">
+                                        <div id="street">
+                                            Street
+                                            <Form.Control required type="text" onChange={(e) => setStreet(e.target.value)} placeholder="Street" value={street} />
+                                            <Form.Control.Feedback type="invalid">
+                                                Street is required
+                                            </Form.Control.Feedback>
+                                        </div>
+
+                                        <div id="streetNr">
+                                            Street Number
+                                            <Form.Control required type="text" placeholder="Street number" pattern="[0-9]*" onChange={(e) => setStreetNr(e.target.value)} />
+                                            <Form.Control.Feedback type="invalid">
+                                                Street number is required and should be a number.
+                                            </Form.Control.Feedback>
+                                        </div>
+                                        <div id="postalCode">
+                                            Postal Code
+                                            <Form.Control required type="text" placeholder="Postal code" pattern="[0-9]*" onChange={(e) => setPostalCode(e.target.value)} />
+                                            <Form.Control.Feedback type="invalid">
+                                                Postal code is required and should be a number.
+                                            </Form.Control.Feedback>
+                                        </div>
+                                        <div id="country">
+                                            Country
+                                            <Form.Control required type="text" placeholder="Country" onChange={(e) => setCountry(e.target.value)} />
+                                            <Form.Control.Feedback type="invalid">
+                                                Country is required.
+                                            </Form.Control.Feedback>
+                                        </div>
+                                    </div>
+                                </Form.Group>
                             </Row>
                             <Row>
                                 <Col>
                                     <Form.Group>
                                         <Form.Label >Type</Form.Label>
-                                        <InputGroup><Form.Check label="Indoor park" onChange={(e) => indoor ? setIndoor(false) : setIndoor(true)}/> </InputGroup>
-                                        <InputGroup><Form.Check label="Outdoor park" onChange={(e) => outdoor ? setOutdoor(true) : setOutdoor(false)}/> </InputGroup>
+                                        <InputGroup><Form.Check label="Indoor park" onChange={(e) => indoor ? setIndoor(false) : setIndoor(true)} /> </InputGroup>
+                                        <InputGroup><Form.Check label="Outdoor park" onChange={(e) => outdoor ? setOutdoor(true) : setOutdoor(false)} /> </InputGroup>
                                     </Form.Group>
-                                </Col>  
+                                </Col>
                                 <Col>
-                                <Form.Group>
+                                    <Form.Group>
                                         <Form.Label> Link to themeparks website </Form.Label>
                                         <Form.Control type="url" onChange={(e) => setUrl(e.target.value)} />
                                         <Form.Control.Feedback type="invalid">
                                             A valid url should be given.
                                         </Form.Control.Feedback>
                                     </Form.Group>
-                                </Col>  
+                                </Col>
                             </Row>
-                            <Button type="submit">Submit</Button>
+                            <Button type="submit" >Submit</Button>
                         </Form>
                     </Card.Body>
                 </Card>
