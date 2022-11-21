@@ -145,7 +145,7 @@ function findReview(req: any, res: any) {
     } else if (result) {
       res.status(200).json({ error: false, review: result.review, date: result.date });
     } else {
-      res.json({ error: true, review: "No review is found" });
+      res.json({ error: false, review: "" });
     }
   });
 }
