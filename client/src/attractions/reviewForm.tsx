@@ -1,6 +1,6 @@
 import Axios from "axios";
 import { useEffect, useState } from "react";
-import { Form, InputGroup } from "react-bootstrap";
+import { Button, Form, InputGroup } from "react-bootstrap";
 import { trackPromise, usePromiseTracker } from "react-promise-tracker";
 import { backendServer } from "../helpers";
 import ButtonWithLoading from "../higherOrderComponents/buttonWithLoading";
@@ -20,6 +20,7 @@ export default function WriteReview(props: writReviewProps) {
     const [review, setReview] = useState("")
     const [reviewError, setReviewError] = useState("")
     const [validated, setValidated] = useState(false)
+    const [allowed, setAllowed] = useState(false)
 
     const { promiseInProgress } = usePromiseTracker()
 
@@ -76,8 +77,13 @@ export default function WriteReview(props: writReviewProps) {
         };
 
     useEffect(() => {
-        if (props.edit) {
+        if (user) {
+            setAllowed(true)
             getUserReview()
+            if (props.edit) {
+                setAllowed(false)
+            }
+
         }
     }, [])
 
@@ -92,13 +98,15 @@ export default function WriteReview(props: writReviewProps) {
                     cols={100}
                     onChange={(e) => setReview(e.target.value)}
                     placeholder="Write a review"
-                    value={review}
+                    value={allowed ? "You already posted a review for this attraction. You can edit your review" : review}
+                    disabled={allowed}
                     isInvalid={(reviewError as any)} />
                 <Form.Control.Feedback type="invalid">
                     {reviewError}
                 </Form.Control.Feedback>
             </InputGroup>
-            <ButtonWithLoading className="submitreview" disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Post" />
+            {allowed ? <Button className="submitreview" onClick={() =>{setAllowed(false)}}>Edit my review</Button>:
+            <ButtonWithLoading className="submitreview" disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Post" />}
         </Form>
 
     </div>)
