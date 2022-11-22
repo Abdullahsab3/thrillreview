@@ -1,9 +1,12 @@
 import 'leaflet/dist/leaflet.css';
 import {Popup, MapContainer, TileLayer, Marker, useMap} from 'react-leaflet';
-import './styling/map.css';
+import './styling/map.scss';
 import L from 'leaflet';
 import {Helmet} from 'react-helmet-async';
 import { useState, useEffect } from 'react';
+
+import markerIconPng from "leaflet/dist/images/marker-icon.png"
+import {Icon} from 'leaflet'
 
 
 function SetToUserLocation() {
@@ -11,6 +14,20 @@ function SetToUserLocation() {
   map.locate({setView: true, maxZoom: 15});
   return null;
 }
+
+function getAllThemeParks(){
+  // Breedtegraad (latitude): 51.0808505
+//Lengtegraad (longitude): 
+  return [51.0808505, 2.5987627]
+}
+
+function AddThemeParksToMap(){
+  var map = useMap();
+  var marker = L.marker([51.0808505, 2.5987627],).addTo(map);
+  marker.bindPopup("plopsaland de panne <a href=\"https://leafletjs.com/examples.html\">test</a>").openPopup();
+  return null;
+}
+
 
 const LeafletMap = () => {
 
@@ -21,6 +38,7 @@ const LeafletMap = () => {
            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
        />
        <SetToUserLocation />
+       <AddThemeParksToMap />
   </MapContainer>
     
   )
