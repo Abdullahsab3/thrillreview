@@ -18,13 +18,23 @@ function SetToUserLocation() {
 function getAllThemeParks(){
   // Breedtegraad (latitude): 51.0808505
 //Lengtegraad (longitude): 
-  return [51.0808505, 2.5987627]
+  return [["51.0808505", "2.5987627", "plopsaland", "https://leafletjs.com/examples.html"],
+         ["50.6925","4.5877", "walibi", "https://nl.wikipedia.org/wiki/Walibi_Belgium"]];
+}
+
+function AddThemeParkToMap(input: Array<string>){
+  var map = useMap();
+  const marker = L.marker([parseFloat(input[0]), parseFloat(input[1])]).addTo(map);
+  const text = `${input[2]} <a href=${input[3]}> Click to go to page</a>`
+  marker.bindPopup(text);
+  //"plopsaland de panne <a href=\"https://leafletjs.com/examples.html\">test</a>"
 }
 
 function AddThemeParksToMap(){
-  var map = useMap();
-  var marker = L.marker([51.0808505, 2.5987627],).addTo(map);
-  marker.bindPopup("plopsaland de panne <a href=\"https://leafletjs.com/examples.html\">test</a>").openPopup();
+ 
+  var themeParkInfo = getAllThemeParks()
+  themeParkInfo.forEach(AddThemeParkToMap)
+  
   return null;
 }
 
