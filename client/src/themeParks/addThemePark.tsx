@@ -35,7 +35,7 @@ function AddThemePark() {
         if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
-        } else {
+        } else { 
             alert("test");
             const streetNr = 21;
             const street ="Zwaluwenstraat";

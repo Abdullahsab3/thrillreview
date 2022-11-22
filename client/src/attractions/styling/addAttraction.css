@@ -1,5 +1,15 @@
-.types{
-    text-align: left;
+
+.attraction-type-options{
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+}
+
+
+.attraction-type-option{
+    width: fit-content;
+}
+
+.form-label{
+    color: cornflowerblue
 }

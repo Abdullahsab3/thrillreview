@@ -88,7 +88,6 @@ function AddAttraction() {
                         <Form className="align-items-center" noValidate validated={validated} onSubmit={handleSubmit}>
                             <Row lg={2} sm={1}>
                                 <Col>
-
                                     <Form.Group>
                                         <Form.Label> Name* </Form.Label>
                                         <Form.Control required type="text" onChange={(e) => setName(e.target.value)} />
@@ -123,14 +122,16 @@ function AddAttraction() {
                             </Row>
                             <Row>
                                 <Col>
-                                    <Form.Group>
+                                    <Form.Group id="attraction-types">
                                         <Form.Label >Type</Form.Label>
-                                        <InputGroup><Form.Check label="flat ride" /> </InputGroup>
-                                        <InputGroup><Form.Check label="steel coaster" /> </InputGroup>
-                                        <InputGroup><Form.Check label="wooden coaster" /> </InputGroup>
-                                        <InputGroup><Form.Check label="standing coaster" /> </InputGroup>
-                                        <InputGroup><Form.Check label="sitdown coaster" /> </InputGroup>
-                                        <InputGroup><Form.Check label="launch coaster" /> </InputGroup>
+                                        <div className='attraction-type-options'>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="flat ride" /> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="steel coaster" /> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="wooden coaster" /> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="standing coaster" /> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="sitdown coaster" /> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="launch coaster" /> </InputGroup>
+                                        </div>
                                     </Form.Group>
                                 </Col>
                                 <Col>
@@ -154,7 +155,6 @@ function AddAttraction() {
                                     </Row>
                                 </Col>
                             </Row>
-
                             <Row lg={2} sm={1}>
                                 <Col>
                                     <Form.Group>
