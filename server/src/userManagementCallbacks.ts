@@ -60,7 +60,6 @@ function ChangePassword(req: any, res: any) {
   const oldPassword: string = req.body.password;
   const newPassword: string = req.body.newPassword;
   const id: number = user.id;
-  console.log(user)
   validateUserPassword(
     user.username,
     oldPassword,
@@ -135,7 +134,6 @@ function loginUser(req: any, res: any) {
 
 function sendProfileInformation(req: any, res: any) {
   const user: User = (req as any).user;
-  // reverted due to severe vulnaribility issues
   const userid = user.id;
   db.get(
     "SELECT * FROM users WHERE id = ?",
@@ -187,13 +185,13 @@ function updateUsername(req: any, res: any) {
                 "Something went wrong while trying to update the username.",
             });
           } else {
+            user.username = newUsername
             const accessToken = createTokens(user as User);
 
             res.cookie("access-token", accessToken, {
               maxAge: daysToMilliseconds(30),
               httpOnly: false, // temporary false. update later
             });
-            req.user = user
             res.status(200).json({ updated: true });
           }
         });
