@@ -41,13 +41,12 @@ function findAttractionById(req: any, res: any) {
   const id = req.params.id;
   getAttraction(id, function (error: any, attraction: Attraction | null) {
     if (error) {
-      return res.status(400).json(error);
+      return res.status(400).json({error: error});
     }
     if (attraction) {
       return res.status(200).json(attraction.toJSON());
     } else {
-      return res.status(200).json({
-        error: true,
+      return res.status(400).json({
         attractionID: "No attraction found with the given ID",
       });
     }

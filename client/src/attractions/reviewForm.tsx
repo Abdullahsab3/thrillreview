@@ -2,6 +2,7 @@ import Axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import { trackPromise, usePromiseTracker } from "react-promise-tracker";
+import { Link } from "react-router-dom";
 import { backendServer } from "../helpers";
 import ButtonWithLoading from "../higherOrderComponents/buttonWithLoading";
 import { fetchUserFromLocalStorage } from "../localStorageProcessing";
@@ -14,7 +15,6 @@ interface writReviewProps {
     edit?: boolean
 }
 export default function WriteReview(props: writReviewProps) {
-    Axios.defaults.withCredentials = true
     const user: User | null = fetchUserFromLocalStorage()
 
 
@@ -87,47 +87,54 @@ export default function WriteReview(props: writReviewProps) {
     useEffect(() => {
         if (user) {
             getUserReview()
-
         }
     }, [])
 
-    return (<div>
-        <Form noValidate validated={validated} onSubmit={handleUploadingReview} className="comment">
-            <InputGroup>
-                <Form.Control
-                    required
-                    as="textarea"
-                    rows={6}
-                    cols={100}
-                    onChange={(e) => setReview(e.target.value)}
-                    placeholder="Write a review"
-                    value={review}
-                    disabled={notAllowed}
-                    isInvalid={(reviewError as any)} />
-                <Form.Control.Feedback type="invalid">
-                    {reviewError}
-                </Form.Control.Feedback>
-            </InputGroup>
-            {!notAllowed &&
-
+    if(user) {
+        return (<div>
+            <Form noValidate validated={validated} onSubmit={handleUploadingReview} className="comment">
                 <InputGroup>
-                <div className="d-flex flex-column">
-                    <Form.Label>Rate this attraction: </Form.Label>
-                    <StarRatingForm getRating={function (rating: number) {
-                        if (rating === -1) {
-                            setRating(null)
-                        } else {
-                            setRating(rating)
-                        }
-                    }} />
-                    </div>
+                    <Form.Control
+                        required
+                        as="textarea"
+                        rows={6}
+                        cols={100}
+                        onChange={(e) => setReview(e.target.value)}
+                        placeholder="Write a review"
+                        value={review}
+                        disabled={notAllowed}
+                        isInvalid={(reviewError as any)} />
+                    <Form.Control.Feedback type="invalid">
+                        {reviewError}
+                    </Form.Control.Feedback>
+                </InputGroup>
+                {!notAllowed &&
+    
+                    <InputGroup>
+                    <div className="d-flex flex-column">
+                        <Form.Label>Rate this attraction: </Form.Label>
+                        <StarRatingForm getRating={function (rating: number) {
+                            if (rating === -1) {
+                                setRating(null)
+                            } else {
+                                setRating(rating)
+                            }
+                        }} />
+                        </div>
+    
+                    </InputGroup>}
+                {notAllowed ?
+                    <Button className="submitreview"
+                        onClick={() => { setnotAllowed(false) }}>Edit my review</Button> :
+                    <ButtonWithLoading className="submitreview" disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Post" />}
+            </Form>
+    
+        </div>)
 
-                </InputGroup>}
-            {notAllowed ?
-                <Button className="submitreview"
-                    onClick={() => { setnotAllowed(false) }}>Edit my review</Button> :
-                <ButtonWithLoading className="submitreview" disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Post" />}
-        </Form>
-
-    </div>)
+    } else {
+        return (<div>
+            In order to write a review, you have to <Link  to="/Login">log in first.</Link>
+        </div>)
+    }
+   
 }

@@ -22,7 +22,6 @@ import UploadAvatar from './userManagement/uploadAvatar';
 import  Axios from 'axios';
 
 function App() {
-  Axios.defaults.withCredentials = true
 
 
   return (

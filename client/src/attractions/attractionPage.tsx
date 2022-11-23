@@ -14,8 +14,8 @@ export default function AttractionPage() {
     const { attractionID } = useParams()
 
     Axios.get(backendServer(`/attraction/${attractionID}`)).then((res) => {
-
-            const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = res.data
+        // HIER EEN BUG: STUUR IETS VOOR DE LEGE DINGEN IPV NIETS
+        const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = res.data
         setAttraction(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, id))
     }).catch(function (error: any) {
         setError(error.response.data)
@@ -68,7 +68,7 @@ export default function AttractionPage() {
                 </div>
                 <div className="col d-flex justify-content-right">
 
-                <Reviews attractionID={attractionID as string} />
+                    <Reviews attractionID={attractionID as string} />
 
                 </div>
             </div>

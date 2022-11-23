@@ -29,7 +29,8 @@ export default function Review(props: ReviewProps) {
 
     useEffect(() => {
 
-        if ((user as User).id === props.userID) {
+
+        if (user && ((user as User).id === props.userID)) {
             setPostedByUser(true)
         }
         getuserAvatar(props.userID, function (avatar) {
