@@ -23,22 +23,23 @@ function Register() {
   const [validated, setValidated] = useState(false);
 
   function checkForErrors(data: any): boolean {
-    console.log(data.error)
-    if (data.error) {
-      const receivedUsernameError: string = data.username
-      const receivedEmailError: string = data.email
-      const receivedPasswordError: string = data.password
-      console.log(receivedUsernameError)
-      if (receivedUsernameError) {
-        setusernameError(receivedUsernameError);
-      }
-      if (receivedPasswordError) {
-        setPasswordError(receivedPasswordError);
-      }
-      if (receivedEmailError) {
-        setEmailError(receivedEmailError)
-      }
-
+    const receivedUsernameError: string = data.username
+    const receivedEmailError: string = data.email
+    const receivedPasswordError: string = data.password
+    console.log(receivedUsernameError)
+    if (receivedUsernameError) {
+      setusernameError(receivedUsernameError);
+      return true;
+    }
+    if (receivedPasswordError) {
+      setPasswordError(receivedPasswordError);
+      return true;
+    }
+    if (receivedEmailError) {
+      setEmailError(receivedEmailError)
+      return true;
+    } else if (data.error) {
+      setPasswordError(data.error)
       return true;
     } else {
       return false;
@@ -67,21 +68,21 @@ function Register() {
       }
       else {
         trackPromise(
-        Axios.post(backendServer("/register"), {
-          username: username,
-          email: email,
-          password: password,
-        }).then((res) => {
-          if (checkForErrors((res as any).data)) {
-            setValidated(false)
-          } else {
-            navigate("/login")
-          }
-        }).catch(function (error) {
-          if (checkForErrors(error.response.data)) {
-            setValidated(false)
-          }
-        })
+          Axios.post(backendServer("/user"), {
+            username: username,
+            email: email,
+            password: password,
+          }).then((res) => {
+            if (res.data.registered) {
+              navigate("/Login")
+            } else {
+              setValidated(false)
+            }
+          }).catch(function (error) {
+            if (checkForErrors(error.response.data)) {
+              setValidated(false)
+            }
+          })
         )
       }
     }

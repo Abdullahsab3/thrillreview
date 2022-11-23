@@ -17,17 +17,15 @@ export default function ChangeAvatar() {
 
 
     function checkForErrors(data: any, setFileError: React.Dispatch<SetStateAction<string>>): boolean {
-        if (data.error) {
-            const avatarError: string = data.error.avatar
-            if (avatarError) {
-                setFileError(avatarError);
-            } else {
-                setFileError(data.error)
-            }
+        const avatarError: string = data.error.avatar
+        if (avatarError) {
+            setFileError(avatarError);
             return true;
-
+        } else if (data.error) {
+            setFileError(data.error)
+            return true;
         } else {
-            return false
+            return false;
         }
     }
 
@@ -39,16 +37,16 @@ export default function ChangeAvatar() {
                     const formData = new FormData();
                     formData.append('avatar', uploadedFile)
                     trackPromise(
-                        Axios.post(backendServer("/change-avatar"), formData, {
+                        Axios.post(backendServer("/user/avatar"), formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             }
                         }).then((res) => {
-                            if (checkForErrors(res.data, setFileError)) {
+                            setValidated(true);
+                            navigate("/profile")
+                        }).catch(function (error) {
+                            if (checkForErrors(error.data, setFileError)) {
                                 setValidated(false)
-                            } else {
-                                setValidated(true);
-                                navigate("/profile")
                             }
                         })
                     )
@@ -66,7 +64,7 @@ export default function ChangeAvatar() {
                     title="Change your avatar"
                     description="Drag and drop your avatar image here or choose a file to upload"
                     onSubmit={sendAvatar}
-                    
+
                     serverValidated={validated}
                     imageMaxSize={8 * 1024 * 1024}
                     imageWidth={360}

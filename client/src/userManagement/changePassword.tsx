@@ -23,17 +23,22 @@ export default function ChangePassword() {
     const { promiseInProgress } = usePromiseTracker()
 
     function checkForErrors(data: any): boolean {
+
+        const receievedOldPasswordError: string = data.password
+        const receievdNewPasswordError: string = data.newPassword
         if (data.error) {
-            const receievedOldPasswordError: string = data.password
-            const receievdNewPasswordError: string = data.newPassword
-            if (receievedOldPasswordError) {
-                setOldPasswordError(receievedOldPasswordError)
-            }
-            if (receievdNewPasswordError) {
-                setNewPasswordError(receievdNewPasswordError)
-            }
+            setOldPasswordError(data.error)
             return true;
-        } else {
+        }
+        if (receievedOldPasswordError) {
+            setOldPasswordError(receievedOldPasswordError)
+            return true;
+        }
+        if (receievdNewPasswordError) {
+            setNewPasswordError(receievdNewPasswordError)
+            return true;
+        }
+        else {
             return false;
         }
     }
@@ -46,21 +51,22 @@ export default function ChangePassword() {
             event.preventDefault();
             event.stopPropagation();
             trackPromise(
-            Axios.post(backendServer("/updatePassword"), {
-                password: oldPassword,
-                newPassword: newPassword
-            }).then((res) => {
-                if (checkForErrors((res as any).data)) {
-                    setValidated(false)
-                } else {
-                    setValidated(true)
-                    navigate("/profile")
-                }
-            }).catch(function (error) {
-                if (checkForErrors(error.response.data)) {
-                    setValidated(false)
-                }
-            })
+                Axios.put(backendServer("/user/password"), {
+                    password: oldPassword,
+                    newPassword: newPassword
+                }).then((res) => {
+                    if ((res as any).data.updated) {
+                        setValidated(true)
+                        navigate("/profile")
+
+                    } else {
+                        setValidated(false)
+                    }
+                }).catch(function (error) {
+                    if (checkForErrors(error.response.data)) {
+                        setValidated(false)
+                    }
+                })
             )
         };
 
@@ -101,7 +107,7 @@ export default function ChangePassword() {
                                         {newPasswordError}
                                     </Form.Control.Feedback>
                                 </InputGroup>
-                                <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Submit!"/>
+                                <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Submit!" />
                             </Form.Group>
                         </Form>
                     </Card.Body>

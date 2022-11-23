@@ -20,13 +20,16 @@ export default function ChangeUsername() {
     const [validated, setValidated] = useState(false)
 
     function checkForErrors(data: any): boolean {
-        console.log(data)
+
+        const receviedNewUsernameError: string = data.username
         if (data.error) {
-            const receviedNewUsernameError: string = data.username
-            if (receviedNewUsernameError) {
-                setNewUsernameError(receviedNewUsernameError)
-            }
+            setNewUsernameError(data.error)
             return true;
+        } else if (receviedNewUsernameError) {
+            setNewUsernameError(receviedNewUsernameError)
+
+            return true;
+
         } else {
             return false;
         }
@@ -38,22 +41,24 @@ export default function ChangeUsername() {
             event.preventDefault();
             event.stopPropagation();
             trackPromise(
-            Axios.post(backendServer("/updateUsername"), {
-                username: newUsername
-            }).then((res) => {
-                if (checkForErrors((res as any).data)) {
-                    setValidated(false)
-                } else {
-                    (savedUser as User).username = newUsername
-                    setUserInLocalstorage(savedUser as User);
-                    setValidated(true)
-                    navigate("/profile")
-                }
-            }).catch(function (error) {
-                if (checkForErrors(error.response.data)) {
-                    setValidated(false)
-                }
-            })
+                Axios.put(backendServer("/user/username"), {
+                    username: newUsername
+                }).then((res) => {
+                    if ((res as any).data.updated) {
+
+                        (savedUser as User).username = newUsername
+                        setUserInLocalstorage(savedUser as User);
+                        setValidated(true)
+                        navigate("/profile")
+                    } else {
+
+                        setValidated(false)
+                    }
+                }).catch(function (error) {
+                    if (checkForErrors(error.response.data)) {
+                        setValidated(false)
+                    }
+                })
             )
         };
 
@@ -84,7 +89,7 @@ export default function ChangeUsername() {
                                         {newUsernameError}
                                     </Form.Control.Feedback>
                                 </InputGroup>
-                                <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Submit your username!"/>
+                                <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Submit your username!" />
                             </Form.Group>
                         </Form>
                     </Card.Body>

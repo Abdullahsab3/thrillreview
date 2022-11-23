@@ -16,22 +16,16 @@ async function getUsername(
   id: number,
   getRes: (error: string | null, username: string | null) => void,
 ) {
-  Axios.post("/get-username", {
-    id: id,
-  }).then((res) => {
-    if (res.data.error) {
-      getRes(res.data.username, null);
-    } else {
+  Axios.get(`/user/${id}/username`).then((res) => {
       getRes(null, res.data.username);
-    }
   }).catch(function (error: any) {
-    getRes(error.response.data, null);
+    getRes(error.response.data.username, null);
   });
 }
 
 // TODO: zorg voor de error handling
 async function getuserEmail(getRes: (email: string) => void) {
-  const res = await Axios.post(backendServer("/profile"));
+  const res = await Axios.get(backendServer("/user/email"));
   getRes(res.data.email);
 }
 
@@ -40,10 +34,9 @@ async function getuserAvatar(
   getRes: (avatar: string) => void,
 ) {
   const res = await Axios({
-    method: "post",
+    method: "get",
     responseType: "blob",
-    url: backendServer("/get-avatar"),
-    data: {id: id}
+    url: backendServer(`/user/${id}/avatar`)
   });
   let reader = new window.FileReader();
   reader.readAsDataURL(res.data);

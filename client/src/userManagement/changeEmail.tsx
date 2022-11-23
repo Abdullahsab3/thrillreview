@@ -20,15 +20,15 @@ export default function ChangeEmail() {
     const [validated, setValidated] = useState(false);
 
 
-  const { promiseInProgress } = usePromiseTracker()
+    const { promiseInProgress } = usePromiseTracker()
 
     function checkForErrors(data: any): boolean {
-        console.log(data)
-        if (data.error) {
-            const receievedEmailError: string = data.email
-            if (receievedEmailError) {
-                setEmailError(receievedEmailError)
-            }
+        const receievedEmailError: string = data.email
+        if (receievedEmailError) {
+            setEmailError(receievedEmailError)
+            return true;
+        } else if (data.error) {
+            setEmailError(data.error)
             return true;
         } else {
             return false;
@@ -42,20 +42,22 @@ export default function ChangeEmail() {
             event.preventDefault();
             event.stopPropagation();
             trackPromise(
-            Axios.post(backendServer("/updateEmail"), {
-                newEmail: newEmail
-            }).then((res) => {
-                if (checkForErrors((res as any).data)) {
-                    setValidated(false)
-                } else {
-                    setValidated(true)
-                    navigate("/profile")
-                }
-            }).catch(function (error) {
-                if (checkForErrors(error.response.data)) {
-                    setValidated(false)
-                }
-            })
+                Axios.put(backendServer("/user/email"), {
+                    newEmail: newEmail
+                }).then((res) => {
+                    if ((res as any).data.updated) {
+
+                        setValidated(true)
+                        navigate("/profile")
+                    } else {
+
+                        setValidated(false)
+                    }
+                }).catch(function (error) {
+                    if (checkForErrors(error.response.data)) {
+                        setValidated(false)
+                    }
+                })
             )
         };
 
@@ -88,7 +90,7 @@ export default function ChangeEmail() {
                             </Form.Group>
 
                             <Form.Group className="mb-3">
-                                <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Submit your email!"/>
+                                <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Submit your email!" />
                             </Form.Group>
 
                         </Form>

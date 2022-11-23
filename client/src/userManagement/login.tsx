@@ -25,18 +25,20 @@ function Login() {
     const { promiseInProgress } = usePromiseTracker()
 
     function checkForErrors(data: any): boolean {
-        if (data.error) {
-            const receivedUsernameError: string = data.username
-            const receivedPasswordError: string = data.password
-            if (receivedUsernameError) {
-                setusernameError(receivedUsernameError);
-            }
-            if (receivedPasswordError) {
-                setPasswordError(receivedPasswordError);
-            }
-
+        const receivedUsernameError: string = data.username
+        const receivedPasswordError: string = data.password
+        if (receivedUsernameError) {
+            setusernameError(receivedUsernameError);
             return true;
-        } else {
+        }
+        if (receivedPasswordError) {
+            setPasswordError(receivedPasswordError);
+            return true;
+        } else if(data.error) {
+            setPasswordError(data.Error)
+            return true;
+        }
+        else {
             return false;
         }
     }
@@ -49,17 +51,17 @@ function Login() {
             event.preventDefault();
             event.stopPropagation();
             trackPromise(
-                Axios.post(backendServer("/login"), {
+                Axios.post(backendServer("/user/login"), {
                     username: username,
                     password: password,
                 }).then((res) => {
-                    if (checkForErrors((res as any).data)) {
-                        setValidated(false)
-                    } else {
+                    if ((res as any).data.authenticated) {
                         const newUser = new User(username, (res as any).data.id)
                         setUserInLocalstorage(newUser)
                         setValidated(true)
                         window.location.replace("/")
+                    } else {
+                        setValidated(false)
                     }
                 }).catch(function (error) {
                     if (checkForErrors(error.response.data)) {
@@ -120,7 +122,7 @@ function Login() {
                         </Form>
                         Or register <Link to="/register"> here </Link>
                     </Card.Body>
-                    
+
                 </Card>
             </div>
         </div>

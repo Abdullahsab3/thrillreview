@@ -2,6 +2,7 @@ import { daysToMilliseconds } from "./helpers";
 import { User } from "./User";
 import {
   checkForEmailExistence,
+  checkForUserAvatar,
   checkForUserExistence,
   checkForUsernameExistence,
   db,
@@ -12,29 +13,46 @@ import { createTokens } from "./JWT";
 
 function registerNewUser(req: any, res: any) {
   const { username, email, password } = req.body;
-  checkForUserExistence(username, email, function (error: string | null) {
-    if (error) {
-      res.status(400).json(error);
-    } else {
-      // hashing factor = 15
-      bcrypt.hash(password, 15).then((hash) => {
-        db.run("INSERT INTO users (username, email, hash) VALUES(? , ?, ?)", [
-          username,
-          email,
-          hash,
-        ], (error: Error) => {
+  checkForUsernameExistence(
+    username,
+    function (exists: boolean, message: string | null) {
+      if (message) {
+        res.status(400).json({ username: message });
+      } else if (exists) {
+        res.status(400).json({ username: "username is already used" });
+      } else {
+        checkForEmailExistence(email, function (error) {
           if (error) {
-            return res.status(400).json({
-              error: true,
-              username: error.message,
-            });
+            res.status(400).json({ email: error });
           } else {
-            return res.json({ error: false });
+            // hashing factor = 15
+            bcrypt.hash(password, 15).then((hash) => {
+              db.run(
+                "INSERT INTO users (username, email, hash) VALUES(? , ?, ?)",
+                [
+                  username,
+                  email,
+                  hash,
+                ],
+                (error: Error) => {
+                  if (error) {
+                    return res.status(400).json(
+                      {
+                        error:
+                          "Something went wrong while trying to register the user.",
+                      },
+                    );
+                  } else {
+                    return res.status(200).json({ registered: true });
+                  }
+                },
+              );
+            });
           }
         });
-      });
-    }
-  });
+      }
+    },
+  );
 }
 
 function ChangePassword(req: any, res: any) {
@@ -48,7 +66,7 @@ function ChangePassword(req: any, res: any) {
     oldPassword,
     function (error: any, validatedUser: User | null) {
       if (error) {
-        return res.status(401).json(error);
+        return res.status(401).json({ password: error });
       } else if (validatedUser) {
         bcrypt.hash(newPassword, 15).then((hash) => {
           db.run(
@@ -56,12 +74,15 @@ function ChangePassword(req: any, res: any) {
             [hash, id],
             function (error: Error) {
               if (error) {
-                res.status(400).json({ error: true, password: error.message });
+                res.status(400).json({
+                  newPassword:
+                    "Something went wrong while trying to update the user password.",
+                });
               } else {[
                   /* TODO: zorg ervoor dat de gebruiker afgemeld wordt en dat een
                     token gegenereerd moet worden.
                 */
-                  res.status(200).json({ error: false }),
+                  res.status(200).json({ updated: true }),
                 ];}
             },
           );
@@ -73,21 +94,36 @@ function ChangePassword(req: any, res: any) {
 
 function loginUser(req: any, res: any) {
   const { username, password } = req.body;
-  validateUserPassword(
+  checkForUsernameExistence(
     username,
-    password,
-    function (error: any, user: User | null) {
-      if (error) {
-        return res.status(400).json(error);
+    function (exists: boolean, message: string | null) {
+      if (message) {
+        return res.status(400).json({ username: message });
+      } else if (exists) {
+        validateUserPassword(
+          username,
+          password,
+          function (error: any, user: User | null) {
+            if (error) {
+              return res.status(400).json({ password: error });
+            } else {
+              const accessToken = createTokens(user as User);
+
+              res.cookie("access-token", accessToken, {
+                maxAge: daysToMilliseconds(30),
+                httpOnly: false, // temporary false. update later
+              });
+
+              res.status(200).json({
+                authenticated: true,
+                username: username,
+                id: (user as User).id,
+              });
+            }
+          },
+        );
       } else {
-        const accessToken = createTokens(user as User);
-
-        res.cookie("access-token", accessToken, {
-          maxAge: daysToMilliseconds(30),
-          httpOnly: false, // temporary false. update later
-        });
-
-        res.json({ error: false, username: username, id: (user as User).id });
+        return res.status(400).json({ username: "Username does not exist" });
       }
     },
   );
@@ -102,13 +138,19 @@ function sendProfileInformation(req: any, res: any) {
     [userid],
     (err: Error, result: any) => {
       if (err) {
-        return res.status(400).json({ error: err.message });
+        return res.status(400).json({
+          error:
+            "something went wrong while trying to get the user information.",
+        });
       }
       if (result) {
         // hier kan je informatie over de profiel sturen naar de client
         res.status(200).json({ email: result.email });
       } else {
-        res.status(400).json({ error: "Something went wrong." });
+        res.status(400).json({
+          error:
+            "User is not found. Are you sure you're registered and logged in?",
+        });
       }
     },
   );
@@ -120,22 +162,24 @@ function updateUsername(req: any, res: any) {
   const newUsername: string = (req as any).body.username;
   if (!newUsername) {
     return res.status(400).json({
-      error: true,
       username: "No username provided",
     });
   }
   checkForUsernameExistence(newUsername, function (error: any) {
     if (error) {
-      res.status(400).json(error);
+      res.status(400).json({ username: error });
     } else {
       db.run("UPDATE users SET username = ? WHERE id = ?", [
         newUsername,
         userid,
       ], function (error: Error) {
         if (error) {
-          res.status(400).json({ error: true, username: error.message });
+          res.status(400).json({
+            username:
+              "Something went wrong while trying to update the username.",
+          });
         } else {
-          res.status(200).json({ error: false });
+          res.status(200).json({ updated: true });
         }
       });
     }
@@ -152,16 +196,18 @@ function updateEmail(req: any, res: any) {
   }
   checkForEmailExistence(newEmail, function (error: any) {
     if (error) {
-      res.status(400).json(error);
+      res.status(400).json({ newEmail: error });
     } else {
       db.run(
         "UPDATE users set email = ? WHERE id = ?",
         [newEmail, userid],
         function (error: Error) {
           if (error) {
-            res.status(400).json({ error: true, newEmail: error.message });
+            res.status(400).json({
+              newEmail: "Something went wrong while updating the user email.",
+            });
           } else {
-            res.status(200).json({ error: false });
+            res.status(200).json({ updated: true });
           }
         },
       );
@@ -171,7 +217,7 @@ function updateEmail(req: any, res: any) {
 
 function addAvatar(req: any, res: any) {
   if (!req.file) {
-    return res.status(400).json({ error: true, file: "please provide a file" });
+    return res.status(400).json({ file: "please provide a file" });
   } else {
     const user: User = req.user;
     const userid: number = user.id;
@@ -181,9 +227,11 @@ function addAvatar(req: any, res: any) {
       [userid, originalname, mimetype, buffer],
       function (error: Error) {
         if (error) {
-          res.status(400).json({ error: true, file: error.message });
+          res.status(400).json({
+            file: "Something went wrong while uploading the user avatar.",
+          });
         } else {[
-            res.status(200).json({ error: false }),
+            res.status(200).json({ added: true }),
           ];}
       },
     );
@@ -197,51 +245,38 @@ function getAvatar(req: any, res: any) {
     [userid],
     (err: Error, result: any) => {
       if (err) {
-        return res.status(400).json({ error: err.message });
+        return res.status(400).json({
+          avatar: "Something went wrong while getting the user avatar.",
+        });
       }
       if (result) {
         res.set("Content-Type", result.type);
         // hier kan je informatie over de profiel sturen naar de client
         res.status(200).send(result.content);
       } else {
-        res.status(400).json({ error: "Something went wrong." });
+        res.status(400).json({
+          avatar:
+            "User is not found. Are you sure you're registered and logged in?",
+        });
       }
     },
   );
 }
 
 function getUserName(req: any, res: any) {
-  const id = req.body.id;
+  const id = req.params.id;
   db.get(
     "SELECT * FROM users WHERE id = ?",
     id,
     function (error, result) {
       if (error) {
-        res.status(400).json({ error: true, username: error.message });
+        res.status(400).json({
+          username: "Something went wrong when trying to get the username.",
+        });
       } else if (result) {
-        res.status(200).json({ error: false, username: result.username });
+        res.status(200).json({ username: result.username });
       } else {
-        res.status(400).json({ error: true, username: "username not found" });
-      }
-    },
-  );
-}
-
-function checkForUserAvatar(
-  id: number,
-  getErr: (error: string | null, res: number | null) => void,
-) {
-  db.get(
-    "SELECT id FROM avatars WHERE id = ?",
-    id,
-    (err: Error, result: any) => {
-      if (err) {
-        getErr(err.message, null);
-      }
-      if (result) {
-        getErr(null, result.id);
-      } else {
-        getErr(null, null);
+        res.status(400).json({ username: "username is not found." });
       }
     },
   );
@@ -256,9 +291,11 @@ function updateAvatar(req: any, res: any) {
     [originalname, mimetype, buffer, userid],
     function (error: Error) {
       if (error) {
-        res.status(400).json({ error: true, avatar: error.message });
+        res.status(400).json({
+          avatar: "Something went wrong when inserting the avatar.",
+        });
       } else {
-        res.status(200).json({ error: false });
+        res.status(200).json({ updated: true });
       }
     },
   );
@@ -269,7 +306,7 @@ function setAvatar(req: any, res: any) {
   const userid: number = user.id;
   checkForUserAvatar(userid, (error, result) => {
     if (error) {
-      res.status(400).json({ error: true, avatar: error });
+      res.status(400).json({ avatar: error });
     } else if (result) {
       updateAvatar(req, res);
     } else {
@@ -278,10 +315,26 @@ function setAvatar(req: any, res: any) {
   });
 }
 
+function deleteUser(req: any, res: any) {
+  const userid: number = req.user.id
+  db.run("DELETE FROM users WHERE id = ?", [userid], function (error) {
+    if(error) {
+      res.status(400).json({error: "something went wrong while deleting the user accound"})
+    }
+  })
+  db.run("DELETE FROM avatars WHERE id = ?", [userid], function (error) {
+    if(error) {
+      res.status(400).json({error: "something went wrong while deleting the user avatar."})
+    }
+  })
+
+}
+
 export {
   addAvatar,
   ChangePassword,
   getAvatar,
+  getUserName,
   loginUser,
   registerNewUser,
   sendProfileInformation,
@@ -289,5 +342,5 @@ export {
   updateAvatar,
   updateEmail,
   updateUsername,
-  getUserName
+  deleteUser
 };

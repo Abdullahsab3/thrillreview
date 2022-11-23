@@ -13,7 +13,8 @@ import {
   getAvatar,
   updateAvatar,
   setAvatar,
-  getUserName
+  getUserName,
+  deleteUser
 } from "./userManagementCallbacks";
 import { addAttraction, findAttractionById, findAttractionReviews, findReview, setAttractionReview } from "./attractionCallbacks";
 import multer from "multer";
@@ -53,22 +54,25 @@ app.use(cors(corsOptions));
 */
 
 // usermanagement requests
-app.post("/register", registerNewUser);
-app.post("/upload-avatar", [validateTokens, upload.single("avatar")], addAvatar);
-app.post("/change-avatar", [validateTokens, upload.single("avatar")], setAvatar)
-app.post("/get-avatar", getAvatar)
-app.post("/login", loginUser);
-app.post("/profile", validateTokens, sendProfileInformation);
-app.post("/updateUsername", validateTokens, updateUsername);
-app.post("/updateEmail", validateTokens, updateEmail);
-app.post("/updatePassword", validateTokens, ChangePassword);
+app.post("/user", registerNewUser);
+app.post("/user/login", loginUser);
+app.get("/user/email", validateTokens, sendProfileInformation);
+app.get("/user/:id/username", getUserName)
+
+app.post("/user/avatar", [validateTokens, upload.single("avatar")], addAvatar);
+app.put("/user/avatar", [validateTokens, upload.single("avatar")], setAvatar)
+app.get("/user/:id/avatar", getAvatar)
+
+app.put("/user/username", validateTokens, updateUsername);
+app.put("/user/email", validateTokens, updateEmail);
+app.put("/user/password", validateTokens, ChangePassword);
+app.delete("/user", validateTokens, deleteUser)
 
 //attrations requests
 app.post("/addAttraction", validateTokens, addAttraction);
 app.post("/getAttraction", findAttractionById);
 app.post("/upload-review", validateTokens, setAttractionReview)
 app.post("/get-review", findReview)
-app.post("/get-username", getUserName)
 app.post("/get-attraction-reviews", findAttractionReviews)
 
 app.get("/", (req, res) => {

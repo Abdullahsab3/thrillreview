@@ -19,17 +19,20 @@ db.run(
 
 function checkForUsernameExistence(
   username: string,
-  getResult: (error: any) => void,
+  getResult: (exists: boolean, message: string | null) => void,
 ): void {
   db.get(
     "SELECT * from users WHERE username = ?",
     [username],
     (err, result) => {
       if (err) {
-        getResult({ error: true, username: err.message });
+        getResult(
+          false,
+          "Something went wrong when checking for username existence",
+        );
       } else if (result) {
-        getResult({ error: true, username: "username is already used" });
-      } else getResult(null);
+        getResult(true, null);
+      } else getResult(false, null);
     },
   );
 }
@@ -43,9 +46,9 @@ function checkForEmailExistence(
     [email],
     (err, result) => {
       if (err) {
-        getResult({ error: true, email: err.message });
+        getResult("Something went wrong when checking for email existence");
       } else if (result) {
-        getResult({ error: true, email: "Email is already used" });
+        getResult("Email is already used");
       } else getResult(null);
     },
   );
@@ -56,13 +59,13 @@ function checkForUserExistence(
   email: string,
   getResult: (error: any) => void,
 ): void {
-  checkForUsernameExistence(username, function (usernameError: any) {
-    if (usernameError) {
-      getResult(usernameError);
-    } else {
+  checkForUsernameExistence(username, function (exists: boolean, message: any) {
+    if (exists) {
       checkForEmailExistence(email, function (emailError: any) {
         getResult(emailError);
       });
+    } else {
+      getResult(message)
     }
   });
 }
@@ -78,7 +81,7 @@ function validateUserPassword(
     (err: Error, result: any) => {
       if (err) {
         getResult(
-          { error: true, username: err.message, password: err.message },
+          "Something went wrong when validating the user password.",
           null,
         );
       }
@@ -86,16 +89,13 @@ function validateUserPassword(
         const hashed: string = result.hash;
         bcrypt.compare(password, hashed).then((same) => {
           if (!same) {
-            getResult({
-              error: true,
-              password: "You entered the wrong password!",
-            }, null);
+            getResult("You entered the wrong password!", null);
           } else {
             getResult(null, new User(username, result.id));
           }
         });
       } else {
-        getResult({ error: true, username: "User does not exist!" }, null);
+        getResult("User does not exist!", null);
       }
     },
   );
@@ -110,7 +110,7 @@ function getAttraction(
     [attractionID],
     function (err: Error, result: any) {
       if (err) {
-        getResult({ error: true, name: err.message }, null);
+        getResult("Something went wrong when getting the attraction.", null);
       }
       if (result) {
         getResult(
@@ -144,37 +144,77 @@ function getReview(
     "SELECT * FROM attractionreview WHERE attractionID = ? AND userID = ?",
     [attractionID, userID],
     function (error: any, result: any) {
-      if(error) {
-        getResult({error: true, review: error.message}, null)
-      } else if(result) {
-        getResult(null, new Review(attractionID, userID, result.review, result.rating, result.date))
+      if (error) {
+        getResult(
+          "Something went wrong when trying to get the user review.",
+          null,
+        );
+      } else if (result) {
+        getResult(
+          null,
+          new Review(
+            attractionID,
+            userID,
+            result.review,
+            result.rating,
+            result.date,
+          ),
+        );
       } else {
-        getResult(null, null)
+        getResult(null, null);
       }
     },
   );
 }
 
-function getAttractionReviews(attractionID: number, getResult: (error: any | null, result: any | null) => void) {
-  db.all("SELECT * FROM attractionreview WHERE attractionID = ?", [attractionID], function (error, result){
-    if(error) {
-      getResult({error: true, reviews: error.message}, null)
-    } else if(result) {
-      getResult(null, {reviews: result})
+function getAttractionReviews(
+  attractionID: number,
+  getResult: (error: any | null, result: any | null) => void,
+) {
+  db.all("SELECT * FROM attractionreview WHERE attractionID = ?", [
+    attractionID,
+  ], function (error, result) {
+    if (error) {
+      getResult("Something went wrong when trying to get the reviews.", null);
+    } else if (result) {
+      getResult(null, { reviews: result });
     } else {
-      getResult(null, null)
+      getResult(null, null);
     }
-  } )
+  });
+}
 
+function checkForUserAvatar(
+  id: number,
+  getErr: (error: string | null, res: number | null) => void,
+) {
+  db.get(
+    "SELECT id FROM avatars WHERE id = ?",
+    id,
+    (err: Error, result: any) => {
+      if (err) {
+        getErr(
+          "Something went wrong while trying to check the user avatar",
+          null,
+        );
+      }
+      if (result) {
+        getErr(null, result.id);
+      } else {
+        getErr(null, null);
+      }
+    },
+  );
 }
 
 export {
   checkForEmailExistence,
+  checkForUserAvatar,
   checkForUserExistence,
   checkForUsernameExistence,
   db,
   getAttraction,
-  validateUserPassword,
+  getAttractionReviews,
   getReview,
-  getAttractionReviews
+  validateUserPassword,
 };

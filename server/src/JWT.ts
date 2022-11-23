@@ -11,14 +11,6 @@ function createTokens(user: User) {
   return accessToken;
 }
 
-declare global {
-    namespace Express {
-        interface Request {
-              authenticated?: boolean;
-      }
-    }
-  }
-
   
 function validateTokens(req: Request, res: Response, next: Function) {
   const accessToken = req.cookies["access-token"];

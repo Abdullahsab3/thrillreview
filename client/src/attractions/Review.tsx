@@ -37,10 +37,8 @@ export default function Review(props: ReviewProps) {
         })
         getUsername(props.userID, function (error, username) {
             if (error) {
-                console.log(error)
                 setError(error)
             } else if (username) {
-                console.log(username)
                 setUsername(username)
             }
         })
