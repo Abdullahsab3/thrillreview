@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import InputGroup from 'react-bootstrap/InputGroup';
 import ButtonWithLoading from './buttonWithLoading';
 import "./styling/cardWithImageUpload.css"
-import { Button } from 'react-bootstrap';
+import { Alert, Button } from 'react-bootstrap';
 
 /* 
 Supported functionalities:
@@ -15,8 +15,8 @@ Supported functionalities:
 interface cardProps {
     title: string;
     description: string;
-    onSubmit: (uploadedFile: File, setFileError: React.Dispatch<SetStateAction<string>>) => React.FormEventHandler<HTMLFormElement>;
-    
+    onSubmit: (uploadedFile: File, getFileError: (error: string) => void) => React.FormEventHandler<HTMLFormElement>;
+
     serverValidated: boolean;
     imageMaxSize: number;
     imageWidth?: number;
@@ -154,7 +154,11 @@ function CardWithImageUpload(cardProps: cardProps) {
             onDragOver={dragOverhandler}>
             <Card.Body>
                 <Card.Title ><strong>{cardProps.title}</strong></Card.Title>
-                <Form noValidate validated={cardProps.serverValidated} onSubmit={cardProps.onSubmit((uploadedFile as File), setFileError)}>
+                <Form noValidate validated={cardProps.serverValidated} onSubmit={cardProps.onSubmit((uploadedFile as File), function (error: string) {
+                    if (error) {
+                        setFileError(error)
+                    }
+                })}>
                     <Form.Group className="mb-3">
                         {!uploadedFile &&
                             <div>
@@ -167,20 +171,20 @@ function CardWithImageUpload(cardProps: cardProps) {
                                         accept=".jpg, .jpeg, .png"
                                         onChange={handleFileChange}
                                         isInvalid={(fileError as any)} />
-                                    <Form.Control.Feedback type="invalid">
-                                        {fileError}
-                                    </Form.Control.Feedback>
                                 </InputGroup>
                             </div>}
 
                         <ButtonWithLoading disabled={!isFormValid() || cardProps.promiseInProgress} promiseInProgress={cardProps.promiseInProgress} message="Submit" />
+
                         {uploadedFile &&
                             <Button id="removeButton"
                                 className="submitbutton"
                                 variant="danger"
                                 disabled={!isFormValid()}
                                 onClick={() => removeRetrievedAvatar()}>Remove image</Button>}
+
                     </Form.Group>
+                    {fileError && <Alert key='warning' variant='warning'>{fileError}</Alert>}
                 </Form>
                 {uploadedFile && <Form.Label className="center">Selected file: {uploadedFile?.name}</Form.Label>}
                 {preview && <Card.Img variant="bottom" className="preview" src={preview} />}

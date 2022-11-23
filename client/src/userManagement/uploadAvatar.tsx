@@ -16,20 +16,21 @@ export default function ChangeAvatar() {
     const [validated, setValidated] = useState(false)
 
 
-    function checkForErrors(data: any, setFileError: React.Dispatch<SetStateAction<string>>): boolean {
-        const avatarError: string = data.error.avatar
+    function checkForErrors(data: any, getFileError: (error: string) => void): boolean {
+        const avatarError: string = data.avatar
         if (avatarError) {
-            setFileError(avatarError);
+            getFileError(avatarError);
             return true;
         } else if (data.error) {
-            setFileError(data.error)
+            getFileError(data.error)
             return true;
         } else {
             return false;
         }
     }
 
-    function sendAvatar(uploadedFile: File | null, setFileError: React.Dispatch<SetStateAction<string>>): React.FormEventHandler<HTMLFormElement> {
+    function sendAvatar(uploadedFile: File | null, getFileError: (error: string) => void): React.FormEventHandler<HTMLFormElement> {
+        Axios.defaults.withCredentials = true
         const sendAvatar: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault();
@@ -45,7 +46,7 @@ export default function ChangeAvatar() {
                             setValidated(true);
                             navigate("/profile")
                         }).catch(function (error) {
-                            if (checkForErrors(error.data, setFileError)) {
+                            if (checkForErrors(error.response.data, getFileError)) {
                                 setValidated(false)
                             }
                         })

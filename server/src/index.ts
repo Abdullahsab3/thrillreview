@@ -59,7 +59,7 @@ app.post("/user/login", loginUser);
 app.get("/user/email", validateTokens, sendProfileInformation);
 app.get("/user/:id/username", getUserName)
 
-app.post("/user/avatar", [validateTokens, upload.single("avatar")], addAvatar);
+app.post("/user/avatar", [validateTokens, upload.single("avatar")], setAvatar);
 app.put("/user/avatar", [validateTokens, upload.single("avatar")], setAvatar)
 app.get("/user/:id/avatar", getAvatar)
 

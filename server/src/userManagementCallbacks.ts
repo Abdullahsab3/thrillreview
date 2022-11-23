@@ -192,7 +192,7 @@ function updateEmail(req: any, res: any) {
   const newEmail: string = (req as any).body.newEmail;
 
   if (!newEmail) {
-    return res.status(400).json({ error: true, newEmail: "No email provided" });
+    return res.status(400).json({ newEmail: "No email provided" });
   }
   checkForEmailExistence(newEmail, function (error: any) {
     if (error) {
@@ -217,7 +217,7 @@ function updateEmail(req: any, res: any) {
 
 function addAvatar(req: any, res: any) {
   if (!req.file) {
-    return res.status(400).json({ file: "please provide a file" });
+    return res.status(400).json({ avatar: "please provide a file" });
   } else {
     const user: User = req.user;
     const userid: number = user.id;
@@ -228,7 +228,7 @@ function addAvatar(req: any, res: any) {
       function (error: Error) {
         if (error) {
           res.status(400).json({
-            file: "Something went wrong while uploading the user avatar.",
+            avatar: "Something went wrong while uploading the user avatar.",
           });
         } else {[
             res.status(200).json({ added: true }),
@@ -239,7 +239,7 @@ function addAvatar(req: any, res: any) {
 }
 
 function getAvatar(req: any, res: any) {
-  const userid: number = req.body.id;
+  const userid: number = req.params.id;
   db.get(
     "SELECT * FROM avatars WHERE id = ?",
     [userid],
