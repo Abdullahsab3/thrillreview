@@ -38,7 +38,7 @@ function addAttraction(req: any, res: any) {
 }
 
 function findAttractionById(req: any, res: any) {
-  const id = req.body.attractionID;
+  const id = req.params.id;
   getAttraction(id, function (error: any, attraction: Attraction | null) {
     if (error) {
       return res.status(400).json(error);
@@ -95,7 +95,7 @@ function updateAttractionReview(
 }
 
 function setAttractionReview(req: any, res: any) {
-  const attractionID = req.body.attractionID;
+  const attractionID = req.params.attractionID;
   const review = req.body.review;
   const stars = req.body.stars
   const user: User = req.user;
@@ -141,8 +141,8 @@ function setAttractionReview(req: any, res: any) {
 }
 
 function findReview(req: any, res: any) {
-  const attractionID = req.body.attractionID;
-  const userID = req.body.userID;
+  const attractionID = req.params.attractionID;
+  const userID = req.query.userid;
   getReview(attractionID, userID, function (error, result) {
     if (error) {
       res.status(400).json(error);
@@ -155,7 +155,7 @@ function findReview(req: any, res: any) {
 }
 
 function findAttractionReviews(req: any, res: any) {
-  const attractionID = req.body.attractionID
+  const attractionID = req.params.attractionID
   getAttractionReviews(attractionID, function (error, result) {
     if(error) {
       res.status(400).json(error)

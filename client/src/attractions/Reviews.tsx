@@ -12,16 +12,17 @@ export default function Reviews(props: ReviewsProps) {
     const [reviews, setReviews] = useState([])
 
     function getReviews() {
-        Axios.post(backendServer("/get-attraction-reviews"), {
-            attractionID: props.attractionID
-        }).then((res) => {
-            if (res.data.error) {
-                setError(res.data.reviews)
-            } else {
-                setReviews(res.data.reviews)
-            }
+        Axios.get(backendServer(`/attraction/${props.attractionID}/reviews`)).then((res) => {
+            setReviews(res.data.reviews)
         }).catch(function (error: any) {
-            setError(error.response.data)
+            if (error.response.data.reviews) {
+
+                setError(error.response.data.reviews)
+
+            } else if (error.response.data.error) {
+                setError(error.response.data.error)
+
+            }
         })
     }
     useEffect(() => {
@@ -32,9 +33,9 @@ export default function Reviews(props: ReviewsProps) {
     return (
         <div>
             <h1>Reviews</h1>
-            <WriteReview attractionID={props.attractionID}/>
+            <WriteReview attractionID={props.attractionID} />
             {reviews.map(review => {
-                return(<Review attractionID={props.attractionID} userID={(review as any).userID} reviewText={(review as any).review} rating={(review as any).stars} date={(review as any).date}/>)
+                return (<Review attractionID={props.attractionID} userID={(review as any).userID} reviewText={(review as any).review} rating={(review as any).stars} date={(review as any).date} />)
             })}
         </div>
     )

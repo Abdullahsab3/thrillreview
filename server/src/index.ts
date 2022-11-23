@@ -69,11 +69,12 @@ app.put("/user/password", validateTokens, ChangePassword);
 app.delete("/user", validateTokens, deleteUser)
 
 //attrations requests
-app.post("/addAttraction", validateTokens, addAttraction);
-app.post("/getAttraction", findAttractionById);
-app.post("/upload-review", validateTokens, setAttractionReview)
-app.post("/get-review", findReview)
-app.post("/get-attraction-reviews", findAttractionReviews)
+app.post("/attraction", validateTokens, addAttraction);
+app.get("/attraction/:id", findAttractionById);
+app.post("/attraction/:attractionID/review", validateTokens, setAttractionReview)
+app.put("/attraction/:attractionID/review", validateTokens, setAttractionReview)
+app.get("/attraction/:attractionID/review", findReview)
+app.get("/attraction/:attractionID/reviews", findAttractionReviews)
 
 app.get("/", (req, res) => {
   res.json({ "nothing": "yet" });

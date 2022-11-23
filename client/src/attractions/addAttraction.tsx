@@ -32,7 +32,7 @@ function AddAttraction() {
             event.preventDefault();
             event.stopPropagation();
         } else {
-            Axios.post(backendServer("/addAttraction"), {
+            Axios.post(backendServer("/attraction"), {
                 name: name,
                 themepark: themepark,
                 opening: opening,

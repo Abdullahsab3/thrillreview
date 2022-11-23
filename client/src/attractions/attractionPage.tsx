@@ -13,15 +13,10 @@ export default function AttractionPage() {
 
     const { attractionID } = useParams()
 
-    Axios.post(backendServer("/getAttraction"), {
-        attractionID: attractionID
-    }).then((res) => {
-        if (res.data.error) {
-            setError(res.data.attractionID)
-        } else {
+    Axios.get(backendServer(`/attraction/${attractionID}`)).then((res) => {
+
             const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = res.data
-            setAttraction(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, id))
-        }
+        setAttraction(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, id))
     }).catch(function (error: any) {
         setError(error.response.data)
     })

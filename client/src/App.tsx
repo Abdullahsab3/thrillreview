@@ -47,7 +47,7 @@ function App() {
             <Route path='/Profile/change-email' element={<ChangeEmail/>}/>
             <Route path='/Profile/change-password' element={<ChangePassword/>}/>
             <Route path='/profile/upload-avatar' element={<UploadAvatar/>}/>
-            <Route path='/addAttraction' element={<AddAttraction />} />
+            <Route path='/add-attraction' element={<AddAttraction />} />
             <Route path="/addThemePark" element={<AddThemePark />}/>
             <Route path='/Attractions/:attractionID' element={<AttractionPage/>}/>x
           </Routes>

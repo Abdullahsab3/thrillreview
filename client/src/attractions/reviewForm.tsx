@@ -40,8 +40,8 @@ export default function WriteReview(props: writReviewProps) {
     }
 
     function getUserReview() {
-        Axios.post(backendServer("/get-review"),
-            { attractionID: props.attractionID, userID: (user as User).id }).then((res) => {
+        Axios.get(backendServer(`/attraction/${props.attractionID}/review?userid=${(user as User).id}`))
+        .then((res) => {
                 if (res) {
                     if (checkForErrors((res as any).data)) {
                         setValidated(false)
@@ -65,8 +65,7 @@ export default function WriteReview(props: writReviewProps) {
             setReviewError("");
             event.stopPropagation();
             trackPromise(
-                Axios.post(backendServer("/upload-review"), {
-                    attractionID: props.attractionID,
+                Axios.post(backendServer(`/attraction/${props.attractionID}/review`), {
                     review: review,
                     stars: rating
                 }).then((res) => {

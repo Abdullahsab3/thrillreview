@@ -80,7 +80,7 @@ function Attractions() {
             </Row>
             <Row lg={3} sm={1}>
                 <Col className="AttractionCol">
-                    <CardWithLinkTo to="/addAttraction" title="Add an attraction" />
+                    <CardWithLinkTo to="/add-attraction" title="Add an attraction" />
                 </Col>
             </Row>
         </div>
