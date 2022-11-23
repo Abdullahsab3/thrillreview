@@ -60,14 +60,14 @@ function ChangePassword(req: any, res: any) {
   const oldPassword: string = req.body.password;
   const newPassword: string = req.body.newPassword;
   const id: number = user.id;
-
+  console.log(user)
   validateUserPassword(
     user.username,
     oldPassword,
-    function (error: any, validatedUser: User | null) {
+    function (validated: boolean, error: string | null) {
       if (error) {
         return res.status(401).json({ password: error });
-      } else if (validatedUser) {
+      } else if (validated) {
         bcrypt.hash(newPassword, 15).then((hash) => {
           db.run(
             "UPDATE users SET hash = ? WHERE id = ?",
@@ -87,6 +87,8 @@ function ChangePassword(req: any, res: any) {
             },
           );
         });
+      } else {
+        res.status(400).json({ password: "Given password is not correct!" });
       }
     },
   );
@@ -103,10 +105,10 @@ function loginUser(req: any, res: any) {
         validateUserPassword(
           username,
           password,
-          function (error: any, user: User | null) {
+          function (validated: boolean, error: string | null, user?: User) {
             if (error) {
               return res.status(400).json({ password: error });
-            } else {
+            } else if (validated) {
               const accessToken = createTokens(user as User);
 
               res.cookie("access-token", accessToken, {
@@ -119,6 +121,8 @@ function loginUser(req: any, res: any) {
                 username: username,
                 id: (user as User).id,
               });
+            } else {
+              res.status(400).json({ password: "Password is not correct!" });
             }
           },
         );
@@ -165,25 +169,37 @@ function updateUsername(req: any, res: any) {
       username: "No username provided",
     });
   }
-  checkForUsernameExistence(newUsername, function (error: any) {
-    if (error) {
-      res.status(400).json({ username: error });
-    } else {
-      db.run("UPDATE users SET username = ? WHERE id = ?", [
-        newUsername,
-        userid,
-      ], function (error: Error) {
-        if (error) {
-          res.status(400).json({
-            username:
-              "Something went wrong while trying to update the username.",
-          });
-        } else {
-          res.status(200).json({ updated: true });
-        }
-      });
-    }
-  });
+  checkForUsernameExistence(
+    newUsername,
+    function (exists: boolean, message: string | null) {
+      if (message) {
+        res.status(400).json({ username: message });
+      } else if (exists) {
+        res.status(400).json({ username: "username already exists." });
+      } else {
+        db.run("UPDATE users SET username = ? WHERE id = ?", [
+          newUsername,
+          userid,
+        ], function (error: Error) {
+          if (error) {
+            res.status(400).json({
+              username:
+                "Something went wrong while trying to update the username.",
+            });
+          } else {
+            const accessToken = createTokens(user as User);
+
+            res.cookie("access-token", accessToken, {
+              maxAge: daysToMilliseconds(30),
+              httpOnly: false, // temporary false. update later
+            });
+            req.user = user
+            res.status(200).json({ updated: true });
+          }
+        });
+      }
+    },
+  );
 }
 
 function updateEmail(req: any, res: any) {
@@ -316,23 +332,27 @@ function setAvatar(req: any, res: any) {
 }
 
 function deleteUser(req: any, res: any) {
-  const userid: number = req.user.id
+  const userid: number = req.user.id;
   db.run("DELETE FROM users WHERE id = ?", [userid], function (error) {
-    if(error) {
-      res.status(400).json({error: "something went wrong while deleting the user accound"})
+    if (error) {
+      res.status(400).json({
+        error: "something went wrong while deleting the user accound",
+      });
     }
-  })
+  });
   db.run("DELETE FROM avatars WHERE id = ?", [userid], function (error) {
-    if(error) {
-      res.status(400).json({error: "something went wrong while deleting the user avatar."})
+    if (error) {
+      res.status(400).json({
+        error: "something went wrong while deleting the user avatar.",
+      });
     }
-  })
-
+  });
 }
 
 export {
   addAvatar,
   ChangePassword,
+  deleteUser,
   getAvatar,
   getUserName,
   loginUser,
@@ -342,5 +362,4 @@ export {
   updateAvatar,
   updateEmail,
   updateUsername,
-  deleteUser
 };

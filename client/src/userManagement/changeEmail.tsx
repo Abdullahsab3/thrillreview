@@ -23,7 +23,7 @@ export default function ChangeEmail() {
     const { promiseInProgress } = usePromiseTracker()
 
     function checkForErrors(data: any): boolean {
-        const receievedEmailError: string = data.email
+        const receievedEmailError: string = data.newEmail
         if (receievedEmailError) {
             setEmailError(receievedEmailError)
             return true;
@@ -63,7 +63,7 @@ export default function ChangeEmail() {
 
 
     function isFormValid(): boolean {
-        return newEmail !== "" && isValidEmail(newEmail);
+        return newEmail !== "";
     }
 
     if (savedUser) {
@@ -73,7 +73,7 @@ export default function ChangeEmail() {
                 <Card className='card'>
                     <Card.Body>
                         <Card.Title><strong>Change your email</strong></Card.Title>
-                        <Form noValidate validated={validated} onSubmit={handleChangeEmail}>
+                        <Form validated={validated} onSubmit={handleChangeEmail}>
                             <Form.Group className="mb-3">
                                 <Form.Label>New Email</Form.Label>
                                 <InputGroup hasValidation>

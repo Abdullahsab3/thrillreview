@@ -27,9 +27,7 @@ export default function ChangeUsername() {
             return true;
         } else if (receviedNewUsernameError) {
             setNewUsernameError(receviedNewUsernameError)
-
             return true;
-
         } else {
             return false;
         }

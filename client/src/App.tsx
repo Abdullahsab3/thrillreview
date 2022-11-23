@@ -19,8 +19,10 @@ import AddAttraction from './attractions/addAttraction';
 import AttractionPage from './attractions/attractionPage';
 import AddThemePark from './themeParks/addThemePark';
 import UploadAvatar from './userManagement/uploadAvatar';
+import  Axios from 'axios';
 
 function App() {
+  Axios.defaults.withCredentials = true
 
 
   return (

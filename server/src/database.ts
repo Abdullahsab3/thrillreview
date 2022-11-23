@@ -73,7 +73,7 @@ function checkForUserExistence(
 function validateUserPassword(
   username: string,
   password: string,
-  getResult: (error: any, user: User | null) => void,
+  getResult: (validated: boolean, error: string | null, user?: User) => void,
 ) {
   db.get(
     "SELECT * FROM users WHERE username = ?",
@@ -81,25 +81,27 @@ function validateUserPassword(
     (err: Error, result: any) => {
       if (err) {
         getResult(
-          "Something went wrong when validating the user password.",
-          null,
+         false,
+         "Something went wrong when validating the user password.",
         );
       }
-      if (result) {
+      else if (result) {
         const hashed: string = result.hash;
         bcrypt.compare(password, hashed).then((same) => {
           if (!same) {
-            getResult("You entered the wrong password!", null);
+            getResult(false, null);
           } else {
-            getResult(null, new User(username, result.id));
+            getResult(true, null, new User(result.username, result.id));
           }
         });
       } else {
-        getResult("User does not exist!", null);
+        getResult(false, null);
       }
     },
   );
 }
+
+
 
 function getAttraction(
   attractionID: number,

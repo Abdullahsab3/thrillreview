@@ -80,7 +80,7 @@ export default function ChangePassword() {
                 <Card className='card'>
                     <Card.Body>
                         <Card.Title><strong>Change your password</strong></Card.Title>
-                        <Form noValidate validated={validated} onSubmit={handleChangePassword}>
+                        <Form validated={validated} onSubmit={handleChangePassword}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Password</Form.Label>
                                 <InputGroup hasValidation>
