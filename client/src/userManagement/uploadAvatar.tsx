@@ -30,7 +30,6 @@ export default function ChangeAvatar() {
     }
 
     function sendAvatar(uploadedFile: File | null, getFileError: (error: string) => void): React.FormEventHandler<HTMLFormElement> {
-        Axios.defaults.withCredentials = true
         const sendAvatar: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault();

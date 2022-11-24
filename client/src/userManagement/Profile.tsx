@@ -17,7 +17,6 @@ function Profile() {
 
     const [email, setEmail] = useState("")
     const [avatar, setAvatar] = useState("")
-    Axios.defaults.withCredentials = true
     var user: User | null = fetchUserFromLocalStorage();
 
 

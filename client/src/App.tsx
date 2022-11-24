@@ -23,6 +23,8 @@ import  Axios from 'axios';
 
 function App() {
 
+  Axios.defaults.withCredentials = true
+
 
   return (
     /* Abdullah: navigationbar wordt een keer gerenderd. Op zich geen probleem 
