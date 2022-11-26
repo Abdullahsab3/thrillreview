@@ -10,7 +10,7 @@ interface ReviewsProps {
 }
 export default function Reviews(props: ReviewsProps) {
     const disabledPage = -1
-    const initialLimit = 1
+    const initialLimit = 5
 
     const [Error, setError] = useState("")
     const [reviews, setReviews] = useState([])
@@ -67,13 +67,13 @@ export default function Reviews(props: ReviewsProps) {
 
 
     return (
-        <div>
+        <div className="d-flex flex-column">
             <h1>Reviews</h1>
             <WriteReview attractionID={props.attractionID} />
             {reviews.map(review => {
                 return (<Review attractionID={props.attractionID} userID={(review as any).userID} reviewText={(review as any).review} rating={(review as any).stars} date={(review as any).date} />)
             })}
-            <Pagination>
+            <Pagination className="pagination">
                 <Pagination.Prev disabled={prevPage == disabledPage} onClick={handlePrev}/>
                 <Pagination.Item active>{page}</Pagination.Item>
                 <Pagination.Next disabled={nextPage == disabledPage} onClick={handleNext}/>

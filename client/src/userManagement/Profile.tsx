@@ -41,7 +41,7 @@ function Profile() {
         return (
             <div id="profile">
                 <h1 className="text-center">Your account information</h1>
-                <Table striped bordered hover className="table" id="profilepictureTable">
+                <Table striped bordered className="table" id="profilepictureTable">
                     <tbody>
 
                         <tr><th><img src={avatar} id="profileAvatar" /></th></tr>
@@ -52,7 +52,7 @@ function Profile() {
 
                 <div className='table-responsive'>
 
-                    <Table striped bordered hover className="table">
+                    <Table striped bordered className="table">
 
                         <tbody>
                             <tr>

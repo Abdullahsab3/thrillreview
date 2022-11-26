@@ -4,14 +4,14 @@ class Attraction {
     openingdate: string;
     builder: string;
     type: string;
-    height: number;
-    length: number;
-    inversions: number;
-    duration: number;
+    height: string;
+    length: string;
+    inversions: string;
+    duration: string;
     id: number;
     
     constructor(name: string, themapark: string, opingdate: string, builder: string, type: string, 
-                height: number, lenght: number, inversions: number, duration: number, id: number) {
+                height: string, lenght: string, inversions: string, duration: string, id: number) {
         this.name = name;
         this.themepark = themapark;
         this.openingdate = opingdate;

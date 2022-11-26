@@ -16,7 +16,7 @@ import {
   getUserName,
   deleteUser
 } from "./userManagementCallbacks";
-import { addAttraction, findAttractionById, findAttractionReviews, findReview, setAttractionReview } from "./attractionCallbacks";
+import { addAttraction, findAttractionById, findAttractionReviews, findReview, setAttractionReview, updateAttraction } from "./attractionCallbacks";
 import multer from "multer";
 
 const app = express();
@@ -70,7 +70,8 @@ app.delete("/user", validateTokens, deleteUser)
 
 //attrations requests
 app.post("/attraction", validateTokens, addAttraction);
-app.get("/attraction/:id", findAttractionById);
+app.put("/attraction/:attractionID", validateTokens, updateAttraction);
+app.get("/attraction/:attractionID", findAttractionById);
 app.post("/attraction/:attractionID/review", validateTokens, setAttractionReview)
 app.put("/attraction/:attractionID/review", validateTokens, setAttractionReview)
 app.get("/attraction/:attractionID/review", findReview)

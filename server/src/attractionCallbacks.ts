@@ -38,7 +38,7 @@ function addAttraction(req: any, res: any) {
 }
 
 function findAttractionById(req: any, res: any) {
-  const id = req.params.id;
+  const id = req.params.attractionID;
   getAttraction(id, function (error: any, attraction: Attraction | null) {
     if (error) {
       return res.status(400).json({ error: error });
@@ -186,10 +186,51 @@ function findAttractionReviews(req: any, res: any) {
     }
   });
 }
+
+function updateAttraction(req:any, res: any) {
+  const attractionID = parseInt(req.params.attractionID)
+  const {name,
+    themepark,
+    opening,
+    Builder,
+    type,
+    length,
+    height,
+    inversions,
+    duration,} = res.body
+    if(name) {
+      // change attraction name
+    }
+    if(opening) {
+      // change opening
+    }
+    if(themepark) {
+      // change themepark
+    }
+    if(Builder) {
+      // change builder
+    }
+    if(type) {
+      // change type
+    }
+    if(length) {
+      //change length
+    }
+    if(height) {
+      // change height
+    }
+    if(inversions) {
+      // change inversions
+    }
+    if(duration) {
+      // change duration
+    } 
+}
 export {
   addAttraction,
   findAttractionById,
   findAttractionReviews,
   findReview,
   setAttractionReview,
+  updateAttraction
 };

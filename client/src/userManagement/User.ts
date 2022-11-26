@@ -29,6 +29,7 @@ async function getuserEmail(getRes: (email: string) => void) {
   getRes(res.data.email);
 }
 
+// vreemde bug hier: ik catch de error maar hij wordt door de browser toch gedisplayed (aka niet gecatcht)
 function getuserAvatar(
   id: number,
   getRes: (avatar: string | null) => void,

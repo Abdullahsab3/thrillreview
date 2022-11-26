@@ -1,3 +1,7 @@
 #attractionInfoCard {
-    width: 50%;
+    width: 60%;
+}
+
+.AttractionTitle{
+    display: inline-block;
 }
