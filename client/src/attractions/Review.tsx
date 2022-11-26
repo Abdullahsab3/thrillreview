@@ -34,7 +34,9 @@ export default function Review(props: ReviewProps) {
             setPostedByUser(true)
         }
         getuserAvatar(props.userID, function (avatar) {
-            setAvatar(avatar)
+            if (avatar) {
+                setAvatar(avatar as string)
+            }
         })
         getUsername(props.userID, function (error, username) {
             if (error) {
@@ -64,7 +66,7 @@ export default function Review(props: ReviewProps) {
                 {editedClicked ?
                     <WriteReview attractionID={props.attractionID} edit /> :
                     <div>
-                        <StarRating rating={props.rating}/>
+                        <StarRating rating={props.rating} />
                         <Card.Text>
                             {props.reviewText}
                         </Card.Text>

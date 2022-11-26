@@ -214,7 +214,6 @@ function getAttractionReviews(
               const numberOfReviews: number = countResult["COUNT(*)"];
               const results: reviewsPagination = { reviews: ReviewsResult };
               const totalPages = numberOfReviews / limit;
-              results.totalPages = totalPages;
 
               if (page < totalPages) {
                 results.next = {

@@ -42,22 +42,21 @@ export default function WriteReview(props: writReviewProps) {
     function getUserReview() {
         Axios.get(backendServer(`/attraction/${props.attractionID}/review?userid=${(user as User).id}`))
         .then((res) => {
-                if (res) {
-                    if (checkForErrors((res as any).data)) {
-                        setValidated(false)
-                    } else if (res.data.review) {
-                        setReview(res.data.review)
-                        if (props.edit) {
-                            setnotAllowed(false)
-                        } else {
-                            setnotAllowed(true)
-                        }
-                    }
-                }
+            setReview(res.data.review)
+            if (props.edit) {
+                setnotAllowed(false)
+            } else {
+                setnotAllowed(true)
+            }
+            
             }).catch((error) => {
+                if(error.status === 404) {
+                    setValidated(false)
+                } else {
                 if (checkForErrors(error.response.data)) {
                     setValidated(false)
                 }
+            }
             })
     }
     const handleUploadingReview: React.FormEventHandler<HTMLFormElement> =

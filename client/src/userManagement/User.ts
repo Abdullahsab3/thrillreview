@@ -1,4 +1,4 @@
-import Axios from "axios";
+import Axios, { AxiosError } from "axios";
 import { SetStateAction } from "react";
 import { backendServer } from "../helpers";
 
@@ -17,7 +17,7 @@ async function getUsername(
   getRes: (error: string | null, username: string | null) => void,
 ) {
   Axios.get(`/user/${id}/username`).then((res) => {
-      getRes(null, res.data.username);
+    getRes(null, res.data.username);
   }).catch(function (error: any) {
     getRes(error.response.data.username, null);
   });
@@ -29,22 +29,23 @@ async function getuserEmail(getRes: (email: string) => void) {
   getRes(res.data.email);
 }
 
-async function getuserAvatar(
-    id: number,
-  getRes: (avatar: string) => void,
+function getuserAvatar(
+  id: number,
+  getRes: (avatar: string | null) => void,
 ) {
-  const res = await Axios({
-    method: "get",
-    responseType: "blob",
-    url: backendServer(`/user/${id}/avatar`)
+  Axios.get(backendServer(`/user/${id}/avatar`), { responseType: "blob" }).then(
+    (res) => {
+      let reader = new window.FileReader();
+      reader.readAsDataURL(res.data);
+      reader.onload = function () {
+        let imageDataUrl = reader.result;
+        getRes(imageDataUrl as string);
+      };
+    },
+  ).catch((error: AxiosError) => {
+    console.log(error)
+    getRes(null)
   });
-  let reader = new window.FileReader();
-  reader.readAsDataURL(res.data);
-  reader.onload = function () {
-    let imageDataUrl = reader.result;
-    //console.log(imageDataUrl);
-    getRes(imageDataUrl as string);
-  };
 }
 
-export {getUsername, getuserAvatar, getuserEmail, User };
+export { getuserAvatar, getuserEmail, getUsername, User };

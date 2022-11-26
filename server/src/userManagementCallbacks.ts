@@ -260,7 +260,7 @@ function getAvatar(req: any, res: any) {
     (err: Error, result: any) => {
       if (err) {
         return res.status(400).json({
-          avatar: "Something went wrong while getting the user avatar.",
+          error: "Something went wrong while getting the user avatar.",
         });
       }
       if (result) {
@@ -268,9 +268,9 @@ function getAvatar(req: any, res: any) {
         // hier kan je informatie over de profiel sturen naar de client
         res.status(200).send(result.content);
       } else {
-        res.status(400).json({
-          avatar:
-            "User is not found. Are you sure you're registered and logged in?",
+        res.status(404).json({
+          error:
+            "Avatar for this user is not found.",
         });
       }
     },

@@ -27,8 +27,12 @@ function Profile() {
                 setEmail(res)
             });
             getuserAvatar(user.id,
-                function (res: string) {
-                    setAvatar(res)
+                function (res: string | null) {
+                    if (res) {
+
+                        setAvatar(res as string)
+
+                    }
                 });
         }
     }, [])
