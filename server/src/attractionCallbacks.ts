@@ -31,7 +31,7 @@ function addAttraction(req: any, res: any) {
       if (error) {
         return res.status(400).json({ error: error.message });
       } else {
-        return res.json({ registered: true });
+        return res.json({ added: true });
       }
     },
   );
@@ -41,7 +41,7 @@ function findAttractionById(req: any, res: any) {
   const id = req.params.id;
   getAttraction(id, function (error: any, attraction: Attraction | null) {
     if (error) {
-      return res.status(400).json({error: error});
+      return res.status(400).json({ error: error });
     }
     if (attraction) {
       return res.status(200).json(attraction.toJSON());
@@ -61,11 +61,11 @@ function addAttractionReview(
   getErr: (error: any | null) => void,
 ) {
   db.run(
-    "INSERT INTO attractionreview (attractionID, userID, review, stars, date) VALUES(?, ?, ?, ?, datetime(\'now\'))",
+    "INSERT INTO attractionreview (attractionID, userID, review, stars, date) VALUES(?, ?, ?, ?, datetime('now'))",
     [attractionID, userID, review, stars],
     (error: Error) => {
       if (error) {
-        getErr({error: true, review: error.message});
+        getErr({ error: true, review: error.message });
       } else {
         getErr(null);
       }
@@ -81,7 +81,7 @@ function updateAttractionReview(
   getErr: (error: any) => void,
 ) {
   db.run(
-    "UPDATE  attractionreview SET review = ?, stars = ?, date = datetime(\'now\') WHERE attractionID = ? AND userID = ?",
+    "UPDATE  attractionreview SET review = ?, stars = ?, date = datetime('now') WHERE attractionID = ? AND userID = ?",
     [review, stars, attractionID, userID],
     (error: Error) => {
       if (error) {
@@ -96,7 +96,7 @@ function updateAttractionReview(
 function setAttractionReview(req: any, res: any) {
   const attractionID = req.params.attractionID;
   const review = req.body.review;
-  const stars = req.body.stars
+  const stars = req.body.stars;
   const user: User = req.user;
   const userID: number = user.id;
   getAttraction(attractionID, function (error, result) {
@@ -116,18 +116,24 @@ function setAttractionReview(req: any, res: any) {
               if (error) {
                 return res.status(400).json(error);
               } else {
-                return res.status(200).json({error: false})
+                return res.status(200).json({ updated: true });
               }
             },
           );
         } else {
-          addAttractionReview(attractionID, userID, review, stars, function (error) {
-            if (error) {
-              return res.status(400).json(error);
-            } else {
-              return res.status(200).json({error: false})
-            }
-          });
+          addAttractionReview(
+            attractionID,
+            userID,
+            review,
+            stars,
+            function (error) {
+              if (error) {
+                return res.status(400).json(error);
+              } else {
+                return res.status(200).json({ added: true });
+              }
+            },
+          );
         }
       });
     } else {
@@ -146,23 +152,44 @@ function findReview(req: any, res: any) {
     if (error) {
       res.status(400).json(error);
     } else if (result) {
-      res.status(200).json({ error: false, review: result.review, rating: result.rating, date: result.date });
+      res.status(200).json({
+        review: result.review,
+        rating: result.rating,
+        date: result.date,
+      });
     } else {
-      res.json({ error: false, review: "" });
+      res.status(404).json({review: "Review is not found"});
     }
   });
 }
 
 function findAttractionReviews(req: any, res: any) {
-  const attractionID = req.params.attractionID
-  getAttractionReviews(attractionID, function (error, result) {
-    if(error) {
-      res.status(400).json(error)
-    } else if(result) {
-      res.status(200).json(result)
+  const attractionID = parseInt(req.params.attractionID);
+  var page = parseInt(req.query.page);
+  var limit = parseInt(req.query.limit);
+  if (isNaN(attractionID)) {
+    res.status(400).json({ error: "The number of the attraction is required" });
+  }
+  if (isNaN(page)) {
+    page = 0;
+  }
+  if (isNaN(limit)) {
+    limit = 0;
+  }
+  getAttractionReviews(attractionID, page, limit, function (error, result) {
+    if (error) {
+      res.status(400).json(error);
+    } else if (result) {
+      res.status(200).json(result);
     } else {
-      res.status(400).json({error: true, reviews: "No reviews found"})
+      res.status(400).json({ error: true, reviews: "No reviews found" });
     }
-  })
+  });
 }
-export { addAttraction, findAttractionById, findReview, setAttractionReview, findAttractionReviews };
+export {
+  addAttraction,
+  findAttractionById,
+  findAttractionReviews,
+  findReview,
+  setAttractionReview,
+};

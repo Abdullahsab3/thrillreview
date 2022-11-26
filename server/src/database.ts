@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import { Attraction } from "./Attraction";
 import { AnyARecord } from "dns";
 import Review from "./Review";
+import { count } from "console";
+import { start } from "repl";
 
 const db = new Database("thrillreview.db");
 
@@ -65,7 +67,7 @@ function checkForUserExistence(
         getResult(emailError);
       });
     } else {
-      getResult(message)
+      getResult(message);
     }
   });
 }
@@ -81,11 +83,10 @@ function validateUserPassword(
     (err: Error, result: any) => {
       if (err) {
         getResult(
-         false,
-         "Something went wrong when validating the user password.",
+          false,
+          "Something went wrong when validating the user password.",
         );
-      }
-      else if (result) {
+      } else if (result) {
         const hashed: string = result.hash;
         bcrypt.compare(password, hashed).then((same) => {
           if (!same) {
@@ -100,8 +101,6 @@ function validateUserPassword(
     },
   );
 }
-
-
 
 function getAttraction(
   attractionID: number,
@@ -169,21 +168,76 @@ function getReview(
   );
 }
 
+interface page {
+  page: number;
+  limit: number;
+}
+interface reviewsPagination {
+  next?: page;
+  previous?: page;
+  totalPages?: number;
+  reviews: any;
+}
 function getAttractionReviews(
   attractionID: number,
-  getResult: (error: any | null, result: any | null) => void,
+  page: number,
+  limit: number,
+  getResult: (error: any | null, result: reviewsPagination | null) => void,
 ) {
-  db.all("SELECT * FROM attractionreview WHERE attractionID = ?", [
-    attractionID,
-  ], function (error, result) {
-    if (error) {
-      getResult("Something went wrong when trying to get the reviews.", null);
-    } else if (result) {
-      getResult(null, { reviews: result });
-    } else {
-      getResult(null, null);
-    }
-  });
+  const startIndex: number = (page - 1) * limit;
+  const endIndex: number = page * limit;
+  db.get(
+    "SELECT COUNT(*) from attractionreview WHERE attractionID = ?",
+    [attractionID],
+    function (error, countResult) {
+      if (error) {
+        getResult("Something went wrong while fetching the reviews", null);
+      } else {
+        if (limit === 0) {
+          limit = countResult["COUNT(*)"];
+        }
+        db.all(
+          "SELECT * FROM attractionreview WHERE attractionID = ? LIMIT ?,?",
+          [
+            attractionID,
+            startIndex,
+            limit,
+          ],
+          function (error, ReviewsResult) {
+            if (error) {
+              console.log(error);
+              getResult(
+                "Something went wrong while trying to get the reviews.",
+                null,
+              );
+            } else if (ReviewsResult) {
+              const numberOfReviews: number = countResult["COUNT(*)"];
+              const results: reviewsPagination = { reviews: ReviewsResult };
+              const totalPages = numberOfReviews / limit;
+              results.totalPages = totalPages;
+
+              if (page < totalPages) {
+                results.next = {
+                  page: page + 1,
+                  limit: limit,
+                };
+              }
+              if (startIndex > 0) {
+                results.previous = {
+                  page: page - 1,
+                  limit: limit,
+                };
+              }
+
+              getResult(null, results);
+            } else {
+              getResult(null, null);
+            }
+          },
+        );
+      }
+    },
+  );
 }
 
 function checkForUserAvatar(

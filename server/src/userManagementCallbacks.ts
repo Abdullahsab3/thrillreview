@@ -43,7 +43,7 @@ function registerNewUser(req: any, res: any) {
                       },
                     );
                   } else {
-                    return res.status(200).json({ registered: true });
+                    return res.status(200).json({ added: true });
                   }
                 },
               );
