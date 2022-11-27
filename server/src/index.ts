@@ -77,7 +77,7 @@ app.put("/attraction/:attractionID/review", validateTokens, setAttractionReview)
 app.get("/attraction/:attractionID/review", findReview)
 app.get("/attraction/:attractionID/reviews", findAttractionReviews)
 
-app.get("/", (req, res) => {
+app.get("/feed", (req, res) => {
   res.json({ "nothing": "yet" });
 });
 

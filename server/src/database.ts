@@ -19,6 +19,11 @@ db.run(
 (attractionID INTEGER, userID INTEGER, review TEXT, stars INTEGERS, date TEXT)",
 );
 
+db.run(
+"CREATE TABLE IF NOT EXISTS attractions \
+(id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, themepark STRING, opening STRING, builder STRING, type STRING, length STRING, height STRING, inversions INTEGER, duration STRING)",
+);
+
 function checkForUsernameExistence(
   username: string,
   getResult: (exists: boolean, message: string | null) => void,
