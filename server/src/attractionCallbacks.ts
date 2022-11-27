@@ -16,7 +16,7 @@ function addAttraction(req: any, res: any) {
   } = req.body;
   const userid = req.user.id
   db.run(
-    "INSERT INTO attractions (userID, name, themepark, opening, Builder, type, length, height, inversions, duration) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO attractions (userID, name, themepark, opening, Builder, type, length, height, inversions, duration) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [
       userid,
       name,
