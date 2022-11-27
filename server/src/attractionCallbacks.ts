@@ -197,7 +197,7 @@ function updateAttraction(req:any, res: any) {
     length,
     height,
     inversions,
-    duration,} = res.body
+    duration,} = req.body
     if(name) {
       // change attraction name
     }
@@ -224,7 +224,7 @@ function updateAttraction(req:any, res: any) {
     }
     if(duration) {
       // change duration
-    } 
+    }
 }
 export {
   addAttraction,
