@@ -33,10 +33,12 @@ function App() {
         het is een lelijke tijdelijke oplossing
         */
 
-    <HelmetProvider>
-      <div className="whole website">
+    //<HelmetProvider>
+      <div className="whole-website">
         <Router>
+          <header>
           <Navigationbar />
+          </header>
           <div className="middle">
           <Routes>
             <Route path='/' element={<Home />} />
@@ -58,7 +60,7 @@ function App() {
         </Router>
 
       </div>
-    </HelmetProvider>
+    //</HelmetProvider>
 
   );
 }

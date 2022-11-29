@@ -4,6 +4,10 @@
   
 }
 
+html, body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   background-color: aliceblue;
@@ -20,6 +24,18 @@ button.btn.btn-primary{
 
 .form-control{
   background-color: aliceblue;
+}
+
+.whole-website{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+header{
+  flex-basis: 96px;
+}
+.middle{
+  flex: 1;
 }
 
 
