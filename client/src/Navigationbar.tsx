@@ -1,4 +1,4 @@
-import './styling/Navigationbar.scss';
+import './styling/Navigationbar.css';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import { NavLink as RouterLink } from 'react-router-dom';
