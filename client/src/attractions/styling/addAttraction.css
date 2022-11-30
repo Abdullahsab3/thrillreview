@@ -1,15 +1,34 @@
-
-.attraction-type-options{
+.attraction-type-options {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 
-.attraction-type-option{
+.attraction-type-option {
     width: fit-content;
 }
 
-.form-label{
+.form-label {
     color: rgb(92, 92, 92);
 }
+
+/* adapted from https://stackoverflow.com/questions/36540105/how-to-style-a-choose-file-button-using-css-only */
+#imgUpload{
+    position: absolute;
+    z-index: 1000; /* define the order of overlapping elements*/
+    opacity: 0;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#button-overlay{
+    position:relative;
+  }
+
+.carousel-indicators [data-bs-target]{
+    background-color: goldenrod;
+}  
+
