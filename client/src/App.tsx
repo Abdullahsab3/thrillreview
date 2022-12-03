@@ -1,6 +1,4 @@
-//import './styling/App.css';
-
-import './styling/App.scss';
+import './styling/App.css';
 import Navigationbar from './Navigationbar';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Routes } from 'react-router-dom'
@@ -33,10 +31,12 @@ function App() {
         het is een lelijke tijdelijke oplossing
         */
 
-    <HelmetProvider>
-      <div className="whole website">
+    //<HelmetProvider>
+      <div className="whole-website">
         <Router>
+          <header>
           <Navigationbar />
+          </header>
           <div className="middle">
           <Routes>
             <Route path='/' element={<Home />} />
@@ -58,7 +58,7 @@ function App() {
         </Router>
 
       </div>
-    </HelmetProvider>
+    //</HelmetProvider>
 
   );
 }

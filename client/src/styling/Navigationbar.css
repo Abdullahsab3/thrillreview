@@ -10,11 +10,10 @@
   color: inherit;
   text-decoration: none;
   font-size: 2rem;
-
 }
 
 .bg-dark{
-  background-color: midnightblue;
+  background-color: midnightblue !important; /* I know !important should be avoided, but they use an important! for their bg-dark so mine was not showing*/
 }
 
 a.pageLink.nav-link.active{

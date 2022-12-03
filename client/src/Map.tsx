@@ -1,6 +1,6 @@
 import 'leaflet/dist/leaflet.css';
 import {Popup, MapContainer, TileLayer, Marker, useMap} from 'react-leaflet';
-import './styling/map.scss';
+import './styling/map.css';
 import L from 'leaflet';
 import {Helmet} from 'react-helmet-async';
 import { useState, useEffect } from 'react';
