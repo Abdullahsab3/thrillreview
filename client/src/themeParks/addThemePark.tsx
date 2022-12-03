@@ -35,13 +35,16 @@ function AddThemePark() {
             event.preventDefault();
             event.stopPropagation();
         } else { 
-            alert("test");
             const streetNr = 21;
             const street ="Zwaluwenstraat";
             const postalCode = 8400;
             const url=`https://nominatim.openstreetmap.org/search?street=${streetNr}%20${street.replaceAll(' ', '%20')}&postalcode=${postalCode}&&format=json`;
             let lat = 0;
             let long = 0;
+            /** DIT MOET NAAR DE BACKEND want de credentials worden altijd op true gezet
+             * dus of dat moet aangepast worden, of het moet veranderen naar de backend
+             * daarbij moet het dit zijn: (dus met header) axios.get(url, { headers: {'User-Agent' : "thrillreview"}}) 
+             * MAAR PROBLEEM IN CHROME -> nog op te lossen (mss als naar backend dat het probleem magisch verdwijnt :)*/
              axios.get(url).then(res =>
                 {
                     // https://stackoverflow.com/questions/64736789/react-leaflet-map-doesnt-update
