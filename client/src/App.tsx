@@ -16,6 +16,7 @@ import ChangeEmail from './userManagement/changeEmail';
 import AddAttraction from './attractions/addAttraction';
 import AttractionPage from './attractions/attractionPage';
 import AddThemePark from './themeParks/addThemePark';
+import BrowseAttractions from './attractions/browseAttractions';
 import UploadAvatar from './userManagement/uploadAvatar';
 import  Axios from 'axios';
 
@@ -52,7 +53,8 @@ function App() {
             <Route path='/profile/upload-avatar' element={<UploadAvatar/>}/>
             <Route path='/add-attraction' element={<AddAttraction />} />
             <Route path="/addThemePark" element={<AddThemePark />}/>
-            <Route path='/Attractions/:attractionID' element={<AttractionPage/>}/>x
+            <Route path='/Attractions/:attractionID' element={<AttractionPage/>}/>
+            <Route path='/browse-attractions/:query' element={<BrowseAttractions/>}/>
           </Routes>
           </div>
         </Router>
