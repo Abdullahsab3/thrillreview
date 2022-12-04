@@ -32,20 +32,24 @@ async function getuserEmail(getRes: (email: string) => void) {
 // vreemde bug hier: ik catch de error maar hij wordt door de browser toch gedisplayed (aka niet gecatcht)
 function getuserAvatar(
   id: number,
-  getRes: (avatar: string | null) => void,
+  getRes: (error: string | null, avatar: string | null) => void,
 ) {
-  Axios.get(backendServer(`/user/${id}/avatar`), { responseType: "blob" }).then(
+  Axios.get(backendServer(`/user/${id}/avatar`), { responseType: "blob", validateStatus: function(status) {return status < 500} }).then(
     (res) => {
-      let reader = new window.FileReader();
-      reader.readAsDataURL(res.data);
-      reader.onload = function () {
-        let imageDataUrl = reader.result;
-        getRes(imageDataUrl as string);
-      };
+      if(res.status == 404) {
+        getRes("No user avatar available", null)
+      } else if (res.data) {
+        let reader = new window.FileReader();
+        reader.readAsDataURL(res.data);
+        reader.onload = function () {
+          let imageDataUrl = reader.result;
+          getRes(null, imageDataUrl as string);
+        };
+      }
     },
   ).catch((error: AxiosError) => {
-    console.log(error)
-    getRes(null)
+    console.log(error.response?.status);
+    getRes("An error occured when trying to retrieve the avatar", null);
   });
 }
 

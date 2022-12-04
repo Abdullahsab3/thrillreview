@@ -1,16 +1,18 @@
 import { FormEventHandler, useEffect, useState } from "react";
-import { Button, Card, Col, Form, InputGroup, Row } from "react-bootstrap";
+import { Button, Card, Carousel, CarouselItem, Col, Form, InputGroup, Modal, Row } from "react-bootstrap";
 import { Attraction } from "./Attraction";
 
 interface AttractionInputProps {
     title: string;
     text: string;
-    attraction: Attraction
+    attraction?: Attraction
     onFormSubmit: (a: Attraction) => FormEventHandler<HTMLFormElement>
     validated: boolean
 
 }
 export default function AttractionInputForm(props: AttractionInputProps) {
+
+    const maxImageUploads = 5;
 
     const [name, setName] = useState("")
     const [themepark, setThemepark] = useState("")
@@ -21,19 +23,69 @@ export default function AttractionInputForm(props: AttractionInputProps) {
     const [length, setLength] = useState("")
     const [inversions, setInversions] = useState("")
     const [duration, setDuration] = useState("")
+    const [allImages, setAllImages] = useState<File[]>([]);
+    const [reachedImgLimit, setReachedImgLimit] = useState(false);
+    const [imagesSelected, setImagesSelected] = useState(false);
 
     useEffect(() => {
-        setName(props.attraction.name)
-        setThemepark(props.attraction.themepark)
-        setOpeningdate(props.attraction.openingdate)
-        setBuilder(props.attraction.builder)
-        setType(props.attraction.type)
-        setHeight(props.attraction.height)
-        setLength(props.attraction.length)
-        setInversions(props.attraction.inversions)
-        setDuration(props.attraction.duration)
+        if(props.attraction) {
+            setName(props.attraction.name)
+            setThemepark(props.attraction.themepark)
+            setOpeningdate(props.attraction.openingdate)
+            setBuilder(props.attraction.builder)
+            setType(props.attraction.type)
+            setHeight(props.attraction.height)
+            setLength(props.attraction.length)
+            setInversions(props.attraction.inversions)
+            setDuration(props.attraction.duration)
+        }
+
 
     }, [])
+
+    function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+        const alreadyUploaded = allImages;
+        const newUploads = e.target.files;
+        if (newUploads) {
+            const nronewUploads = newUploads.length
+            for (let i = 0; !reachedImgLimit && i < nronewUploads; i++) {
+                alreadyUploaded.push(newUploads[i])
+                if (alreadyUploaded.length >= maxImageUploads) {
+                    alert(`You can only upload ${maxImageUploads} pictures`);
+                    setReachedImgLimit(true);
+                    break;
+                }
+            }
+            setAllImages(alreadyUploaded)
+            setImagesSelected(true)
+            console.log(allImages)
+        }
+    }
+
+    function ShowImages() {
+        const [showing, setShowing] = useState(false)
+        return (
+            <div id="popUpImageShowing">
+                <Button onClick={(e) => setShowing(true)} disabled={!imagesSelected}>See Images</Button>
+                <Modal show={showing} onHide={() => setShowing(false)}>
+                    <Modal.Header closeButton> The images you uploaded</Modal.Header>
+                    <Modal.Body>
+                        <Carousel>
+                            {
+                                allImages.map((v) => <CarouselItem> <img width="500px" height="500px" className="attractionImage" src={URL.createObjectURL(v)} alt="attraction image"></img></CarouselItem>)
+                            }
+                        </Carousel>
+                    </Modal.Body>
+                </Modal>
+            </div>
+        )
+    }
+
+    function getId() {
+        if(props.attraction) {
+            return props.attraction.id
+        } else return 0
+    }
 
 
     return (
@@ -44,7 +96,20 @@ export default function AttractionInputForm(props: AttractionInputProps) {
                     <Card.Text>{props.text}</Card.Text>
                     <Form className="align-items-center"
                         validated={props.validated}
-                        onSubmit={props.onFormSubmit(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, props.attraction.id))}>
+                        onSubmit={props.onFormSubmit(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, getId()))}>
+                        <Row>
+                            <Col>
+                                <Form.Group>
+                                    <Button id="button-overlay">
+                                        Upload Images
+                                        <Form.Control type="file" id="imgUpload" accept=".jpeg, .png, .jpg" multiple onChange={handleImageUpload} disabled={reachedImgLimit} />
+                                    </Button>
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <ShowImages />
+                            </Col>
+                        </Row>
                         <Row lg={2} sm={1}>
                             <Col>
                                 <Form.Group>

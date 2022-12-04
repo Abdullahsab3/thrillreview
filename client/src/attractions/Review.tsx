@@ -33,7 +33,7 @@ export default function Review(props: ReviewProps) {
         if (user && ((user as User).id === props.userID)) {
             setPostedByUser(true)
         }
-        getuserAvatar(props.userID, function (avatar) {
+        getuserAvatar(props.userID, function (error, avatar) {
             if (avatar) {
                 setAvatar(avatar as string)
             }

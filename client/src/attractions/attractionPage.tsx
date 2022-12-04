@@ -7,9 +7,11 @@ import { Button, Card, Form, Modal, Table } from "react-bootstrap"
 import "./styling/attractionPage.css"
 import Reviews from "./Reviews"
 import AttractionInputForm from "./attractionInputForm"
+import StarRating from "./starRating"
 
 export default function AttractionPage() {
     const [attraction, setAttraction] = useState<Attraction>()
+    const [rating, setRating] = useState(0)
     const [error, setError] = useState("")
     const [validated, setValidated] = useState(false)
     const [edit, setEdit] = useState(false)
@@ -21,10 +23,16 @@ export default function AttractionPage() {
 
         Axios.get(backendServer(`/attraction/${attractionID}`)).then((res) => {
             // HIER EEN BUG: STUUR IETS VOOR DE LEGE DINGEN IPV NIETS
-        const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = res.data
+            const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = res.data
             setAttraction(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, id))
         }).catch(function (error: any) {
             setError(error.response.data)
+        })
+
+        Axios.get(backendServer(`/attraction/${attractionID}/rating`)).then((res) => {
+            setRating(res.data.rating)
+        }).catch(function (error: any) {
+            setError(error.reponse.data)
         })
     }
 
@@ -99,9 +107,10 @@ export default function AttractionPage() {
     function getInformationCard() {
         return (
             <div>
-                <div className="AttractionTitle d-flex justify-content-center">
+                <div className="AttractionTitle d-flex flex-column justify-content-center">
                     <h1 className="title">{attraction?.name}
                     </h1>
+                    <StarRating className="attractionAvgRating" rating={rating}/>
                 </div>
 
                 <div className="d-flex flex-column">
