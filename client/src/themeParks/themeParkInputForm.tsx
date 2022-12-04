@@ -1,5 +1,5 @@
 import './styling/addThemePark.css'
-import React, { useState } from 'react';
+import React, { FormEventHandler, useEffect, useState } from 'react';
 import { Card, Dropdown } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -11,8 +11,18 @@ import Row from 'react-bootstrap/Row';
 import { setSyntheticTrailingComments } from 'typescript';
 import axios from 'axios';
 import { allowedNodeEnvironmentFlags } from 'process';
+import { ThemePark } from './themePark';
 
-function AddThemePark() {
+interface ThemeParkInputFormProps {
+    title: string;
+    text: string;
+    themepark?: ThemePark
+    onFormSubmit: (a: ThemePark) => FormEventHandler<HTMLFormElement>
+    validated: boolean
+
+}
+
+function ThemeParkInputForm(props: ThemeParkInputFormProps) {
     const navigate = useNavigate()
 
     const [name, setName] = useState("")
@@ -25,116 +35,33 @@ function AddThemePark() {
     const [outdoor, setOutdoor] = useState(false)
     const [themeParkurl, setUrl] = useState("")
 
+    useEffect(() => {
+        if (props.themepark) {
+            setName(props.themepark.name)
+            setOpening(props.themepark.openingdate)
+            setStreet(props.themepark.street)
+            setStreetNr(props.themepark.streetNumber.toString())
+            setPostalCode(props.themepark.postalCode)
+            setCountry(props.themepark.country)
+            setUrl(props.themepark.website)
 
-
-    const [validated, setValidated] = useState(false);
-
-    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-        const form = event.currentTarget
-        
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-        } else { 
-            //const streetNr = 21;
-            //const street ="Zwaluwenstraat";
-            //const postalCode = 8400;
-            const url=`https://nominatim.openstreetmap.org/search?street=${streetNr}%20${street.replaceAll(' ', '%20')}&postalcode=${postalCode}&&format=json`;
-            //let lat = 0;
-            //let long = 0;
-            /** DIT MOET NAAR DE BACKEND want de credentials worden altijd op true gezet
-             * dus of dat moet aangepast worden, of het moet veranderen naar de backend
-             * daarbij moet het dit zijn: (dus met header) axios.get(url, { headers: {'User-Agent' : "thrillreview"}}) 
-             * MAAR PROBLEEM IN CHROME -> nog op te lossen (mss als naar backend dat het probleem magisch verdwijnt :)*/
-             //axios.get(url).then(res =>
-               // {
-                 //   // https://stackoverflow.com/questions/64736789/react-leaflet-map-doesnt-update
-                   // const data = res.data
-                    //console.log(data);
-                    //if (data === undefined || data.length === 0) {
-                      //  alert("Address is not recognised!")
-                    //} else {           
-                      //  lat = data[0].lat
-                        //long = data[0].lon
-                    //}                   
-                    //alert("WHOOOHHHHWWWWOOOOW" + url + "lat "+ lat + "lon " + long);  
-                //})
-                //event.preventDefault(); // prevent reloading
-            axios.post(backendServer("/themepark"), {
-                name: name,
-                openingsdate: opening,
-                street: street,
-                streetNumber: streetNr,
-                postalCode: postalCode,
-                country: country,
-                type: "",
-                website: themeParkurl,
-            }).then((response) => {
-                if (response.data.recognised){
-                    navigate("/home")
-                }
-            }).catch(function (error) {
-                if (error.response.status === 418) {
-                    alert("Adress not found")
-                }
-            }) 
         }
-        event.preventDefault();
-        setValidated(true);
-    }
 
-    // I use div and custom css because row/col did not do what I wanted
-    function AddressFormGroup() {
-        return (
-            <Form.Group id="address">
-                <Form.Label> Address </Form.Label>
-                <div id="address-components">
-                    <div id="street">
-                        Street
-                        <Form.Control required type="text" onChange={(e) => setStreet(e.target.value)} placeholder="Street" value={street} />
-                        <Form.Control.Feedback type="invalid">
-                            Street is required
-                        </Form.Control.Feedback>
-                    </div>
 
-                    <div id="streetNr">
-                        Street Number
-                        <Form.Control required type="text" placeholder="Street number" pattern="[0-9]*" onChange={(e) => setStreetNr(e.target.value)} />
-                        <Form.Control.Feedback type="invalid">
-                            Street number is required and should be a number.
-                        </Form.Control.Feedback>
-                    </div>
-                    <div id="postalCode">
-                        Postal Code
-                        <Form.Control required type="text" placeholder="Postal code" pattern="[0-9]*" onChange={(e) => setPostalCode(e.target.value)} />
-                        <Form.Control.Feedback type="invalid">
-                            Postal code is required and should be a number.
-                        </Form.Control.Feedback>
-                    </div>
-                    <div id="country">
-                        Country
-                        <Form.Control required type="text" placeholder="Country" onChange={(e) => setCountry(e.target.value)} />
-                        <Form.Control.Feedback type="invalid">
-                            Country is required.
-                        </Form.Control.Feedback>
-                    </div>
-                </div>
-            </Form.Group>
-        );
-    }
+    }, [])
+
 
 
     // length, height, duration : zal nog gevalideerd worden dat echt cijfer is  : https://codesandbox.io/s/9zjo1lp86w?file=/src/Components/InputDecimal.jsx
     // row moet rond card want anders krijg je een lelijke gap tussen header en de card
     return (
         <div className="ContentOfPage">
-            <h1>Add a theme park</h1>
             <Row>
                 <Card>
                     <Card.Body>
                         <Card.Title>Add a new theme park</Card.Title>
                         <Card.Text>Fill in the form to add a new theme park. Please check first if the theme park is not a duplicate.</Card.Text>
-                        <Form className="align-items-center" noValidate validated={validated} onSubmit={handleSubmit}>
+                        <Form className="align-items-center" noValidate validated={props.validated} onSubmit={props.onFormSubmit(new ThemePark(name, opening, street, parseInt(streetNr), postalCode, country, "", themeParkurl, 0))}>
                             <Row lg={2} sm={1}>
                                 <Col>
                                     <Form.Group>
@@ -213,4 +140,4 @@ function AddThemePark() {
             </Row >
         </div >);
 }
-export default AddThemePark;
+export default ThemeParkInputForm;

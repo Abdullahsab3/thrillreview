@@ -1,5 +1,5 @@
 import { ThemePark } from "./ThemePark";
-import { db } from "./database";
+import { db, getThemePark } from "./database";
 import { User } from "./User";
 import axios from 'axios';
 
@@ -52,6 +52,23 @@ function addThemePark(req: any, res: any) {
     }) 
 }
 
+function findThemeParkByID(req: any, res: any) {
+    const id = req.params.themeparkID;
+    getThemePark(id, function (error: any, attraction: ThemePark | null) {
+      if (error) {
+        return res.status(400).json({ error: error });
+      }
+      if (attraction) {
+        return res.status(200).json(attraction.toJSON());
+      } else {
+        return res.status(400).json({
+          attractionID: "No attraction found with the given ID",
+        });
+      }
+    });
+  }
+
 export {
-    addThemePark
+    addThemePark,
+    findThemeParkByID
 }

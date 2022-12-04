@@ -6,6 +6,7 @@ import { AnyARecord } from "dns";
 import Review from "./Review";
 import { count } from "console";
 import { start } from "repl";
+import { ThemePark } from "./ThemePark";
 
 const db = new Database("thrillreview.db");
 
@@ -23,6 +24,9 @@ db.run(
 "CREATE TABLE IF NOT EXISTS attractions \
 (id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, themepark STRING, opening STRING, builder STRING, type STRING, length STRING, height STRING, inversions INTEGER, duration STRING)",
 );
+
+db.run("CREATE TABLE IF NOT EXISTS themeparks \
+(id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, openingsdate STRING, street STRING, streetnumber INTEGER, postalcode STRING, country STRING, lat STRING, long STRING, type STRING, website STRING)")
 
 function checkForUsernameExistence(
   username: string,
@@ -141,6 +145,36 @@ function getAttraction(
   );
 }
 
+function getThemePark(
+  themeParkID: number,
+  getResult: (error: any, themepark: ThemePark | null) => void,
+) {
+  db.get(
+    "SELECT * FROM themeparks WHERE id = ?",
+    [themeParkID],
+    function (err: Error, result: any) {
+      if (err) {
+        getResult("Something went wrong while getting the themepark", null);
+      } else if (result) {
+        getResult(
+          null,
+          new ThemePark(
+            result.name,
+            result.openingsdate,
+            result.street,
+            result.streetnumber,
+            result.postalcode,
+            result.country,
+            result.type,
+            result.website,
+            result.id,
+          ),
+        );
+      }
+    },
+  );
+}
+
 function getAttractionRating(
   attractionID: number,
   getAverage: (error: string | null, result: number | null) => void,
@@ -150,9 +184,12 @@ function getAttractionRating(
   ], function (error: any, result: any) {
     if (result) {
       getAverage(null, result["avg(stars)"]);
-    } else{
-      console.log(error)
-      getAverage("Something went wrong while calculating the average of rating of this attraction", null)
+    } else {
+      console.log(error);
+      getAverage(
+        "Something went wrong while calculating the average of rating of this attraction",
+        null,
+      );
     }
   });
 }
@@ -290,8 +327,9 @@ export {
   checkForUsernameExistence,
   db,
   getAttraction,
+  getAttractionRating,
   getAttractionReviews,
   getReview,
   validateUserPassword,
-  getAttractionRating
+  getThemePark
 };
