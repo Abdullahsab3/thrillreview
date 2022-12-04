@@ -5,3 +5,8 @@
 .AttractionTitle{
     display: inline-block;
 }
+
+.attractionAvgRating{
+    text-align: center;
+    font-size:  xx-large;
+}
