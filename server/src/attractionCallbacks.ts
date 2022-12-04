@@ -219,6 +219,25 @@ function updateAttraction(req: any, res: any) {
     inversions,
     duration,
   } = req.body;
+  db.run(
+    "UPDATE attractions SET name = ?, themepark = ?, opening = ?, Builder = ?, type = ?, length = ?, height = ?, inversions = ?, duration = ? WHERE id = ?",
+    [
+      name,
+      themepark,
+      opening,
+      Builder,
+      type,
+      length,
+      height,
+      inversions,
+      duration,
+      attractionID,
+    ], function (error) {
+      if(error) {
+        res.status(400).json({error: "Something went wrong while trying to update the attraction information"})
+      }
+    }
+  );/* 
   if (name) {
     // change attraction name
   }
@@ -245,14 +264,14 @@ function updateAttraction(req: any, res: any) {
   }
   if (duration) {
     // change duration
-  }
+  } */
 }
 export {
   addAttraction,
   findAttractionById,
   findAttractionReviews,
   findReview,
+  getAverageRating,
   setAttractionReview,
   updateAttraction,
-  getAverageRating
 };

@@ -52,6 +52,41 @@ function addThemePark(req: any, res: any) {
     }) 
 }
 
+function editThemePark(req: any, res: any) {
+  const themeparkID = parseInt(req.params.themeparkID);
+  const {
+    name,
+    openingsdate,
+    street,
+    streetNumber,
+    postalCode,
+    country,
+    lat,
+    long,
+    type,
+    website,
+} = req.body;
+  db.run(
+    "UPDATE attractions SET name = ?, openingsdate = ?, street = ?, streetnumber = ?, postalcode = ?, country = ?, lat = ?, long = ?, type = ? website = ? WHERE id = ?",
+    [
+      name,
+      openingsdate,
+      street,
+      streetNumber,
+      postalCode,
+      country,
+      lat,
+      long,
+      type,
+      website,
+      themeparkID,
+    ], function (error) {
+      if(error) {
+        res.status(400).json({error: "Something went wrong while trying to update the themepark information"})
+      }
+    })
+}
+
 function findThemeParkByID(req: any, res: any) {
     const id = req.params.themeparkID;
     getThemePark(id, function (error: any, attraction: ThemePark | null) {
@@ -70,5 +105,6 @@ function findThemeParkByID(req: any, res: any) {
 
 export {
     addThemePark,
-    findThemeParkByID
+    findThemeParkByID,
+    editThemePark
 }
