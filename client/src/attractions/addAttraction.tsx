@@ -14,12 +14,14 @@ import Modal from 'react-bootstrap/Modal';
 import { Grid } from 'react-bootstrap-icons';
 import CardWithImageUpload from '../higherOrderComponents/cardWithImageUpload';
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
+import AttractionInputForm from './attractionInputForm';
+import { Attraction } from './Attraction';
 
 function AddAttraction() {
     const maxImageUploads = 5;
     const navigate = useNavigate()
 
-    const [name, setName] = useState("")
+/*     const [name, setName] = useState("")
     const [themepark, setThemepark] = useState("")
     const [opening, setOpening] = useState("")
     const [builder, setBuilder] = useState("")
@@ -27,42 +29,41 @@ function AddAttraction() {
     const [length, setLength] = useState("")
     const [height, setHeight] = useState("")
     const [inversions, setInversions] = useState("")
-    const [duration, setDuration] = useState("")
+    const [duration, setDuration] = useState("") */
     const [validated, setValidated] = useState(false);
     const [allImages, setAllImages] = useState<File[]>([]);
     const [reachedImgLimit, setReachedImgLimit] = useState(false);
     const [imagesSelected, setImagesSelected] = useState(false);
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-        const form = event.currentTarget
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-        } else {
-            Axios.post(backendServer("/attraction"), {
-                name: name,
-                themepark: themepark,
-                opening: opening,
-                Builder: builder,
-                type: type,
-                length: length,
-                height: height,
-                inversions: inversions,
-                duration: duration,
-            }).then((response) => {
-                if (response.data.registered) {
-                    navigate("/home")
-                }
-            }).catch(function (error) {
-                if (error.response) {
-                    //setError(error.response.data.error)
-                }
-            })
+
+
+    function submit(attraction: Attraction) {
+        const handleSubmit: React.FormEventHandler<HTMLFormElement> =
+            (event: React.FormEvent<HTMLFormElement>) =>{
+            const form = event.currentTarget
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                Axios.post(backendServer("/attraction"), attraction.toJSON()
+                ).then((response) => {
+                    if (response.data.registered) {
+                        navigate("/home")
+                    }
+                }).catch(function (error) {
+                    if (error.response) {
+                        //setError(error.response.data.error)
+                    }
+                })
+            }
+            setValidated(true);
         }
-        setValidated(true);
+        return(handleSubmit)
+
     }
 
-    interface textField {
+
+/*     interface textField {
         label: string;
         required: boolean;
         invalidFeedback: string;
@@ -80,9 +81,9 @@ function AddAttraction() {
                 </Form.Control.Feedback>
             </Form.Group>
         );
-    }
+    } */
 
-    function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+/*     function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
         const alreadyUploaded = allImages;
         const newUploads = e.target.files;
         if (newUploads) {
@@ -119,7 +120,7 @@ function AddAttraction() {
             </div>
         )
     }
-
+ */
 
 
     // length, height, duration : zal nog gevalideerd worden dat echt cijfer is  : https://codesandbox.io/s/9zjo1lp86w?file=/src/Components/InputDecimal.jsx
@@ -129,7 +130,7 @@ function AddAttraction() {
                                     {allImages.map((f: File, i: Number) => 
                                         (<CarouselItem ><Carousel.Caption>test</Carousel.Caption></CarouselItem>))}
                                 </Carousel> */
-    return (
+ /*    return (
         <div className="ContentOfPage">
             <h1>Add an Attraction</h1>
             <Row>
@@ -242,7 +243,14 @@ function AddAttraction() {
                     </Card.Body>
                 </Card>
             </Row >
-        </div >);
+        </div >); */
+        return(
+            <AttractionInputForm 
+                title="Add an attraction"
+                text="Fill in the form to add a new attraction. Please check first if the attraction is not a duplicate."
+                onFormSubmit={submit}
+                validated={validated}           />
+        )
 }
 
 export default AddAttraction;

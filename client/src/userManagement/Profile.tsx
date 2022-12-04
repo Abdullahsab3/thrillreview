@@ -17,6 +17,7 @@ function Profile() {
 
     const [email, setEmail] = useState("")
     const [avatar, setAvatar] = useState("")
+    const [avatarError, setAvatarError] = useState("")
     var user: User | null = fetchUserFromLocalStorage();
 
 
@@ -26,14 +27,27 @@ function Profile() {
             getuserEmail(function (res: string) {
                 setEmail(res)
             });
-            getuserAvatar(user.id,
-                function (res: string | null) {
-                    if (res) {
+            try {
+                getuserAvatar(user.id,
+                    function (error: string | null, res: string | null) {
+                        if (res) {
 
-                        setAvatar(res as string)
+                            setAvatar(res as string)
 
-                    }
-                });
+                        }
+                        else if (error) {
+                            setAvatarError(error)
+
+                        }
+                    });
+
+            } catch(error: any) {
+                if(error.response.data.status == 404) {
+                    setAvatarError("No avatar available")
+                }
+
+            }
+
         }
     }, [])
 
@@ -43,8 +57,7 @@ function Profile() {
                 <h1 className="text-center">Your account information</h1>
                 <Table striped bordered className="table" id="profilepictureTable">
                     <tbody>
-
-                        <tr><th><img src={avatar} id="profileAvatar" /></th></tr>
+                        <tr><th>{avatarError ?  <p>{avatarError}</p> : <img src={avatar} id="profileAvatar" /> }</th></tr>
                         <tr><th>Your profile avatar</th></tr>
                         <tr><th><Button onClick={() => navigate("/profile/upload-avatar")}>Change your avatar</Button></th></tr>
                     </tbody>
