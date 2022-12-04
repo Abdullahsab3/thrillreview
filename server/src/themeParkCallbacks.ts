@@ -14,7 +14,6 @@ function addThemePark(req: any, res: any) {
         website,
     } = req.body;
     const userid = req.user.id
-    console.log("add-themepark");
     db.run(
         "INSERT INTO themeparks (userID, name, openingsdate, street, streetnumber, postalcode, country, type, website) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
