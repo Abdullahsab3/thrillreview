@@ -10,6 +10,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { setSyntheticTrailingComments } from 'typescript';
 import axios from 'axios';
+import { allowedNodeEnvironmentFlags } from 'process';
 
 function AddThemePark() {
     const navigate = useNavigate()
@@ -38,7 +39,7 @@ function AddThemePark() {
             //const streetNr = 21;
             //const street ="Zwaluwenstraat";
             //const postalCode = 8400;
-            //const url=`https://nominatim.openstreetmap.org/search?street=${streetNr}%20${street.replaceAll(' ', '%20')}&postalcode=${postalCode}&&format=json`;
+            const url=`https://nominatim.openstreetmap.org/search?street=${streetNr}%20${street.replaceAll(' ', '%20')}&postalcode=${postalCode}&&format=json`;
             //let lat = 0;
             //let long = 0;
             /** DIT MOET NAAR DE BACKEND want de credentials worden altijd op true gezet
@@ -73,11 +74,12 @@ function AddThemePark() {
                     navigate("/home")
                 }
             }).catch(function (error) {
-                if (error.response) {
-                    //
+                if (error.response.status === 418) {
+                    alert("Adress not found")
                 }
             }) 
         }
+        event.preventDefault();
         setValidated(true);
     }
 
