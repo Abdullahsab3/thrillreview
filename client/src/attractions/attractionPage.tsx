@@ -21,7 +21,7 @@ export default function AttractionPage() {
 
         Axios.get(backendServer(`/attraction/${attractionID}`)).then((res) => {
             // HIER EEN BUG: STUUR IETS VOOR DE LEGE DINGEN IPV NIETS
-            const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = res.data
+        const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = res.data
             setAttraction(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, id))
         }).catch(function (error: any) {
             setError(error.response.data)

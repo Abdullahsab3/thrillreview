@@ -17,7 +17,7 @@ function SetToUserLocation() {
 
 function getAllThemeParks(){
   // Breedtegraad (latitude): 51.0808505
-//Lengtegraad (longitude): 
+  //Lengtegraad (longitude): 
   return [["51.0808505", "2.5987627", "plopsaland", "https://leafletjs.com/examples.html"],
          ["50.6925","4.5877", "walibi", "https://nl.wikipedia.org/wiki/Walibi_Belgium"]];
 }
