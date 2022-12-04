@@ -33,6 +33,7 @@ function App() {
         */
 
     //<HelmetProvider>
+    /* react-router-dom v6 does not support optional parameters. https://stackoverflow.com/questions/70005601/alternate-way-for-optional-parameters-in-v6 */
       <div className="whole-website">
         <Router>
           <header>
@@ -55,6 +56,7 @@ function App() {
             <Route path="/addThemePark" element={<AddThemePark />}/>
             <Route path='/Attractions/:attractionID' element={<AttractionPage/>}/>
             <Route path='/browse-attractions/:query' element={<BrowseAttractions/>}/>
+            <Route path='/browse-attractions/' element={<BrowseAttractions/>}/> 
           </Routes>
           </div>
         </Router>
