@@ -16,7 +16,7 @@ import {
   getUserName,
   deleteUser
 } from "./userManagementCallbacks";
-import { addAttraction, findAttractionById, findAttractionReviews, findReview, setAttractionReview, updateAttraction } from "./attractionCallbacks";
+import { addAttraction, findAttractionById, findAttractionReviews, findReview, getAverageRating, setAttractionReview, updateAttraction } from "./attractionCallbacks";
 import { addThemePark } from "./themeParkCallbacks";
 import multer from "multer";
 
@@ -77,6 +77,7 @@ app.post("/attraction/:attractionID/review", validateTokens, setAttractionReview
 app.put("/attraction/:attractionID/review", validateTokens, setAttractionReview)
 app.get("/attraction/:attractionID/review", findReview)
 app.get("/attraction/:attractionID/reviews", findAttractionReviews)
+app.get("/attraction/:attractionID/rating", getAverageRating)
 
 
 //themepark requests

@@ -141,6 +141,22 @@ function getAttraction(
   );
 }
 
+function getAttractionRating(
+  attractionID: number,
+  getAverage: (error: string | null, result: number | null) => void,
+) {
+  db.get("SELECT avg(stars) FROM attractionreview WHERE attractionID = ?", [
+    attractionID,
+  ], function (error: any, result: any) {
+    if (result) {
+      getAverage(null, result["avg(stars)"]);
+    } else{
+      console.log(error)
+      getAverage("Something went wrong while calculating the average of rating of this attraction", null)
+    }
+  });
+}
+
 function getReview(
   attractionID: number,
   userID: number,
@@ -277,4 +293,5 @@ export {
   getAttractionReviews,
   getReview,
   validateUserPassword,
+  getAttractionRating
 };

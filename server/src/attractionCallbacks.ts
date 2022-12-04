@@ -1,5 +1,11 @@
 import { Attraction } from "./Attraction";
-import { db, getAttraction, getAttractionReviews, getReview } from "./database";
+import {
+  db,
+  getAttraction,
+  getAttractionRating,
+  getAttractionReviews,
+  getReview,
+} from "./database";
 import { User } from "./User";
 
 function addAttraction(req: any, res: any) {
@@ -14,7 +20,7 @@ function addAttraction(req: any, res: any) {
     inversions,
     duration,
   } = req.body;
-  const userid = req.user.id
+  const userid = req.user.id;
   db.run(
     "INSERT INTO attractions (userID, name, themepark, opening, Builder, type, length, height, inversions, duration) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [
@@ -160,7 +166,18 @@ function findReview(req: any, res: any) {
         date: result.date,
       });
     } else {
-      res.status(404).json({review: "Review is not found"});
+      res.status(404).json({ review: "Review is not found" });
+    }
+  });
+}
+
+function getAverageRating(req: any, res: any) {
+  const attractionID = req.params.attractionID;
+  getAttractionRating(attractionID, function (error, result) {
+    if (error) {
+      res.status(400).json({ error: error });
+    } else if (result) {
+      res.status(200).json({ rating: result });
     }
   });
 }
@@ -189,9 +206,10 @@ function findAttractionReviews(req: any, res: any) {
   });
 }
 
-function updateAttraction(req:any, res: any) {
-  const attractionID = parseInt(req.params.attractionID)
-  const {name,
+function updateAttraction(req: any, res: any) {
+  const attractionID = parseInt(req.params.attractionID);
+  const {
+    name,
     themepark,
     opening,
     Builder,
@@ -199,34 +217,35 @@ function updateAttraction(req:any, res: any) {
     length,
     height,
     inversions,
-    duration,} = req.body
-    if(name) {
-      // change attraction name
-    }
-    if(opening) {
-      // change opening
-    }
-    if(themepark) {
-      // change themepark
-    }
-    if(Builder) {
-      // change builder
-    }
-    if(type) {
-      // change type
-    }
-    if(length) {
-      //change length
-    }
-    if(height) {
-      // change height
-    }
-    if(inversions) {
-      // change inversions
-    }
-    if(duration) {
-      // change duration
-    }
+    duration,
+  } = req.body;
+  if (name) {
+    // change attraction name
+  }
+  if (opening) {
+    // change opening
+  }
+  if (themepark) {
+    // change themepark
+  }
+  if (Builder) {
+    // change builder
+  }
+  if (type) {
+    // change type
+  }
+  if (length) {
+    //change length
+  }
+  if (height) {
+    // change height
+  }
+  if (inversions) {
+    // change inversions
+  }
+  if (duration) {
+    // change duration
+  }
 }
 export {
   addAttraction,
@@ -234,5 +253,6 @@ export {
   findAttractionReviews,
   findReview,
   setAttractionReview,
-  updateAttraction
+  updateAttraction,
+  getAverageRating
 };
