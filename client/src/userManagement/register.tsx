@@ -73,7 +73,7 @@ function Register() {
             email: email,
             password: password,
           }).then((res) => {
-            if (res.data.registered) {
+            if (res.data.added) {
               navigate("/Login")
             } else {
               setValidated(false)
