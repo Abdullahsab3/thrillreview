@@ -5,6 +5,7 @@ import { useParams, Link } from "react-router-dom";
 import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
 import StarRating from "./starRating";
 import { Search } from 'react-bootstrap-icons';
+import "./styling/browseAttractions.css"
 
 
 interface attractionPreviewInterface {
@@ -12,8 +13,9 @@ interface attractionPreviewInterface {
     name: string,
     themepark: string,
     img: string,
-    starrating: number
-
+    starrating: number,
+    key:number,
+    ref?: (e: HTMLDivElement) => void,
 }
 
 function AttractionPreviewCard(props: attractionPreviewInterface) {
@@ -69,6 +71,7 @@ function GetAttractions(query: string, pageNr: number) {
             console.log(res.data);
         }).catch(e => {
             if (axios.isCancel(e)) return // if cancelled, it was meant to
+            setLoading(false)
             setError(true);
         })
         return () => cancel();
@@ -103,10 +106,31 @@ function BrowseAttractions() {
           if (node) observer.current.observe(node) */
     }, [loading, hasMore])
 
+    //  OM TE TESTEN ZONDER BACKEND
+    attractions = [new Attraction("anubis", "plopsa", "29/01/2003", "someone", "sth", "18.5", "13.5", "5", "99:59:59", 1)]
+
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         setPageNr(1);
         setQuery(intermediateQuery)
         event.preventDefault()
+    }
+
+    function LoadingCard() {
+        return(
+            <Card>
+                <Card.Title> We are loading the attractions, please wait</Card.Title>
+                <Card.Body> In the mean time, grab some tea! </Card.Body>
+            </Card>
+        );
+    }
+
+    function ErrorCard(){
+        return(
+            <Card bg="danger" className="mb-2" >
+            <Card.Title> There has been a problem loading the attractions. Please try again.</Card.Title>
+            <Card.Body> Our apologies for the inconvenience. </Card.Body>
+        </Card>
+        );
     }
 
     //Q : zou ik iedere keer opnieuw laten linken zodat de query update in de link?
@@ -134,17 +158,19 @@ function BrowseAttractions() {
 
             {attractions.map((attraction: Attraction, i: number) => {
                 if (attractions.length === i + 1) {
-                    return (<div ref={lastAttractionRef} key={attraction.id}>
-                        <AttractionPreviewCard id={attraction.id} name={attraction.name} themepark={attraction.themepark} img="https://unsplash.com/photos/C4sxVxcXEQg" starrating={3} />
-                    </div>);
+                    // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
+                    return (
+                        <AttractionPreviewCard ref={lastAttractionRef} key={attraction.id} id={attraction.id} name={attraction.name} themepark={attraction.themepark} img="https://unsplash.com/photos/C4sxVxcXEQg" starrating={3} />
+                    );
                 } else {
-                    return <div key={attraction.id}>
-                        <AttractionPreviewCard id={attraction.id} name={attraction.name} themepark={attraction.themepark} img="https://unsplash.com/photos/C4sxVxcXEQg" starrating={3} />
-                    </div>
+                    return(
+                        <AttractionPreviewCard key={attraction.id} id={attraction.id} name={attraction.name} themepark={attraction.themepark} img="https://unsplash.com/photos/C4sxVxcXEQg" starrating={3} />
+                    );
                 }
             })}
-            <div>{loading && "Loading"}</div>
-            <div>{error && "error"}</div>
+            {loading ? <LoadingCard /> : ""}
+            {error ? <ErrorCard /> : ""}
+           
         </>
     );
 
