@@ -17,6 +17,7 @@ import {
   deleteUser
 } from "./userManagementCallbacks";
 import { addAttraction, findAttractionById, findAttractionReviews, findReview, setAttractionReview, updateAttraction } from "./attractionCallbacks";
+import { addThemePark } from "./themeParkCallbacks";
 import multer from "multer";
 
 const app = express();
@@ -76,6 +77,10 @@ app.post("/attraction/:attractionID/review", validateTokens, setAttractionReview
 app.put("/attraction/:attractionID/review", validateTokens, setAttractionReview)
 app.get("/attraction/:attractionID/review", findReview)
 app.get("/attraction/:attractionID/reviews", findAttractionReviews)
+
+
+//themepark requests
+app.post("/themepark", validateTokens, addThemePark)
 
 app.get("/feed", (req, res) => {
   res.json({ "nothing": "yet" });

@@ -5,7 +5,7 @@ import { getuserAvatar, getuserEmail, User } from './User'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table'
-import { fetchUserFromLocalStorage } from '../localStorageProcessing'
+import { fetchUserFromLocalStorage, removeUserInLocalstorage } from '../localStorageProcessing'
 import { backendServer } from '../helpers'
 import './styling/profile.css'
 
@@ -81,6 +81,13 @@ function Profile() {
                             <tr>
                                 <th>
                                     <Button onClick={() => navigate("/profile/change-password")}>Change Password</Button>
+                                </th>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <Button onClick={() => removeUserInLocalstorage()}>Logout</Button>
                                 </th>
                             </tr>
                         </tbody>

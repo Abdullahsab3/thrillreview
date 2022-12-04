@@ -14,3 +14,7 @@ export function setUserInLocalstorage(user: User): void {
     localStorage.setItem('user', '{"username": ' + `"${user.username}"` + ', "id": ' + user.id + '}')
 
 }
+
+export function removeUserInLocalstorage(): void {
+    localStorage.removeItem('user')
+}

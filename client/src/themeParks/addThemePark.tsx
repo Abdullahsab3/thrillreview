@@ -10,6 +10,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { setSyntheticTrailingComments } from 'typescript';
 import axios from 'axios';
+import { allowedNodeEnvironmentFlags } from 'process';
 
 function AddThemePark() {
     const navigate = useNavigate()
@@ -35,33 +36,50 @@ function AddThemePark() {
             event.preventDefault();
             event.stopPropagation();
         } else { 
-            const streetNr = 21;
-            const street ="Zwaluwenstraat";
-            const postalCode = 8400;
+            //const streetNr = 21;
+            //const street ="Zwaluwenstraat";
+            //const postalCode = 8400;
             const url=`https://nominatim.openstreetmap.org/search?street=${streetNr}%20${street.replaceAll(' ', '%20')}&postalcode=${postalCode}&&format=json`;
-            let lat = 0;
-            let long = 0;
+            //let lat = 0;
+            //let long = 0;
             /** DIT MOET NAAR DE BACKEND want de credentials worden altijd op true gezet
              * dus of dat moet aangepast worden, of het moet veranderen naar de backend
              * daarbij moet het dit zijn: (dus met header) axios.get(url, { headers: {'User-Agent' : "thrillreview"}}) 
              * MAAR PROBLEEM IN CHROME -> nog op te lossen (mss als naar backend dat het probleem magisch verdwijnt :)*/
-             axios.get(url).then(res =>
-                {
-                    // https://stackoverflow.com/questions/64736789/react-leaflet-map-doesnt-update
-                    const data = res.data
-                    console.log(data);
-                    if (data === undefined || data.length === 0) {
-                        alert("Address is not recognised!")
-                    } else {           
-                        lat = data[0].lat
-                        long = data[0].lon
-                    }                   
-                    alert("WHOOOHHHHWWWWOOOOW" + url + "lat "+ lat + "lon " + long);  
+             //axios.get(url).then(res =>
+               // {
+                 //   // https://stackoverflow.com/questions/64736789/react-leaflet-map-doesnt-update
+                   // const data = res.data
+                    //console.log(data);
+                    //if (data === undefined || data.length === 0) {
+                      //  alert("Address is not recognised!")
+                    //} else {           
+                      //  lat = data[0].lat
+                        //long = data[0].lon
+                    //}                   
+                    //alert("WHOOOHHHHWWWWOOOOW" + url + "lat "+ lat + "lon " + long);  
+                //})
+                //event.preventDefault(); // prevent reloading
+            axios.post(backendServer("/themepark"), {
+                name: name,
+                openingsdate: opening,
+                street: street,
+                streetNumber: streetNr,
+                postalCode: postalCode,
+                country: country,
+                type: "",
+                website: url,
+            }).then((response) => {
+                if (response.data.recognised){
+                    navigate("/home")
                 }
-            )
-            
-            event.preventDefault(); // prevent reloading
+            }).catch(function (error) {
+                if (error.response.status === 418) {
+                    alert("Adress not found")
+                }
+            }) 
         }
+        event.preventDefault();
         setValidated(true);
     }
 
@@ -183,7 +201,7 @@ function AddThemePark() {
                                         <Form.Label> Link to themeparks website </Form.Label>
                                         <Form.Control type="url" onChange={(e) => setUrl(e.target.value)} />
                                         <Form.Control.Feedback type="invalid">
-                                            A valid url should be given.
+                                            A valid url should be given, starting with https:// or http://.
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
@@ -195,5 +213,4 @@ function AddThemePark() {
             </Row >
         </div >);
 }
-
 export default AddThemePark;
