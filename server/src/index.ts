@@ -20,6 +20,8 @@ import {
 import { addAttraction, findAttractionById, findAttractionReviews, findReview, getAverageRating, setAttractionReview, updateAttraction } from "./attractionCallbacks";
 import { addThemePark, editThemePark, findThemeParkByID } from "./themeParkCallbacks";
 import multer from "multer";
+import {getRecentAttractions, getRecentReviews, getRecents, getRecentThemeparks} from "./home";
+import Review from "./Review";
 
 const app = express();
 const upload = multer({
@@ -88,6 +90,9 @@ app.get("/themepark/:themeparkID", findThemeParkByID)
 app.put("/themepark/:themeparkID", validateTokens, editThemePark)
 
 app.get("/feed", (req, res) => {
+  getRecents(function (error: string | null, results: any[] | null) {
+    console.log(results)
+  })
   res.json({ "nothing": "yet" });
 });
 
