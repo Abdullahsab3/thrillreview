@@ -35,7 +35,7 @@ export default function ThemeParkPage() {
         const updateAttractionInfo: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault()
-                Axios.put(`/themePark/${themePark}`, themePark.toJSON()).then((res) => {
+                Axios.put(`/themePark/${themeParkID}`, themePark.toJSON()).then((res) => {
                     if (res.data.updated) {
                         setValidated(true)
                         setEdit(false)
@@ -129,7 +129,7 @@ export default function ThemeParkPage() {
         return (
             <Modal className="modal-dialog modal-lg" show={edit} onHide={() => setEdit(false)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Edit the attraction</Modal.Title>
+                    <Modal.Title>Edit the themepark</Modal.Title>
                 </Modal.Header>
 
                 {<ThemeParkInputForm

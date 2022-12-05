@@ -10,64 +10,95 @@ import { ThemePark } from "./ThemePark";
 
 const db = new Database("thrillreview.db");
 
-// TODO: zorg ervoor dat de andere tables ook automatisch gemaakt kunnen worden
+/* User tables */
 db.run(
 "CREATE TABLE IF NOT EXISTS avatars \
 (id INTEGER UNIQUE, filename TEXT, type TEXT, content BLOB)",
 );
 db.run(
-"CREATE TABLE IF NOT EXISTS attractionreview \
-(attractionID INTEGER, userID INTEGER, review TEXT, stars INTEGERS, date TEXT)",
+"CREATE TABLE IF NOT EXISTS user \
+(id INTEGER UNIQUE PRIMARY KEY, username TEXT, email TEXT, hash TEXT)",
 );
 
+/* Attractions tables */
 db.run(
 "CREATE TABLE IF NOT EXISTS attractions \
 (id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, themepark STRING)",
 );
 
-db.run("CREATE TABLE IF NOT EXISTS attractionsopening \
-(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, opening STRING)")
+db.run(
+"CREATE TABLE IF NOT EXISTS attractionsopening \
+(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, opening STRING)",
+);
 
-db.run("CREATE TABLE IF NOT EXISTS attractionsbuilder \
-(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, builder STRING)")
+db.run(
+"CREATE TABLE IF NOT EXISTS attractionsbuilder \
+(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, builder STRING)",
+);
 
-db.run("CREATE TABLE IF NOT EXISTS attractionstype \
-(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, opening STRING)")
+db.run(
+"CREATE TABLE IF NOT EXISTS attractionstype \
+(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, opening STRING)",
+);
 
-db.run("CREATE TABLE IF NOT EXISTS attractionslength \
-(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, length STRING)")
+db.run(
+"CREATE TABLE IF NOT EXISTS attractionslength \
+(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, length STRING)",
+);
 
-db.run("CREATE TABLE IF NOT EXISTS attractionsheight \
-(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, height STRING)")
+db.run(
+"CREATE TABLE IF NOT EXISTS attractionsheight \
+(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, height STRING)",
+);
 
-db.run("CREATE TABLE IF NOT EXISTS attractionsinversions \
-(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, inversions INTEGER)")
+db.run(
+"CREATE TABLE IF NOT EXISTS attractionsinversions \
+(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, inversions INTEGER)",
+);
 
-db.run("CREATE TABLE IF NOT EXISTS attractionsduration \
-(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, duration STRING)")
+db.run(
+"CREATE TABLE IF NOT EXISTS attractionsduration \
+(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, duration STRING)",
+);
 
-db.run("CREATE TABLE IF NOT EXISTS themeparks \
-(id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, street STRING, streetnumber INTEGER, postalcode STRING, country STRING, lat STRING, long STRING)")
+db.run(
+"CREATE TABLE IF NOT EXISTS attractionreview \
+  (attractionID INTEGER, userID INTEGER, review TEXT, stars INTEGERS, date TEXT)",
+);
 
-db.run("CREATE TABLE IF NOT EXISTS themeparksopening \
- (id      INTEGER REFERENCES themeparks (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, opening STRING)")
+/* Themeparks tables */
+db.run(
+"CREATE TABLE IF NOT EXISTS themeparks \
+(id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, street STRING, streetnumber INTEGER, postalcode STRING, country STRING, lat STRING, long STRING)",
+);
 
- db.run("CREATE TABLE IF NOT EXISTS themeparkstype \
- (id      INTEGER REFERENCES themeparks (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, type STRING)")
+db.run(
+"CREATE TABLE IF NOT EXISTS themeparksopening \
+ (id      INTEGER REFERENCES themeparks (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, opening STRING)",
+);
 
- db.run("CREATE TABLE IF NOT EXISTS themeparkswebsite \
- (id      INTEGER REFERENCES themeparks (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, website STRING)")
+db.run(
+"CREATE TABLE IF NOT EXISTS themeparkstype \
+ (id      INTEGER REFERENCES themeparks (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, type STRING)",
+);
+
+db.run(
+"CREATE TABLE IF NOT EXISTS themeparkswebsite \
+ (id      INTEGER REFERENCES themeparks (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, website STRING)",
+);
 
 function getLastId() {
   return new Promise<number>((resolve, reject) => {
     db.get(
-      "SELECT last_insert_rowid()",[],
+      "SELECT last_insert_rowid()",
+      [],
       (err, result) => {
-        resolve(result["last_insert_rowid()"])
-      }
+        resolve(result["last_insert_rowid()"]);
+      },
     );
   });
 }
+
 function checkForUsernameExistence(
   username: string,
   getResult: (exists: boolean, message: string | null) => void,
@@ -166,97 +197,113 @@ function getAttraction(
     "SELECT * FROM attractionsopening WHERE id = ?",
     [attractionID],
     function (err: Error, result: any) {
-      if(err){
-      }else if (result){
+      if (err) {
+        getResult("Something went wrong while getting the attraction", null);
+      } else if (result) {
         opening = result.opening;
       }
-    }
-  );
-  db.get(
-    "SELECT * FROM attractionsbuilder WHERE id = ?",
-    [attractionID],
-    function (err: Error, result: any) {
-      if(err){
-      }else if (result){
-        builder = result.builder;
-      }
-    }
-  );
-  db.get(
-    "SELECT * FROM attractionstype WHERE id = ?",
-    [attractionID],
-    function (err: Error, result: any) {
-      if(err){
-      }else if (result){
-        type = result.type;
-      }
-    }
-  );
-  db.get(
-    "SELECT * FROM attractionsheight WHERE id = ?",
-    [attractionID],
-    function (err: Error, result: any) {
-      if(err){
-      }else if (result){
-        height = result.height;
-      }
-    }
-  );
-  db.get(
-    "SELECT * FROM attractionslength WHERE id = ?",
-    [attractionID],
-    function (err: Error, result: any) {
-      if(err){
-      }else if (result){
-        length = result.lenght;
-      }
-    }
-  );
-  db.get(
-    "SELECT * FROM attractionsinversions WHERE id = ?",
-    [attractionID],
-    function (err: Error, result: any) {
-      if(err){
-      }else if (result){
-        inversions = result.inversions;
-      }
-    }
-  ); db.get(
-    "SELECT * FROM attractionsduration WHERE id = ?",
-    [attractionID],
-    function (err: Error, result: any) {
-      if(err){
-      }else if (result){
-        duration = result.duration;
-      }
-    }
-  );
-  db.get(
-    "SELECT * FROM attractions WHERE id = ?",
-    [attractionID],
-    function (err: Error, result: any) {
-      if (err) {
-        getResult("Something went wrong when getting the attraction.", null);
-      }
-      if (result) {
-        getResult(
-          null,
-          new Attraction(
-            result.name,
-            result.themepark,
-            opening,
-            builder,
-            type,
-            height,
-            length,
-            inversions,
-            duration,
-            result.id,
-          ),
-        );
-      } else {
-        getResult(null, null);
-      }
+
+      db.get(
+        "SELECT * FROM attractionsbuilder WHERE id = ?",
+        [attractionID],
+        function (err: Error, result: any) {
+          if (err) {
+          } else if (result) {
+            builder = result.builder;
+          }
+        },
+      );
+
+      db.get(
+        "SELECT * FROM attractionstype WHERE id = ?",
+        [attractionID],
+        function (err: Error, result: any) {
+          if (err) {
+            getResult(
+              "Something wrong happened while gettint the attraction",
+              null,
+            );
+          } else if (result) {
+            type = result.type;
+          }
+        },
+      );
+
+      db.get(
+        "SELECT * FROM attractionsheight WHERE id = ?",
+        [attractionID],
+        function (err: Error, result: any) {
+          if (err) {
+          } else if (result) {
+            height = result.height;
+          }
+        },
+      );
+
+      db.get(
+        "SELECT * FROM attractionslength WHERE id = ?",
+        [attractionID],
+        function (err: Error, result: any) {
+          if (err) {
+          } else if (result) {
+            length = result.length;
+          }
+        },
+      );
+
+      db.get(
+        "SELECT * FROM attractionsinversions WHERE id = ?",
+        [attractionID],
+        function (err: Error, result: any) {
+          if (err) {
+          } else if (result) {
+            inversions = result.inversions;
+          }
+        },
+      );
+
+      db.get(
+        "SELECT * FROM attractionsduration WHERE id = ?",
+        [attractionID],
+        function (err: Error, result: any) {
+          if (err) {
+          } else if (result) {
+            duration = result.duration;
+          }
+        },
+      );
+
+      db.get(
+        "SELECT * FROM attractions WHERE id = ?",
+        [attractionID],
+        function (err: Error, result: any) {
+          if (err) {
+            getResult(
+              "Something went wrong when getting the attraction.",
+              null,
+            );
+          }
+          if (result) {
+            getResult(
+              null,
+              new Attraction(
+                result.name,
+                result.themepark,
+                opening,
+                builder,
+                type,
+                height,
+                length,
+                inversions,
+                duration,
+                result.id,
+              ),
+            );
+          } else {
+            getResult(null, null);
+          }
+        },
+      );
     },
   );
 }
@@ -272,31 +319,31 @@ function getThemePark(
     "SELECT * FROM themeparksopening WHERE id = ?",
     [themeParkID],
     function (err: Error, result: any) {
-      if(err){
-      }else if (result){
+      if (err) {
+      } else if (result) {
         openingsdate = result.opening;
       }
-    }
+    },
   );
   db.get(
     "SELECT * FROM themeparkstype WHERE id = ?",
     [themeParkID],
     function (err: Error, result: any) {
-      if(err){
-      }else if (result){ 
+      if (err) {
+      } else if (result) {
         type = result.type;
       }
-    }
+    },
   );
   db.get(
     "SELECT * FROM themeparkswebsite WHERE id = ?",
     [themeParkID],
     function (err: Error, result: any) {
-      if(err){
-      }else if (result){
+      if (err) {
+      } else if (result) {
         website = result.website;
       }
-    }
+    },
   );
   db.get(
     "SELECT * FROM themeparks WHERE id = ?",
@@ -470,7 +517,6 @@ function checkForUserAvatar(
 }
 
 export {
-  getLastId,
   checkForEmailExistence,
   checkForUserAvatar,
   checkForUserExistence,
@@ -479,7 +525,8 @@ export {
   getAttraction,
   getAttractionRating,
   getAttractionReviews,
+  getLastId,
   getReview,
+  getThemePark,
   validateUserPassword,
-  getThemePark
 };

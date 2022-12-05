@@ -20,7 +20,7 @@ interface attractionPreviewInterface {
 
 function AttractionPreviewCard(props: attractionPreviewInterface) {
     return (
-        <Card>
+        <Card className="browseAttractionsCard">
             <Card.Title>{props.name}</Card.Title>
             <Card.Img variant="bottom" src={props.img} alt={`picture of attraction with name ${props.name}`} />
             <ListGroup className="list-group-flush">
@@ -126,7 +126,7 @@ function BrowseAttractions() {
 
     function ErrorCard(){
         return(
-            <Card bg="danger" className="mb-2" >
+            <Card bg="danger" className="browseAttractionsCard mb-2" >
             <Card.Title> There has been a problem loading the attractions. Please try again.</Card.Title>
             <Card.Body> Our apologies for the inconvenience. </Card.Body>
         </Card>
@@ -139,7 +139,7 @@ function BrowseAttractions() {
     // voordeel: link wordt geupdatet
     return (
         <>
-            <Card>
+            <Card className="browseAttractionsCard">
                 <Card.Body>
                     <Card.Title>Search Attractions</Card.Title>
                     <Card.Text> Find the attraction you are looking for! </Card.Text>
