@@ -1,50 +1,41 @@
 import Axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { Attraction } from "./Attraction"
 import { backendServer } from "../helpers"
 import { Button, Card, Form, Modal, Table } from "react-bootstrap"
-import "./styling/attractionPage.css"
-import Reviews from "./Reviews"
-import AttractionInputForm from "./attractionInputForm"
-import StarRating from "./starRating"
+import { ThemePark } from "./themePark"
+import ThemeParkInputForm from "./themeParkInputForm"
 
-export default function AttractionPage() {
-    const [attraction, setAttraction] = useState<Attraction>()
-    const [rating, setRating] = useState(0)
+export default function ThemeParkPage() {
+    const [themePark, setThemePark] = useState<ThemePark>()
     const [error, setError] = useState("")
     const [validated, setValidated] = useState(false)
     const [edit, setEdit] = useState(false)
 
 
-    const { attractionID } = useParams()
+    const { themeParkID } = useParams()
 
     function getAttractioninfo() {
 
-        Axios.get(backendServer(`/attraction/${attractionID}`)).then((res) => {
+        Axios.get(backendServer(`/themePark/${themeParkID}`)).then((res) => {
             // HIER EEN BUG: STUUR IETS VOOR DE LEGE DINGEN IPV NIETS
-            const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = res.data
-            setAttraction(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, id))
+            const { name, openingdate, street, streetNumber, postalCode, country, type, website, id } = res.data
+            setThemePark(new ThemePark(name, openingdate, street, streetNumber, postalCode, country, type, website, id))
         }).catch(function (error: any) {
             setError(error.response.data)
         })
 
-        Axios.get(backendServer(`/attraction/${attractionID}/rating`)).then((res) => {
-            setRating(res.data.rating)
-        }).catch(function (error: any) {
-            setError(error.reponse.data)
-        })
     }
 
     useEffect(() => {
         getAttractioninfo()
     }, [])
 
-    function submitEdits(attraction: Attraction) {
+    function submitEdits(themePark: ThemePark) {
         const updateAttractionInfo: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault()
-                Axios.put(`/attraction/${attractionID}`, attraction.toJSON()).then((res) => {
+                Axios.put(`/themePark/${themePark}`, themePark.toJSON()).then((res) => {
                     if (res.data.updated) {
                         setValidated(true)
                         setEdit(false)
@@ -70,24 +61,25 @@ export default function AttractionPage() {
 
 
     const info = [
-        <th className="info">Themepark: </th>,
+        <th className="info">name: </th>,
         <th className="info">Opening Date: </th>,
-        <th className="info">Builder: </th>,
+        <th className="info">Street: </th>,
+        <th className="info">street number: </th>,
+        <th className="info">postal Code: </th>,
+        <th className="info">country: </th>,
         <th className="info">Type: </th>,
-        <th className="info">Height: </th>,
-        <th className="info">Length: </th>,
-        <th className="info">Inversions: </th>,
-        <th className="info">Duration: </th>
+        <th className="info">Website: </th>
     ]
     const data = [
-        <td>{attraction?.themepark}</td>,
-        <TableData data={attraction?.openingdate} />,
-        <TableData data={attraction?.builder} />,
-        <TableData data={attraction?.type} />,
-        <TableData data={attraction?.height} />,
-        <TableData data={attraction?.length} />,
-        <TableData data={attraction?.inversions} />,
-        <TableData data={attraction?.duration} />
+
+        <td>{themePark?.name}</td>,
+        <TableData data={themePark?.openingdate} />,
+        <TableData data={themePark?.street} />,
+        <TableData data={themePark?.streetNumber} />,
+        <TableData data={themePark?.postalCode} />,
+        <TableData data={themePark?.country} />,
+        <TableData data={themePark?.type} />,
+        <TableData data={themePark?.website} />
     ]
 
 
@@ -108,9 +100,8 @@ export default function AttractionPage() {
         return (
             <div>
                 <div className="AttractionTitle d-flex flex-column justify-content-center">
-                    <h1 className="title">{attraction?.name}
+                    <h1 className="title">{themePark?.name}
                     </h1>
-                    <StarRating className="attractionAvgRating" rating={rating}/>
                 </div>
 
                 <div className="d-flex flex-column">
@@ -124,7 +115,7 @@ export default function AttractionPage() {
                         <tbody>
                             <tr>
                                 <th>
-                                    <Button onClick={() => setEdit(true)}>Edit the attraction's information</Button>
+                                    <Button onClick={() => setEdit(true)}>Edit the themepark's information</Button>
                                 </th>
                             </tr>
                         </tbody>
@@ -136,17 +127,17 @@ export default function AttractionPage() {
 
     function getInformationForm() {
         return (
-            <Modal show={edit} onHide={() => setEdit(false)}>
+            <Modal className="modal-dialog modal-lg" show={edit} onHide={() => setEdit(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit the attraction</Modal.Title>
                 </Modal.Header>
 
-                <AttractionInputForm
-                    title="Edit the attractions information"
-                    text="Here you can edit the information of this attraction"
-                    attraction={attraction as Attraction}
+                {<ThemeParkInputForm
+                    title="Edit the themeparks information"
+                    text="Here you can edit the information of this themepark"
+                    themepark={themePark as ThemePark}
                     onFormSubmit={submitEdits}
-                    validated={validated} />
+                    validated={validated} />}
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setEdit(false)}>
                         Close
@@ -161,14 +152,13 @@ export default function AttractionPage() {
             <div>
                 {getInformationCard()}
                 {getInformationForm()}
-                <Reviews attractionID={attractionID as string} />
             </div>
         )
 
     }
     return (
         <div className="AttractionPage">
-            {attraction ? <AttractionPageBody /> : <h1 className="title">{`No attraction found with ID ${attractionID}`}</h1>}
+            {themePark ? <AttractionPageBody /> : <h1 className="title">{`No themepark found with ID ${themeParkID}`}</h1>}
         </div>)
 
 }

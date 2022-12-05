@@ -1,5 +1,5 @@
 import { ThemePark } from "./ThemePark";
-import { db } from "./database";
+import { db, getThemePark } from "./database";
 import { User } from "./User";
 import axios from 'axios';
 
@@ -52,6 +52,59 @@ function addThemePark(req: any, res: any) {
     }) 
 }
 
+function editThemePark(req: any, res: any) {
+  const themeparkID = parseInt(req.params.themeparkID);
+  const {
+    name,
+    openingsdate,
+    street,
+    streetNumber,
+    postalCode,
+    country,
+    lat,
+    long,
+    type,
+    website,
+} = req.body;
+  db.run(
+    "UPDATE attractions SET name = ?, openingsdate = ?, street = ?, streetnumber = ?, postalcode = ?, country = ?, lat = ?, long = ?, type = ? website = ? WHERE id = ?",
+    [
+      name,
+      openingsdate,
+      street,
+      streetNumber,
+      postalCode,
+      country,
+      lat,
+      long,
+      type,
+      website,
+      themeparkID,
+    ], function (error) {
+      if(error) {
+        res.status(400).json({error: "Something went wrong while trying to update the themepark information"})
+      }
+    })
+}
+
+function findThemeParkByID(req: any, res: any) {
+    const id = req.params.themeparkID;
+    getThemePark(id, function (error: any, attraction: ThemePark | null) {
+      if (error) {
+        return res.status(400).json({ error: error });
+      }
+      if (attraction) {
+        return res.status(200).json(attraction.toJSON());
+      } else {
+        return res.status(400).json({
+          attractionID: "No attraction found with the given ID",
+        });
+      }
+    });
+  }
+
 export {
-    addThemePark
+    addThemePark,
+    findThemeParkByID,
+    editThemePark
 }

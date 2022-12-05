@@ -4,11 +4,12 @@ import "./styling/starRating.css"
 
 interface ratingProps {
     rating: number
+    className?: string
 }
 
 export default function StarRating(props: ratingProps) {
     return (
-        <div className="star-rating">
+        <div className={props.className}>
             {[...Array(5)].map((star, index) => {
                 index += 1;
                 return (

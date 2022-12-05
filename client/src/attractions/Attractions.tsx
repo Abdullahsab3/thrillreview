@@ -7,6 +7,7 @@ import { Search } from 'react-bootstrap-icons';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useState } from 'react';
 import CardWithLinkTo from '../higherOrderComponents/HigherOrderComponents';
+import { Link } from 'react-router-dom';
 
 function Attractions() {
 
@@ -53,9 +54,11 @@ function Attractions() {
                     <Form onSubmit={handleSubmit}>
                         <InputGroup>
                             <Form.Control type="search" onChange={(e) => setquery(e.target.value)} placeholder="Search" />
+                            <Link to={`/browse-attractions/${query}`}>        
                             <Button type="submit">
                                 <Search />
-                            </Button>
+                            </Button>   
+                            </Link>
                         </InputGroup>
                     </Form>
 
