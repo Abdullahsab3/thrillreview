@@ -1,6 +1,8 @@
+import { buffer } from "stream/consumers";
 import { Attraction } from "./Attraction";
 import {
   db,
+  getLastId,
   getAttraction,
   getAttractionRating,
   getAttractionReviews,
@@ -8,12 +10,12 @@ import {
 } from "./database";
 import { User } from "./User";
 
-function addAttraction(req: any, res: any) {
+async function addAttraction(req: any, res: any) {
   const {
     name,
     themepark,
-    opening,
-    Builder,
+    openingdate,
+    builder,
     type,
     length,
     height,
@@ -22,18 +24,11 @@ function addAttraction(req: any, res: any) {
   } = req.body;
   const userid = req.user.id;
   db.run(
-    "INSERT INTO attractions (userID, name, themepark, opening, Builder, type, length, height, inversions, duration) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO attractions (userID, name, themepark) VALUES(?, ?, ?)",
     [
       userid,
       name,
       themepark,
-      opening,
-      Builder,
-      type,
-      length,
-      height,
-      inversions,
-      duration,
     ],
     (error: Error) => {
       if (error) {
@@ -43,6 +38,70 @@ function addAttraction(req: any, res: any) {
       }
     },
   );
+  const lastid = await getLastId();
+  if (openingdate){
+    db.run(
+      "INSERT INTO attractionsopening (id, opening) VALUES(?, ?)",
+      [
+        lastid,
+        openingdate
+      ]
+    )
+  }
+  if (builder){
+    db.run(
+      "INSERT INTO attractionsbuilder (id, builder) VALUES(?, ?)",
+      [
+        lastid,
+        builder
+      ]
+    )
+  }
+  if (type){
+    db.run(
+      "INSERT INTO attractionsopening (id, opening) VALUES(?, ?)",
+      [
+        lastid,
+        openingdate
+      ]
+    )
+  }
+  if (length){
+    db.run(
+      "INSERT INTO attractionslength (id, length) VALUES(?, ?)",
+      [
+        lastid,
+        length
+      ]
+    )
+  }
+  if (height){
+    db.run(
+      "INSERT INTO attractionsheight (id, height) VALUES(?, ?)",
+      [
+        lastid,
+        height
+      ]
+    )
+  }
+  if (inversions){
+    db.run(
+      "INSERT INTO attractionsinversions (id, inversions) VALUES(?, ?)",
+      [
+        lastid,
+        inversions
+      ]
+    )
+  }
+  if (duration){
+    db.run(
+      "INSERT INTO attractionsduration (id, duration) VALUES(?, ?)",
+      [
+        lastid,
+        duration
+      ]
+    )
+  }
 }
 
 function findAttractionById(req: any, res: any) {

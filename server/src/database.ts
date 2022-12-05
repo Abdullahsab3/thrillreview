@@ -22,8 +22,29 @@ db.run(
 
 db.run(
 "CREATE TABLE IF NOT EXISTS attractions \
-(id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, themepark STRING, opening STRING, builder STRING, type STRING, length STRING, height STRING, inversions INTEGER, duration STRING)",
+(id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, themepark STRING)",
 );
+
+db.run("CREATE TABLE IF NOT EXISTS attractionsopening \
+(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, opening STRING)")
+
+db.run("CREATE TABLE IF NOT EXISTS attractionsbuilder \
+(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, builder STRING)")
+
+db.run("CREATE TABLE IF NOT EXISTS attractionstype \
+(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, opening STRING)")
+
+db.run("CREATE TABLE IF NOT EXISTS attractionslength \
+(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, length STRING)")
+
+db.run("CREATE TABLE IF NOT EXISTS attractionsheight \
+(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, height STRING)")
+
+db.run("CREATE TABLE IF NOT EXISTS attractionsinversions \
+(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, inversions INTEGER)")
+
+db.run("CREATE TABLE IF NOT EXISTS attractionsduration \
+(id      INTEGER REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, duration STRING)")
 
 db.run("CREATE TABLE IF NOT EXISTS themeparks \
 (id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, street STRING, streetnumber INTEGER, postalcode STRING, country STRING, lat STRING, long STRING)")
@@ -134,6 +155,82 @@ function getAttraction(
   attractionID: number,
   getResult: (error: any, attraction: Attraction | null) => void,
 ) {
+  let opening = "";
+  let builder = "";
+  let type = "";
+  let height = "";
+  let length = "";
+  let inversions = "";
+  let duration = "";
+  db.get(
+    "SELECT * FROM attractionsopening WHERE id = ?",
+    [attractionID],
+    function (err: Error, result: any) {
+      if(err){
+      }else if (result){
+        opening = result.opening;
+      }
+    }
+  );
+  db.get(
+    "SELECT * FROM attractionsbuilder WHERE id = ?",
+    [attractionID],
+    function (err: Error, result: any) {
+      if(err){
+      }else if (result){
+        builder = result.builder;
+      }
+    }
+  );
+  db.get(
+    "SELECT * FROM attractionstype WHERE id = ?",
+    [attractionID],
+    function (err: Error, result: any) {
+      if(err){
+      }else if (result){
+        type = result.type;
+      }
+    }
+  );
+  db.get(
+    "SELECT * FROM attractionsheight WHERE id = ?",
+    [attractionID],
+    function (err: Error, result: any) {
+      if(err){
+      }else if (result){
+        height = result.height;
+      }
+    }
+  );
+  db.get(
+    "SELECT * FROM attractionslength WHERE id = ?",
+    [attractionID],
+    function (err: Error, result: any) {
+      if(err){
+      }else if (result){
+        length = result.lenght;
+      }
+    }
+  );
+  db.get(
+    "SELECT * FROM attractionsinversions WHERE id = ?",
+    [attractionID],
+    function (err: Error, result: any) {
+      if(err){
+      }else if (result){
+        inversions = result.inversions;
+      }
+    }
+  ); db.get(
+    "SELECT * FROM attractionsduration WHERE id = ?",
+    [attractionID],
+    function (err: Error, result: any) {
+      if(err){
+      }else if (result){
+        duration = result.duration;
+      }
+    }
+  );
   db.get(
     "SELECT * FROM attractions WHERE id = ?",
     [attractionID],
@@ -147,13 +244,13 @@ function getAttraction(
           new Attraction(
             result.name,
             result.themepark,
-            result.opening,
-            result.builder,
-            result.type,
-            result.height,
-            result.length,
-            result.inversions,
-            result.duration,
+            opening,
+            builder,
+            type,
+            height,
+            length,
+            inversions,
+            duration,
             result.id,
           ),
         );
