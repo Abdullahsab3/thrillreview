@@ -26,8 +26,27 @@ db.run(
 );
 
 db.run("CREATE TABLE IF NOT EXISTS themeparks \
-(id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, openingsdate STRING, street STRING, streetnumber INTEGER, postalcode STRING, country STRING, lat STRING, long STRING, type STRING, website STRING)")
+(id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, street STRING, streetnumber INTEGER, postalcode STRING, country STRING, lat STRING, long STRING)")
 
+db.run("CREATE TABLE IF NOT EXISTS themeparksopening \
+ (id      INTEGER REFERENCES themeparks (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, opening STRING)")
+
+ db.run("CREATE TABLE IF NOT EXISTS themeparkstype \
+ (id      INTEGER REFERENCES themeparks (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, type STRING)")
+
+ db.run("CREATE TABLE IF NOT EXISTS themeparkswebsite \
+ (id      INTEGER REFERENCES themeparks (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, website STRING)")
+
+function getLastId() {
+  return new Promise<number>((resolve, reject) => {
+    db.get(
+      "SELECT last_insert_rowid()",[],
+      (err, result) => {
+        resolve(result["last_insert_rowid()"])
+      }
+    );
+  });
+}
 function checkForUsernameExistence(
   username: string,
   getResult: (exists: boolean, message: string | null) => void,
@@ -149,6 +168,39 @@ function getThemePark(
   themeParkID: number,
   getResult: (error: any, themepark: ThemePark | null) => void,
 ) {
+  let openingsdate = "";
+  let type = "";
+  let website = "";
+  db.get(
+    "SELECT * FROM themeparksopening WHERE id = ?",
+    [themeParkID],
+    function (err: Error, result: any) {
+      if(err){
+      }else if (result){
+        openingsdate = result.opening;
+      }
+    }
+  );
+  db.get(
+    "SELECT * FROM themeparkstype WHERE id = ?",
+    [themeParkID],
+    function (err: Error, result: any) {
+      if(err){
+      }else if (result){ 
+        type = result.type;
+      }
+    }
+  );
+  db.get(
+    "SELECT * FROM themeparkswebsite WHERE id = ?",
+    [themeParkID],
+    function (err: Error, result: any) {
+      if(err){
+      }else if (result){
+        website = result.website;
+      }
+    }
+  );
   db.get(
     "SELECT * FROM themeparks WHERE id = ?",
     [themeParkID],
@@ -160,13 +212,13 @@ function getThemePark(
           null,
           new ThemePark(
             result.name,
-            result.openingsdate,
+            openingsdate,
             result.street,
             result.streetnumber,
             result.postalcode,
             result.country,
-            result.type,
-            result.website,
+            type,
+            website,
             result.id,
           ),
         );
@@ -321,6 +373,7 @@ function checkForUserAvatar(
 }
 
 export {
+  getLastId,
   checkForEmailExistence,
   checkForUserAvatar,
   checkForUserExistence,
