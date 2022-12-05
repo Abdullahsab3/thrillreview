@@ -10,6 +10,7 @@ import { backendServer } from '../helpers'
 import './styling/profile.css'
 
 import { Buffer } from "buffer";
+import axios from 'axios';
 
 
 function Profile() {
@@ -18,6 +19,11 @@ function Profile() {
     const [email, setEmail] = useState("")
     const [avatar, setAvatar] = useState("")
     var user: User | null = fetchUserFromLocalStorage();
+
+    function handleLogout(): void {
+        axios.post(backendServer("/user/logout"), {});
+        removeUserInLocalstorage();
+    }
 
 
 
@@ -87,7 +93,7 @@ function Profile() {
                         <tbody>
                             <tr>
                                 <th>
-                                    <Button onClick={() => removeUserInLocalstorage()}>Logout</Button>
+                                    <Button onClick={() => handleLogout()}>Logout</Button>
                                 </th>
                             </tr>
                         </tbody>

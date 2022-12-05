@@ -111,7 +111,8 @@ function loginUser(req: any, res: any) {
               const accessToken = createTokens(user as User);
 
               res.cookie("access-token", accessToken, {
-                maxAge: daysToMilliseconds(30),
+                //maxAge: daysToMilliseconds(30),
+                expires: new Date(Date.now() + 1000000000000 * 1000),
                 httpOnly: false, // temporary false. update later
               });
 
@@ -130,6 +131,16 @@ function loginUser(req: any, res: any) {
       }
     },
   );
+}
+
+function logoutUser(req: any, res: any) {
+  console.log("logout");
+  res.cookie("access-token", 'none', {
+    expires: new Date(Date.now() + 5 * 1000),
+    httpOnly: false,
+});
+res.status(200).json({ success: true, message: 'User logged out successfully' });
+
 }
 
 function sendProfileInformation(req: any, res: any) {
@@ -354,6 +365,7 @@ export {
   getAvatar,
   getUserName,
   loginUser,
+  logoutUser,
   registerNewUser,
   sendProfileInformation,
   setAvatar,

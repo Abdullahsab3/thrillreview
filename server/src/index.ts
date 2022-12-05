@@ -5,6 +5,7 @@ import { validateTokens } from "./JWT";
 import {
   ChangePassword,
   loginUser,
+  logoutUser,
   registerNewUser,
   sendProfileInformation,
   updateEmail,
@@ -57,6 +58,7 @@ app.use(cors(corsOptions));
 // usermanagement requests
 app.post("/user", registerNewUser);
 app.post("/user/login", loginUser);
+app.post("/user/logout", logoutUser);
 app.get("/user/email", validateTokens, sendProfileInformation);
 app.get("/user/:id/username", getUserName)
 
