@@ -1,5 +1,5 @@
 import { ThemePark } from "./ThemePark";
-import { db, getLastId, getThemePark } from "./database";
+import { db, getLastId, getThemePark, getThemeParksInCoordinatesRange } from "./database";
 import { User } from "./User";
 import axios from "axios";
 
@@ -194,4 +194,26 @@ function findThemeParkByID(req: any, res: any) {
   });
 }
 
-export { addThemePark, editThemePark, findThemeParkByID };
+function findThemeParksInCoordinatesRange(req: any, res: any) {
+  const {
+    minLat,
+    maxLat,
+    minLong,
+    maxLong
+  } = req.body;
+  getThemeParksInCoordinatesRange(minLat, maxLat, minLong, maxLong, 
+    function (error: any, results: any | null) {
+      if (error) {
+        return res.status(400).json({ error: error });
+      }
+      if (results) {
+        return res.status(200).json({ results: results });
+      } else {
+        return res.status(400).json({ results: "no themeparks in this range"});
+
+      }
+    });
+
+}
+
+export { addThemePark, editThemePark, findThemeParkByID, findThemeParksInCoordinatesRange };
