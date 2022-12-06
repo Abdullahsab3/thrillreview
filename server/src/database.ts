@@ -308,6 +308,17 @@ function getAttraction(
   );
 }
 
+function findAttractionName(attractionID: number, getName: (error: string | null, result: string | null) => void) {
+  db.get("SELECT name FROM attractions WHERE id = ?", [attractionID], function (error, result) {
+    if(error) {
+      getName("Something went wrong while retrieving the attraction name", null)
+    }
+    if(result) {
+      getName(null, result.name)
+    }
+  })
+}
+
 function getThemePark(
   themeParkID: number,
   getResult: (error: any, themepark: ThemePark | null) => void,
@@ -529,4 +540,5 @@ export {
   getReview,
   getThemePark,
   validateUserPassword,
+  findAttractionName
 };

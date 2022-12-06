@@ -11,7 +11,7 @@ import StarRatingForm from "./starRatingForm";
 import "./styling/reviewForm.css"
 
 interface writReviewProps {
-    attractionID: string
+    attractionID: number
     edit?: boolean
 }
 export default function WriteReview(props: writReviewProps) {

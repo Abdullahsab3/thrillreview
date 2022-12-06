@@ -17,11 +17,12 @@ import {
   getUserName,
   deleteUser
 } from "./userManagementCallbacks";
-import { addAttraction, findAttractionById, findAttractionReviews, findReview, getAverageRating, setAttractionReview, updateAttraction } from "./attractionCallbacks";
+import { addAttraction, findAttractionById, findAttractionReviews, findReview, getAttractionName, getAverageRating, setAttractionReview, updateAttraction } from "./attractionCallbacks";
 import { addThemePark, editThemePark, findThemeParkByID } from "./themeParkCallbacks";
 import multer from "multer";
 import {getRecentAttractions, getRecentReviews, getRecents, getRecentThemeparks} from "./home";
 import Review from "./Review";
+import { sendFeeds } from "./feedsCallbacks";
 
 const app = express();
 const upload = multer({
@@ -82,6 +83,7 @@ app.put("/attraction/:attractionID/review", validateTokens, setAttractionReview)
 app.get("/attraction/:attractionID/review", findReview)
 app.get("/attraction/:attractionID/reviews", findAttractionReviews)
 app.get("/attraction/:attractionID/rating", getAverageRating)
+app.get("/attraction/:attractionID/name", getAttractionName)
 
 
 //themepark requests
@@ -89,12 +91,7 @@ app.post("/themepark", validateTokens, addThemePark)
 app.get("/themepark/:themeparkID", findThemeParkByID)
 app.put("/themepark/:themeparkID", validateTokens, editThemePark)
 
-app.get("/feed", (req, res) => {
-  getRecents(function (error: string | null, results: any[] | null) {
-    console.log(results)
-  })
-  res.json({ "nothing": "yet" });
-});
+app.get("/feed", sendFeeds);
 
 app.listen(5001, () => {
   console.log("server is running on port 5001");

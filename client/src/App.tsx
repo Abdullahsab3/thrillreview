@@ -2,7 +2,7 @@ import './styling/App.css';
 import Navigationbar from './Navigationbar';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Routes } from 'react-router-dom'
-import Home from './Home';
+import Home from './home/Home';
 import Map from './Map'
 import ThemePark from './themeParks/ThemeParks';
 import Attractions from './attractions/Attractions';

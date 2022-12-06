@@ -10,10 +10,11 @@ import "./styling/review.css"
 
 interface ReviewProps {
     userID: number
-    attractionID: string
+    attractionID: number
     reviewText: string
     rating: number
     date: string
+    className?: string
 }
 export default function Review(props: ReviewProps) {
     const [Error, setError] = useState("")
@@ -23,8 +24,6 @@ export default function Review(props: ReviewProps) {
     const [editedClicked, setEditedClicked] = useState(false)
 
     const user: User | null = fetchUserFromLocalStorage()
-
-
 
 
     useEffect(() => {
@@ -51,7 +50,7 @@ export default function Review(props: ReviewProps) {
 
     return (
         <div>
-            <Card className="comment">
+            <Card className={props.className ? `comment ${props.className}` : "comment"}>
                 <Card.Title>
                     <div>
                         {avatar && <img src={avatar} className="commentAvatar" />}

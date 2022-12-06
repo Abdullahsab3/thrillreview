@@ -70,7 +70,7 @@ export default function ChangeEmail() {
 
         return (
             <div className='col d-flex justify-content-center'>
-                <Card className='card'>
+                <Card className='userManagementCard'>
                     <Card.Body>
                         <Card.Title><strong>Change your email</strong></Card.Title>
                         <Form validated={validated} onSubmit={handleChangeEmail}>

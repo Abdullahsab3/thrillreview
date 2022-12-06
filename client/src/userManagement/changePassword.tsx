@@ -77,7 +77,7 @@ export default function ChangePassword() {
     if (savedUser) {
         return (
             <div className='col d-flex justify-content-center'>
-                <Card className='card'>
+                <Card className='userManagementCard'>
                     <Card.Body>
                         <Card.Title><strong>Change your password</strong></Card.Title>
                         <Form validated={validated} onSubmit={handleChangePassword}>

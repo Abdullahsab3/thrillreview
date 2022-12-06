@@ -23,6 +23,17 @@ async function getUsername(
   });
 }
 
+async function getAttractionName(
+  id: number,
+  getRes: (error: string | null, username: string | null) => void,
+) {
+  Axios.get(`/attraction/${id}/name`).then((res) => {
+    getRes(null, res.data.name);
+  }).catch(function (error) {
+    getRes(error.response.data.error, null);
+  });
+}
+
 // TODO: zorg voor de error handling
 async function getuserEmail(getRes: (email: string) => void) {
   const res = await Axios.get(backendServer("/user/email"));
@@ -34,10 +45,15 @@ function getuserAvatar(
   id: number,
   getRes: (error: string | null, avatar: string | null) => void,
 ) {
-  Axios.get(backendServer(`/user/${id}/avatar`), { responseType: "blob", validateStatus: function(status) {return status < 500} }).then(
+  Axios.get(backendServer(`/user/${id}/avatar`), {
+    responseType: "blob",
+    validateStatus: function (status) {
+      return status < 500;
+    },
+  }).then(
     (res) => {
-      if(res.status == 404) {
-        getRes("No user avatar available", null)
+      if (res.status == 404) {
+        getRes("No user avatar available", null);
       } else if (res.data) {
         let reader = new window.FileReader();
         reader.readAsDataURL(res.data);
@@ -53,4 +69,4 @@ function getuserAvatar(
   });
 }
 
-export { getuserAvatar, getuserEmail, getUsername, User };
+export { getuserAvatar, getuserEmail, getUsername, User , getAttractionName};

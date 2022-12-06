@@ -6,7 +6,7 @@ import Review from "./Review"
 import WriteReview from "./reviewForm"
 
 interface ReviewsProps {
-    attractionID: string
+    attractionID: number
 }
 export default function Reviews(props: ReviewsProps) {
     const disabledPage = -1

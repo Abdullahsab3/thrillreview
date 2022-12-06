@@ -82,7 +82,7 @@ function Login() {
     return (
         <div id='Login'>
             <div className="col d-flex justify-content-center">
-                <Card className='card' border='secondary'>
+                <Card className='userManagementCard' border='secondary'>
                     <Card.Body>
                         <Card.Title ><strong>Log in</strong></Card.Title>
                         <Form noValidate validated={validated} onSubmit={handleLoginSubmit}>

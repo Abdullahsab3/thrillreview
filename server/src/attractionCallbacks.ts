@@ -2,6 +2,7 @@ import { buffer } from "stream/consumers";
 import { Attraction } from "./Attraction";
 import {
   db,
+  findAttractionName,
   getAttraction,
   getAttractionRating,
   getAttractionReviews,
@@ -267,7 +268,7 @@ function findAttractionReviews(req: any, res: any) {
 
 function updateAttraction(req: any, res: any) {
   const lastid = parseInt(req.params.attractionID);
-  const userid = req.user.id
+  const userid = req.user.id;
   const {
     name,
     themepark,
@@ -280,83 +281,95 @@ function updateAttraction(req: any, res: any) {
     duration,
   } = req.body;
 
-  db.run("UPDATE attractions SET userID = ?, name = ?, themepark = ? WHERE id = ?", [userid, name, themepark, lastid], 
-  function (error) {
-    if(error) {
-      return res.status(400).json({error: "Something went wrong while updating the attractions information"})
-    }
-    if (opening) {
-      db.run(
-        "UPDATE attractionsopening SET opening = ? WHERE id = ?",
-        [
-          opening,
-          lastid,
-        ],
-      );
-    }
-    if (builder) {
-      db.run(
-        "update attractionsbuilder SET builder = ? WHERE id = ?",
-        [
-          builder,
-          lastid,
-        ], 
-      );
-    }
-    if (type) {
-      db.run(
-        "UPDATE attractionstype SET opening = ? WHERE id = ?",
-        [
-          
-          type,
-          lastid,
-        ],
-      );
-    }
-    if (length) {
-      db.run(
-        "UPDATE attractionslength SET length = ? WHERE id = ?",
-        [
-          length,
-          lastid,
-        ],
-      );
-    }
-    if (height) {
-      db.run(
-        "UPDATE attractionsheight SET height = ? WHERE id = ?",
-        [
-          height,
-          lastid,
-        ],
-      );
-    }
-    if (inversions) {
-      db.run(
-        "UPDATE attractionsinversions SET inversions = ? WHERE id = ?",
-        [
-  
-          inversions,
-          lastid,
-        ],
-      );
-    }
-    if (duration) {
-      db.run(
-        "UPDATE attractionsduration SET duration = ? WHERE id = ?",
-        [
-          duration,
-          lastid,
-        ],
-      );
-    }
-    return res.json({ added: true });
-
-  })
-
-  
+  db.run(
+    "UPDATE attractions SET userID = ?, name = ?, themepark = ? WHERE id = ?",
+    [userid, name, themepark, lastid],
+    function (error) {
+      if (error) {
+        return res.status(400).json({
+          error:
+            "Something went wrong while updating the attractions information",
+        });
+      }
+      if (opening) {
+        db.run(
+          "UPDATE attractionsopening SET opening = ? WHERE id = ?",
+          [
+            opening,
+            lastid,
+          ],
+        );
+      }
+      if (builder) {
+        db.run(
+          "update attractionsbuilder SET builder = ? WHERE id = ?",
+          [
+            builder,
+            lastid,
+          ],
+        );
+      }
+      if (type) {
+        db.run(
+          "UPDATE attractionstype SET opening = ? WHERE id = ?",
+          [
+            type,
+            lastid,
+          ],
+        );
+      }
+      if (length) {
+        db.run(
+          "UPDATE attractionslength SET length = ? WHERE id = ?",
+          [
+            length,
+            lastid,
+          ],
+        );
+      }
+      if (height) {
+        db.run(
+          "UPDATE attractionsheight SET height = ? WHERE id = ?",
+          [
+            height,
+            lastid,
+          ],
+        );
+      }
+      if (inversions) {
+        db.run(
+          "UPDATE attractionsinversions SET inversions = ? WHERE id = ?",
+          [
+            inversions,
+            lastid,
+          ],
+        );
+      }
+      if (duration) {
+        db.run(
+          "UPDATE attractionsduration SET duration = ? WHERE id = ?",
+          [
+            duration,
+            lastid,
+          ],
+        );
+      }
+      return res.json({ added: true });
+    },
+  );
 }
 
+function getAttractionName(req: any, res: any) {
+  const id = req.params.attractionID;
+  findAttractionName(id, function (error, result) {
+    if (error) {
+      return res.status(404).json({ error: error });
+    }
+    if (result) {
+      return res.status(200).json({ name: result });
+    }
+  });
+}
 
 export {
   addAttraction,
@@ -366,4 +379,5 @@ export {
   getAverageRating,
   setAttractionReview,
   updateAttraction,
+  getAttractionName
 };

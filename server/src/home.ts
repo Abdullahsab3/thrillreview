@@ -81,7 +81,7 @@ export function getRecentThemeparks(
         getResult(
           null,
           result.map((value) =>
-            new ThemeParkPreview(value.name, value.id, value.userID)
+            new ThemeParkPreview(value.name, value.country, value.id, value.userID)
           ),
         );
       }

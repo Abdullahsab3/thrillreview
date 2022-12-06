@@ -69,7 +69,7 @@ export default function ChangeUsername() {
 
         return (
             <div className='col d-flex justify-content-center'>
-                <Card className='card'>
+                <Card className='userManagementCard'>
                     <Card.Body>
                         <Card.Title><strong>Change your username</strong></Card.Title>
                         <Form noValidate validated={validated} onSubmit={handleChangeUsernameSubmit}>

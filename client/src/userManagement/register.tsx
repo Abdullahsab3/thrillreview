@@ -96,7 +96,7 @@ function Register() {
   return (
     <div id='register'>
       <div className="col d-flex justify-content-center">
-        <Card className='card'>
+        <Card className='userManagementCard'>
           <Card.Body>
             <Card.Title><strong>Register</strong></Card.Title>
             <Form noValidate validated={validated} onSubmit={handleRegisterSubmit}>

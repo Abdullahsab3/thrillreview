@@ -161,7 +161,7 @@ export default function AttractionPage() {
             <div>
                 {getInformationCard()}
                 {getInformationForm()}
-                <Reviews attractionID={attractionID as string} />
+                <Reviews attractionID={parseInt(attractionID as string)} />
             </div>
         )
 
