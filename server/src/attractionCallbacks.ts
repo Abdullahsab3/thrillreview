@@ -293,64 +293,66 @@ function updateAttraction(req: any, res: any) {
       }
       if (opening) {
         db.run(
-          "UPDATE attractionsopening SET opening = ? WHERE id = ?",
+          "REPLACE INTO attractionsopening (id, opening) VALUES(?, ?)",
           [
-            opening,
             lastid,
+            opening,
           ],
         );
       }
       if (builder) {
         db.run(
-          "update attractionsbuilder SET builder = ? WHERE id = ?",
+          "REPLACE INTO attractionsbuilder (id, builder) VALUES(?, ?)",
           [
-            builder,
             lastid,
-          ],
+            builder,
+          ], function (error) {
+            console.log(error)
+          }
         );
       }
       if (type) {
         db.run(
-          "UPDATE attractionstype SET opening = ? WHERE id = ?",
+          "REPLACE INTO attractionstype (id, opening) VALUES(?, ?)",
           [
-            type,
             lastid,
+            type,
           ],
         );
       }
       if (length) {
         db.run(
-          "UPDATE attractionslength SET length = ? WHERE id = ?",
+          "REPLACE INTO attractionslength (id, length) VALUES(?, ?)",
           [
-            length,
             lastid,
+            length,
           ],
         );
       }
       if (height) {
         db.run(
-          "UPDATE attractionsheight SET height = ? WHERE id = ?",
+          "REPLACE INTO attractionsheight (id, height) VALUES(?, ?)",
           [
-            height,
             lastid,
+            height,
           ],
         );
       }
       if (inversions) {
         db.run(
-          "UPDATE attractionsinversions SET inversions = ? WHERE id = ?",
+          "REPLACE INTO attractionsinversions (id, inversions) VALUES(?, ?)",
           [
-            inversions,
             lastid,
+            inversions,
           ],
         );
       }
       if (duration) {
         db.run(
-          "UPDATE attractionsduration SET duration = ? WHERE id = ?",
+          "REPLACE INTO attractionsduration (id, duration) VALUES(?, ?)",
           [
-            duration,
             lastid,
+            duration,
           ],
         );
       }
@@ -376,8 +378,8 @@ export {
   findAttractionById,
   findAttractionReviews,
   findReview,
+  getAttractionName,
   getAverageRating,
   setAttractionReview,
   updateAttraction,
-  getAttractionName
 };
