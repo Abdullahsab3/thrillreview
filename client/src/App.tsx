@@ -19,6 +19,7 @@ import AddThemePark from './themeParks/addThemePark';
 import BrowseAttractions from './attractions/browseAttractions';
 import UploadAvatar from './userManagement/uploadAvatar';
 import  Axios from 'axios';
+import ThemeParkPage from './themeParks/themeparksPage';
 
 function App() {
 
@@ -57,6 +58,7 @@ function App() {
             <Route path='/Attractions/:attractionID' element={<AttractionPage/>}/>
             <Route path='/browse-attractions/:query' element={<BrowseAttractions/>}/>
             <Route path='/browse-attractions/' element={<BrowseAttractions/>}/> 
+            <Route path='Themeparks/:themeParkID' element={<ThemeParkPage/>}/>
           </Routes>
           </div>
         </Router>

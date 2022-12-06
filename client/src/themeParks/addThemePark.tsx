@@ -23,7 +23,7 @@ function AddThemePark() {
     const [country, setCountry] = useState("")
     const [indoor, setIndoor] = useState(false)
     const [outdoor, setOutdoor] = useState(false)
-    const [url, setUrl] = useState("")
+    const [themeParkurl, setUrl] = useState("")
 
 
 
@@ -68,7 +68,7 @@ function AddThemePark() {
                 postalCode: postalCode,
                 country: country,
                 type: "",
-                website: url,
+                website: themeParkurl,
             }).then((response) => {
                 if (response.data.recognised){
                     navigate("/home")

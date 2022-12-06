@@ -1,19 +1,21 @@
+import { buffer } from "stream/consumers";
 import { Attraction } from "./Attraction";
 import {
   db,
   getAttraction,
   getAttractionRating,
   getAttractionReviews,
+  getLastId,
   getReview,
 } from "./database";
 import { User } from "./User";
 
-function addAttraction(req: any, res: any) {
+async function addAttraction(req: any, res: any) {
   const {
     name,
     themepark,
-    opening,
-    Builder,
+    openingdate,
+    builder,
     type,
     length,
     height,
@@ -21,24 +23,81 @@ function addAttraction(req: any, res: any) {
     duration,
   } = req.body;
   const userid = req.user.id;
-  db.run(
-    "INSERT INTO attractions (userID, name, themepark, opening, Builder, type, length, height, inversions, duration) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  db.get(
+    "INSERT INTO attractions (userID, name, themepark) VALUES(?, ?, ?) RETURNING id",
     [
       userid,
       name,
       themepark,
-      opening,
-      Builder,
-      type,
-      length,
-      height,
-      inversions,
-      duration,
     ],
-    (error: Error) => {
+    (error: Error, result: any) => {
       if (error) {
         return res.status(400).json({ error: error.message });
       } else {
+        const lastid = result.id;
+        if (openingdate) {
+          db.run(
+            "INSERT INTO attractionsopening (id, opening) VALUES(?, ?)",
+            [
+              lastid,
+              openingdate,
+            ],
+          );
+        }
+        if (builder) {
+          db.run(
+            "INSERT INTO attractionsbuilder (id, builder) VALUES(?, ?)",
+            [
+              lastid,
+              builder,
+            ],
+          );
+        }
+        if (type) {
+          db.run(
+            "INSERT INTO attractionstype (id, opening) VALUES(?, ?)",
+            [
+              lastid,
+              type,
+            ],
+          );
+        }
+        if (length) {
+          db.run(
+            "INSERT INTO attractionslength (id, length) VALUES(?, ?)",
+            [
+              lastid,
+              length,
+            ],
+          );
+        }
+        if (height) {
+          db.run(
+            "INSERT INTO attractionsheight (id, height) VALUES(?, ?)",
+            [
+              lastid,
+              height,
+            ],
+          );
+        }
+        if (inversions) {
+          db.run(
+            "INSERT INTO attractionsinversions (id, inversions) VALUES(?, ?)",
+            [
+              lastid,
+              inversions,
+            ],
+          );
+        }
+        if (duration) {
+          db.run(
+            "INSERT INTO attractionsduration (id, duration) VALUES(?, ?)",
+            [
+              lastid,
+              duration,
+            ],
+          );
+        }
         return res.json({ added: true });
       }
     },
@@ -207,52 +266,104 @@ function findAttractionReviews(req: any, res: any) {
 }
 
 function updateAttraction(req: any, res: any) {
-  const attractionID = parseInt(req.params.attractionID);
+  const lastid = parseInt(req.params.attractionID);
+  const userid = req.user.id
   const {
     name,
     themepark,
     opening,
-    Builder,
+    builder,
     type,
     length,
     height,
     inversions,
     duration,
   } = req.body;
-  if (name) {
-    // change attraction name
-  }
-  if (opening) {
-    // change opening
-  }
-  if (themepark) {
-    // change themepark
-  }
-  if (Builder) {
-    // change builder
-  }
-  if (type) {
-    // change type
-  }
-  if (length) {
-    //change length
-  }
-  if (height) {
-    // change height
-  }
-  if (inversions) {
-    // change inversions
-  }
-  if (duration) {
-    // change duration
-  }
+
+  db.run("UPDATE attractions SET userID = ?, name = ?, themepark = ? WHERE id = ?", [userid, name, themepark, lastid], 
+  function (error) {
+    if(error) {
+      return res.status(400).json({error: "Something went wrong while updating the attractions information"})
+    }
+    if (opening) {
+      db.run(
+        "UPDATE attractionsopening SET opening = ? WHERE id = ?",
+        [
+          opening,
+          lastid,
+        ],
+      );
+    }
+    if (builder) {
+      db.run(
+        "update attractionsbuilder SET builder = ? WHERE id = ?",
+        [
+          builder,
+          lastid,
+        ], 
+      );
+    }
+    if (type) {
+      db.run(
+        "UPDATE attractionstype SET opening = ? WHERE id = ?",
+        [
+          
+          type,
+          lastid,
+        ],
+      );
+    }
+    if (length) {
+      db.run(
+        "UPDATE attractionslength SET length = ? WHERE id = ?",
+        [
+          length,
+          lastid,
+        ],
+      );
+    }
+    if (height) {
+      db.run(
+        "UPDATE attractionsheight SET height = ? WHERE id = ?",
+        [
+          height,
+          lastid,
+        ],
+      );
+    }
+    if (inversions) {
+      db.run(
+        "UPDATE attractionsinversions SET inversions = ? WHERE id = ?",
+        [
+  
+          inversions,
+          lastid,
+        ],
+      );
+    }
+    if (duration) {
+      db.run(
+        "UPDATE attractionsduration SET duration = ? WHERE id = ?",
+        [
+          duration,
+          lastid,
+        ],
+      );
+    }
+    return res.json({ added: true });
+
+  })
+
+  
 }
+
+
 export {
   addAttraction,
   findAttractionById,
   findAttractionReviews,
   findReview,
+  getAverageRating,
   setAttractionReview,
   updateAttraction,
-  getAverageRating
 };

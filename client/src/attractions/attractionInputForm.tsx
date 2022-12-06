@@ -162,7 +162,7 @@ export default function AttractionInputForm(props: AttractionInputProps) {
                                 <Row>
                                     <Form.Group>
                                         <Form.Label>Length</Form.Label>
-                                        <Form.Control type="text" pattern="[0-9]*?(:[.|,][0-9]*)?" placeholder="13,13" onChange={(e) => setLength(e.target.value)} value={length} />
+                                        <Form.Control type="text" pattern="[0-9]*([.|,][0-9]*)?" placeholder="13,13" onChange={(e) => setLength(e.target.value)} value={length} />
                                         <Form.Control.Feedback type="invalid">
                                             The attraction's length should consist of only numbers (you can write decimals by using . or ,).
                                         </Form.Control.Feedback>
@@ -171,7 +171,7 @@ export default function AttractionInputForm(props: AttractionInputProps) {
                                 <Row>
                                     <Form.Group>
                                         <Form.Label>Height </Form.Label>
-                                        <Form.Control type="text" pattern="[0-9]*?(:[.|,][0-9]*)?" placeholder="13,13" onChange={(e) => setHeight(e.target.value)} value={height} />
+                                        <Form.Control type="text" pattern="[0-9]*([.|,][0-9]*)?" placeholder="13,13" onChange={(e) => setHeight(e.target.value)} value={height} />
                                         <Form.Control.Feedback type="invalid">
                                             The attraction's height should consist of only numbers (you can write decimals by using . or ,).
                                         </Form.Control.Feedback>

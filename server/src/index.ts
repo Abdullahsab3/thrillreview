@@ -5,6 +5,7 @@ import { validateTokens } from "./JWT";
 import {
   ChangePassword,
   loginUser,
+  logoutUser,
   registerNewUser,
   sendProfileInformation,
   updateEmail,
@@ -17,8 +18,10 @@ import {
   deleteUser
 } from "./userManagementCallbacks";
 import { addAttraction, findAttractionById, findAttractionReviews, findReview, getAverageRating, setAttractionReview, updateAttraction } from "./attractionCallbacks";
-import { addThemePark } from "./themeParkCallbacks";
+import { addThemePark, editThemePark, findThemeParkByID } from "./themeParkCallbacks";
 import multer from "multer";
+import {getRecentAttractions, getRecentReviews, getRecents, getRecentThemeparks} from "./home";
+import Review from "./Review";
 
 const app = express();
 const upload = multer({
@@ -57,6 +60,7 @@ app.use(cors(corsOptions));
 // usermanagement requests
 app.post("/user", registerNewUser);
 app.post("/user/login", loginUser);
+app.post("/user/logout", logoutUser);
 app.get("/user/email", validateTokens, sendProfileInformation);
 app.get("/user/:id/username", getUserName)
 
@@ -82,8 +86,13 @@ app.get("/attraction/:attractionID/rating", getAverageRating)
 
 //themepark requests
 app.post("/themepark", validateTokens, addThemePark)
+app.get("/themepark/:themeparkID", findThemeParkByID)
+app.put("/themepark/:themeparkID", validateTokens, editThemePark)
 
 app.get("/feed", (req, res) => {
+  getRecents(function (error: string | null, results: any[] | null) {
+    console.log(results)
+  })
   res.json({ "nothing": "yet" });
 });
 
