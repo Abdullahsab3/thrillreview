@@ -91,19 +91,19 @@ function BrowseAttractions() {
     if (initialQuery) setQuery(initialQuery)
     let { attractions, hasMore, loading, error } = GetAttractions(query, pageNr);
     // HIER EEN PROBLEEM HEB AL VEEL GEKEKEN MAAR VIND HET NIET
-    const observer = useRef<HTMLDivElement | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
+    const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
     const lastAttractionRef = useCallback((node: HTMLDivElement) => {
         if (loading) return // otherwise will keep sending callbacks while loading
         console.log(node)
         // DIT HIER GEEFT MIJ FOUTEN, MAAR IS WAT JE MOET DOEN MET SERVER ANTW DUS KAN HET NOG NIET DOEN
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
-        /*  if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
+            if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
           observer.current = new IntersectionObserver(entries => {
               if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more
                   setPageNr(prevPageNr => prevPageNr + 1)
               }
           })
-          if (node) observer.current.observe(node) */
+          if (node) observer.current.observe(node) 
     }, [loading, hasMore])
 
     //  OM TE TESTEN ZONDER BACKEND
