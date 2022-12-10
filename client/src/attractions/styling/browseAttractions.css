@@ -5,7 +5,19 @@
     margin-top: 2%;
 }
 
+.browseAttractionsCard card-title{
+    margin-top: 1rem;
+}
+
 .attractionPreviewWrapper{
     align-self: center;
 
+}
+
+.list-group-item{
+    background-color: aliceblue;
+}
+
+.bg-danger{
+    color:white;
 }

@@ -72,7 +72,7 @@ export default function AttractionInputForm(props: AttractionInputProps) {
                     <Modal.Body>
                         <Carousel>
                             {
-                                allImages.map((v) => <CarouselItem> <img width="500px" height="500px" className="attractionImage" src={URL.createObjectURL(v)} alt="attraction image"></img></CarouselItem>)
+                                allImages.map((v) => <CarouselItem key={v.name}> <img width="500px" height="500px" className="attractionImage" src={URL.createObjectURL(v)} alt="attraction image"></img></CarouselItem>)
                             }
                         </Carousel>
                     </Modal.Body>

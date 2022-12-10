@@ -36,22 +36,12 @@ function Attractions() {
 
     function SearchAttractions() {
         const [query, setquery] = useState("")
-
-
-        function handleSubmit() {
-            if (query) {
-                alert('you searched for ' + query + ', someday this will become a server request')
-            } else {
-                alert('you have to specify what you\'re looking for if you ever want to find it')
-            }
-        }
-
         return (
             <Card>
                 <Card.Body>
                     <Card.Title>Search Attractions</Card.Title>
                     <Card.Text> Find the attraction you are looking for! </Card.Text>
-                    <Form onSubmit={handleSubmit}>
+                    <Form>
                         <InputGroup>
                             <Form.Control type="search" onChange={(e) => setquery(e.target.value)} placeholder="Search" />
                             <Link to={`/browse-attractions/${query}`}>        
