@@ -13,8 +13,8 @@ function ThemePark() {
         return (
             <Card>
                 <Card.Body>
-                    <Card.Title>Search Attractions</Card.Title>
-                    <Card.Text> Find the attraction you are looking for! </Card.Text>
+                    <Card.Title>Search Theme Parks</Card.Title>
+                    <Card.Text> Find the theme park you are looking for! </Card.Text>
                     <Form>
                         <InputGroup>
                             <Form.Control type="search" onChange={(e) => setquery(e.target.value)} placeholder="Search" />
