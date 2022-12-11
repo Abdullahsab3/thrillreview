@@ -90,7 +90,7 @@ app.get("/attraction/:attractionID/name", getAttractionName)
 app.post("/themepark", validateTokens, addThemePark)
 app.get("/themepark/:themeparkID", findThemeParkByID)
 app.put("/themepark/:themeparkID", validateTokens, editThemePark)
-app.get("/themepark/in-range-of-coordinates", findThemeParksInCoordinatesRange)
+app.get("/themepark/in-range-of-coordinates/:minLat&:maxLat&:minLong&:maxLong", findThemeParksInCoordinatesRange)
 
 app.get("/feed", sendFeeds);
 

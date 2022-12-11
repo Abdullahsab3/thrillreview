@@ -200,7 +200,7 @@ function findThemeParksInCoordinatesRange(req: any, res: any) {
     maxLat,
     minLong,
     maxLong
-  } = req.body;
+  } = req.params;
   getThemeParksInCoordinatesRange(minLat, maxLat, minLong, maxLong, 
     function (error: any, results: any | null) {
       if (error) {
