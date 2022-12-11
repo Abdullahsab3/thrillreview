@@ -61,7 +61,7 @@ app.use(cors(corsOptions));
 // usermanagement requests
 app.post("/user", registerNewUser);
 app.post("/user/login", loginUser);
-app.post("/user/logout", logoutUser);
+app.delete("/user/logout", logoutUser);
 app.get("/user/email", validateTokens, sendProfileInformation);
 app.get("/user/:id/username", getUserName)
 
