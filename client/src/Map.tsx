@@ -20,43 +20,36 @@ const Map = () => {
       const bounds: LatLngBounds = map.getBounds();
       const NWcorner = bounds.getNorthWest(); // min latlong
       const SEcorner = bounds.getSouthEast(); // maxlatlong
-      console.log(`nw: ${NWcorner}, se ${SEcorner}`);
-      axios.get(backendServer('themepark/in-range-of-coordinates'), {
-        params: {
-          // order: minlat maxlat minlong maxlong
-          minlat: NWcorner.lat,
-          maxlat: SEcorner.lat,
-          minlong: NWcorner.lng,
-          maxlong: SEcorner.lng,
-        }
-      }).then((res) => {
+      const minlat = NWcorner.lat;
+      const maxlat = SEcorner.lat;
+      const minlong = NWcorner.lng;
+      const maxlong = SEcorner.lng;
+      //console.log(``);
+      axios.get(backendServer(`themepark/in-range-of-coordinates/${minlat}&${maxlat}&${minlong}&${maxlong}`)).then((res) => {
         if (res.data) {
           console.log(res.data)
         }
-      })
-
+      })/*.catch(function (error) {
+        if (error.response) {
+          alert(`error: ${error.response}`)
+        } else alert(`an error but no error response ${error}`);
+      })*/
     }
 
     map.on('moveend', onChange)
     return null;
   }
 
-
-
   var themeParkIcon = L.icon({
     iconUrl: markerIconPng,
     shadowUrl: markerShadowPng,
   })
-
-
 
   function SetToUserLocation() {
     var map = useMap();
     map.locate({ setView: true, maxZoom: 15 });
     return null;
   }
-
-
 
   function getAllThemeParks() {
     // Breedtegraad (latitude): 51.0808505
@@ -104,7 +97,7 @@ const Map = () => {
     <LeafletMap />
 
 
-  )
+  );
 
 }
 
