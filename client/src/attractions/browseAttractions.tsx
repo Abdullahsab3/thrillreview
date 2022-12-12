@@ -5,7 +5,7 @@ import { useParams, Link } from "react-router-dom";
 import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
 import StarRating from "./starRating";
 import { Search } from 'react-bootstrap-icons';
-import "./styling/browseAttractions.css"
+import "../styling/browsingPage.css"
 
 
 interface attractionPreviewInterface {
@@ -20,7 +20,7 @@ interface attractionPreviewInterface {
 
 function AttractionPreviewCard(props: attractionPreviewInterface) {
     return (
-        <Card className="browseAttractionsCard">
+        <Card className="browsingCard">
             <Card.Title>{props.name}</Card.Title>
             <Card.Img variant="bottom" src={props.img} alt={`picture of attraction with name ${props.name}`} />
             <ListGroup className="list-group-flush">
@@ -126,7 +126,7 @@ function BrowseAttractions() {
 
     function ErrorCard(){
         return(
-            <Card bg="danger" className="browseAttractionsCard mb-2" >
+            <Card bg="danger" className="browsingCard mb-2" >
             <Card.Title> There has been a problem loading the attractions. Please try again.</Card.Title>
             <Card.Body> Our apologies for the inconvenience. </Card.Body>
         </Card>
@@ -139,7 +139,7 @@ function BrowseAttractions() {
     // voordeel: link wordt geupdatet
     return (
         <>
-            <Card className="browseAttractionsCard">
+            <Card className="browsingCard">
                 <Card.Body>
                     <Card.Title>Search Attractions</Card.Title>
                     <Card.Text> Find the attraction you are looking for! </Card.Text>

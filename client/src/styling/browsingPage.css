@@ -1,0 +1,13 @@
+.browsingCard{
+    width: 90%;
+    align-self: center;
+    text-align: center;
+}
+
+.list-group-item{
+    background-color: aliceblue;
+}
+
+.bg-danger{
+    color:white;
+}

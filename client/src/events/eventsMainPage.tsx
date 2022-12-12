@@ -7,18 +7,18 @@ import { Link } from 'react-router-dom';
 import { Search } from 'react-bootstrap-icons';
 import { useState } from 'react';
 
-function ThemePark() {
-    function SearchThemeParks() {
+function EventsMainPage() {
+    function SearchEvents() {
         const [query, setquery] = useState("")
         return (
             <Card>
                 <Card.Body>
-                    <Card.Title>Search Theme Parks</Card.Title>
-                    <Card.Text> Find the theme park you are looking for! </Card.Text>
+                    <Card.Title>Search Events</Card.Title>
+                    <Card.Text> Find the events you are looking for! </Card.Text>
                     <Form>
                         <InputGroup>
                             <Form.Control type="search" onChange={(e) => setquery(e.target.value)} placeholder="Search" />
-                            <Link to={`/browse-themeparks/${query}`}>        
+                            <Link to={`/browse-events/${query}`}>        
                             <Button type="submit">
                                 <Search />
                             </Button>   
@@ -34,12 +34,12 @@ function ThemePark() {
 
     return (
         <div className="ContentOfPage">
-            <h1> themeparks</h1>
-            <SearchThemeParks />
-            <CardWithLinkTo to="/addThemePark" title="Add a ThemePark" />
+            <h1> Events</h1>
+            <SearchEvents />
+            <CardWithLinkTo to="/addEvent" title="Add an Event" />
 
         </div>
     );
 }
 
-export default ThemePark;
+export default EventsMainPage;

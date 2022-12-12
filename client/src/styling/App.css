@@ -21,6 +21,10 @@ button.btn.btn-primary{
 
 .card{
   background-color: aliceblue;
+  margin-top: 2%;
+}
+.card-title{
+  margin-top: 1rem;
 }
 
 .form-control{

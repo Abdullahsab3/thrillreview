@@ -4,27 +4,27 @@ import { useParams, Link } from "react-router-dom";
 import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
 import "../styling/browsingPage.css";
-import { ThemePark } from './themePark';
+import { Event } from './Event';
 
-interface themeParkPreviewInterface {
+interface eventPreviewInterface {
     id: number,
     name: string,
-    themepark: string,
+    event: string,
     key:number,
     ref?: (e: HTMLDivElement) => void,
 }
 
-function ThemeParkPreviewCard(props: themeParkPreviewInterface) {
+function EventPreviewCard(props: eventPreviewInterface) {
     return (
         <Card className="browsingCard">
             <Card.Title>{props.name}</Card.Title>
             <ListGroup className="list-group-flush">
-                <ListGroup.Item>Theme park: {props.themepark}</ListGroup.Item>
+                <ListGroup.Item>Event: {props.event}</ListGroup.Item>
             </ListGroup>
             <Card.Body>
-                <Link to={`/Themeparks/${props.id}`}>
+                <Link to={`/Events/${props.id}`}>
                     <Button>
-                        Go to themePark!
+                        Go to Event!
                     </Button>
                 </Link>
             </Card.Body>
@@ -33,17 +33,17 @@ function ThemeParkPreviewCard(props: themeParkPreviewInterface) {
 }
 
 // took inspiration from https://www.youtube.com/watch?v=NZKUirTtxcg
-function GetThemeParks(query: string, pageNr: number) {
+function GetEvents(query: string, pageNr: number) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [hasMore, setHasMore] = useState(false);
-    const [themeparks, setThemeParks] = useState<ThemePark[]>([]);
+    const [events, setEvents] = useState<Event[]>([]);
 
-    // to set themeparks to empty
+    // to set events to empty
     useEffect(() => {
-        setThemeParks([]);
+        setEvents([]);
     }, [query])
-    // to load new themeparks
+    // to load new events
     useEffect(() => {
         setLoading(true)
         setError(false)
@@ -54,10 +54,10 @@ function GetThemeParks(query: string, pageNr: number) {
             params: { query: query, pagenr: pageNr },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {
-            setThemeParks(prevThemeParks => {
-                return [...prevThemeParks, ...res.data.themeparks.map((a: any) => { // ThemePark evt andere naam (afh v response) + DIE ANY MOET IETS ANDERS ZIJN, WSS JSON, Q AAN SERVER
-                    const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = a
-                    new ThemePark(name, openingdate, builder, type, height, length, inversions, duration, id)
+            setEvents(prevEvents => {
+                return [...prevEvents, ...res.data.events.map((a: any) => { // Event evt andere naam (afh v response) + DIE ANY MOET IETS ANDERS ZIJN, WSS JSON, Q AAN SERVER
+                    const { name, date, hour, themepark, description, id } = a
+                    new Event(name, date, hour, themepark, description, id)
                 })]
             })
             setHasMore(res.data.docs.lenght > 0);
@@ -72,21 +72,21 @@ function GetThemeParks(query: string, pageNr: number) {
     }, [query, pageNr]);
 
     return (
-        { themeparks, hasMore, loading, error }
+        { events, hasMore, loading, error }
     );
 }
 
-function BrowseThemeparks() {
+function BrowseEvents() {
     const { initialQuery } = useParams()
     console.log(initialQuery)
     const [query, setQuery] = useState("")
     const [intermediateQuery, setIntermediateQuery] = useState("")
     const [pageNr, setPageNr] = useState(1);
     if (initialQuery) setQuery(initialQuery)
-    let { themeparks, hasMore, loading, error } = GetThemeParks(query, pageNr);
+    let { events, hasMore, loading, error } = GetEvents(query, pageNr);
     // HIER EEN PROBLEEM HEB AL VEEL GEKEKEN MAAR VIND HET NIET
     const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
-    const lastThemeParkRef = useCallback((node: HTMLDivElement) => {
+    const lastEventRef = useCallback((node: HTMLDivElement) => {
         if (loading) return // otherwise will keep sending callbacks while loading
         console.log(node)
         // DIT HIER GEEFT MIJ FOUTEN, MAAR IS WAT JE MOET DOEN MET SERVER ANTW DUS KAN HET NOG NIET DOEN
@@ -101,19 +101,19 @@ function BrowseThemeparks() {
     }, [loading, hasMore])
 
     //  OM TE TESTEN ZONDER BACKEND
-    themeparks = [new ThemePark("anubis",  "29/01/2003", "street", 12, "1170", "BE", "indoor", "https://myweb.be",1)]
+    events = [new Event(0, "my amazing event", "29/01/2003", "09:00", "walibi", "this is an event wowhow what a description this needs to be long enough to actually test whaoopdfi kdsfjkldjkfsd ty gty kdjmfskdhkfdjhdqff")]
     
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    function handleSubmit(Event: React.FormEvent<HTMLFormElement>) {
         setPageNr(1);
         setQuery(intermediateQuery)
-        event.preventDefault()
+        Event.preventDefault()
     }
 
     function LoadingCard() {
         return(
             <Card>
-                <Card.Title> We are loading the themeparks, please wait</Card.Title>
+                <Card.Title> We are loading the events, please wait</Card.Title>
                 <Card.Body> In the mean time, grab some tea! </Card.Body>
             </Card>
         );
@@ -122,22 +122,22 @@ function BrowseThemeparks() {
     function ErrorCard(){
         return(
             <Card bg="danger" className="browsingCard mb-2" >
-            <Card.Title> There has been a problem loading the themeparks. Please try again.</Card.Title>
+            <Card.Title> There has been a problem loading the events. Please try again.</Card.Title>
             <Card.Body> Our apologies for the inconvenience. </Card.Body>
         </Card>
         );
     }
 
     //Q : zou ik iedere keer opnieuw laten linken zodat de query update in de link?
-    //  <Link to={`/browse-themeparks/${query}`}>   </Link> rond submit knop
+    //  <Link to={`/browse-events/${query}`}>   </Link> rond submit knop
     // nadeel: elke keer via routing
     // voordeel: link wordt geupdatet
     return (
         <>
             <Card className="browsingCard">
                 <Card.Body>
-                    <Card.Title>Search Theme Parks</Card.Title>
-                    <Card.Text> Find the theme park you are looking for! </Card.Text>
+                    <Card.Title>Search Events</Card.Title>
+                    <Card.Text> Find the event you are looking for! </Card.Text>
                     <Form onSubmit={handleSubmit}>
                         <InputGroup>
                             <Form.Control type="search" onChange={(e) => setIntermediateQuery(e.target.value)} placeholder="Search" />
@@ -150,15 +150,15 @@ function BrowseThemeparks() {
                 </Card.Body>
             </Card>
 
-            {themeparks.map((themePark: ThemePark, i: number) => {
-                if (themeparks.length === i + 1) {
+            {events.map((event: Event, i: number) => {
+                if (events.length === i + 1) {
                     // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
                     return (
-                        <ThemeParkPreviewCard ref={lastThemeParkRef} key={themePark.id} id={themePark.id} name={themePark.name} themepark={"test"} />
+                        <EventPreviewCard ref={lastEventRef} key={event.id} id={event.id} name={event.name} event={"test"} />
                     );
                 } else {
                     return(
-                        <ThemeParkPreviewCard key={themePark.id} id={themePark.id} name={themePark.name} themepark={"test"} />
+                        <EventPreviewCard key={event.id} id={event.id} name={event.name} event={"test"} />
                     );
                 }
             })}
@@ -171,4 +171,4 @@ function BrowseThemeparks() {
 }
 
 
-export default BrowseThemeparks;
+export default BrowseEvents;

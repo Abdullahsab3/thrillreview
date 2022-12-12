@@ -21,6 +21,9 @@ import UploadAvatar from './userManagement/uploadAvatar';
 import  Axios from 'axios';
 import ThemeParkPage from './themeParks/themeparksPage';
 import BrowseThemeparks from './themeParks/browseThemeParks';
+import EventsMainPage from './events/eventsMainPage'
+import AddEvent from './events/addEvent';
+import BrowseEvents from './events/browseEvents';
 
 function App() {
 
@@ -47,6 +50,7 @@ function App() {
             <Route path='/Map' element={<Map />} />
             <Route path='/Attractions' element={<Attractions />} />
             <Route path='/Themeparks' element={<ThemePark />} />
+            <Route path='/Events' element={<EventsMainPage />} />
             <Route path='/Login' element={<Login />} />
             <Route path='/Register' element={<Register />} />
             <Route path='/Profile' element={<Profile />} />
@@ -61,6 +65,10 @@ function App() {
             <Route path='/browse-attractions/' element={<BrowseAttractions/>}/> 
             <Route path='Themeparks/:themeParkID' element={<ThemeParkPage/>}/>
             <Route path='/browse-themeparks/:query' element={<BrowseThemeparks/>}/>
+            <Route path='/browse-themeparks/' element={<BrowseThemeparks/>}/>
+            <Route path='/addEvent' element={<AddEvent />} />
+            <Route path='/browse-events/:query' element={<BrowseEvents />} />
+            <Route path='/browse-events/' element={<BrowseEvents />} />
           </Routes>
           </div>
         </Router>
@@ -70,7 +78,5 @@ function App() {
 
   );
 }
-
-
 
 export default App;

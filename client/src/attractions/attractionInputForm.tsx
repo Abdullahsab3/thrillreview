@@ -5,9 +5,9 @@ import { Attraction } from "./Attraction";
 interface AttractionInputProps {
     title: string;
     text: string;
-    attraction?: Attraction
-    onFormSubmit: (a: Attraction) => FormEventHandler<HTMLFormElement>
-    validated: boolean
+    attraction?: Attraction;
+    onFormSubmit: (a: Attraction) => FormEventHandler<HTMLFormElement>;
+    validated: boolean;
 
 }
 export default function AttractionInputForm(props: AttractionInputProps) {
@@ -189,7 +189,7 @@ export default function AttractionInputForm(props: AttractionInputProps) {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Duration</Form.Label>
-                                    <Form.Control type="duration" pattern="[0-9]{2}:[0-5][0-9]:[0-5][0-9]" placeholder="hh:mm:ss" onChange={(e) => setDuration(e.target.value)} value={duration} />
+                                    <Form.Control type="text" pattern="[0-9]{2}:[0-5][0-9]:[0-5][0-9]" placeholder="hh:mm:ss" onChange={(e) => setDuration(e.target.value)} value={duration} />
                                     <Form.Control.Feedback type="invalid">
                                         The attraction's duration should be in terms of hours, minutes and seconds (you can write it like this: 99:59:59).
                                     </Form.Control.Feedback>
