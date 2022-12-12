@@ -22,8 +22,9 @@ function Profile() {
     var user: User | null = fetchUserFromLocalStorage();
 
     function handleLogout(): void {
-        axios.post(backendServer("/user/logout"), {});
+        axios.delete(backendServer("/user/logout"), {});
         removeUserInLocalstorage();
+        navigate("/Login");
     }
 
 

@@ -87,6 +87,11 @@ db.run(
  (id      INTEGER UNIQUE REFERENCES themeparks (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, website STRING)",
 );
 
+db.run(
+  "CREATE TABLE IF NOT EXISTS JWT \
+ (token TEXT)",
+);
+
 function getLastId() {
   return new Promise<number>((resolve, reject) => {
     db.get(
@@ -180,6 +185,35 @@ function validateUserPassword(
       }
     },
   );
+}
+
+function addToken(token: String) {
+  db.run(
+    "INSERT INTO JWT (token) VALUES(?)",
+    [
+      token
+    ],
+  );
+}
+
+function removeToken(token: String) {
+  db.run("DELETE FROM JWT WHERE token = ?", [token]);
+}
+
+function checkForTokenExistence(token: String, getResult: (existence: Boolean) => void) {
+  let existence: Boolean;
+  db.get(
+    "SELECT * FROM JWT WHERE token = ?",
+    [token],
+    function (err: Error, result: any) {
+      if (err){
+        getResult(false);
+      }else if (result){
+        getResult(true);
+      }else {
+        getResult(false);
+      }
+    });
 }
 
 function getAttraction(
@@ -560,6 +594,9 @@ export {
   checkForUserAvatar,
   checkForUserExistence,
   checkForUsernameExistence,
+  addToken,
+  removeToken,
+  checkForTokenExistence,
   db,
   findAttractionName,
   getAttraction,

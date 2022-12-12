@@ -1,15 +1,16 @@
-import { daysToMilliseconds } from "./helpers";
+import { daysToMilliseconds, minutsToMilliseconds } from "./helpers";
 import { User } from "./User";
 import {
   checkForEmailExistence,
   checkForUserAvatar,
   checkForUserExistence,
   checkForUsernameExistence,
+  removeToken,
   db,
   validateUserPassword,
 } from "./database";
 import bcrypt from "bcrypt";
-import { createTokens } from "./JWT";
+import { createRefreshToken, removeRefreshToken, createAccesToken } from "./JWT";
 
 function registerNewUser(req: any, res: any) {
   const { username, email, password } = req.body;
@@ -108,11 +109,16 @@ function loginUser(req: any, res: any) {
             if (error) {
               return res.status(400).json({ password: error });
             } else if (validated) {
-              const accessToken = createTokens(user as User);
+              const refreshToken = createRefreshToken(user as User);
+              const accessToken = createAccesToken(user as User);
 
+              res.cookie("refresh-token", refreshToken, {
+                expires: new Date(Date.now() + daysToMilliseconds(1)), // 1 dag
+                httpOnly: false, // temporary false. update later
+              });
+            
               res.cookie("access-token", accessToken, {
-                //maxAge: daysToMilliseconds(30),
-                expires: new Date(Date.now() + 1000000000000 * 1000),
+                expires: new Date(Date.now() + minutsToMilliseconds(0.5)), // 15 min
                 httpOnly: false, // temporary false. update later
               });
 
@@ -135,12 +141,8 @@ function loginUser(req: any, res: any) {
 
 function logoutUser(req: any, res: any) {
   console.log("logout");
-  res.cookie("access-token", 'none', {
-    expires: new Date(Date.now() + 5 * 1000),
-    httpOnly: false,
-});
+removeRefreshToken(req, res);
 res.status(200).json({ success: true, message: 'User logged out successfully' });
-
 }
 
 function sendProfileInformation(req: any, res: any) {
@@ -197,10 +199,20 @@ function updateUsername(req: any, res: any) {
             });
           } else {
             user.username = newUsername
-            const accessToken = createTokens(user as User);
+            
+            const refreshToken = req.cookies["refresh-token"]
+            removeToken(refreshToken);
 
+            const newRefreshToken = createRefreshToken(user);
+            const accessToken = createAccesToken(user);
+  
+            res.cookie("refresh-token", newRefreshToken, {
+              expires: new Date(Date.now() + daysToMilliseconds(1)), // 1 dag
+              httpOnly: false, // temporary false. update later
+            });
+          
             res.cookie("access-token", accessToken, {
-              maxAge: daysToMilliseconds(30),
+              expires: new Date(Date.now() + minutsToMilliseconds(15)), // 15 min
               httpOnly: false, // temporary false. update later
             });
             res.status(200).json({ updated: true });
