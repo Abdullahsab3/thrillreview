@@ -60,6 +60,10 @@ function EventInputForm(props: EventInputFormProps) {
                                 Adding a start date for your event is required
                             </Form.Control.Feedback>
                         </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control as="textarea" onChange={(e) => setDescription(e.target.value)} value={description}/>
+                        </Form.Group>
                         <Button type="submit">Submit event</Button>
                     </Form>
                 </Card.Body>
