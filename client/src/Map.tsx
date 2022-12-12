@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png"
 import { Icon } from 'leaflet'
-import { backendServer } from "./helpers"
+import { backendServer, getThrillreviewWebsiteLink} from "./helpers"
 import axios from 'axios';
 import { Card } from 'react-bootstrap';
 
@@ -82,32 +82,33 @@ const Map = () => {
     // Breedtegraad (latitude): 51.0808505
     //Lengtegraad (longitude): 
     //axios.get("themepark/in-range-of-coordinates", findThemeParksInCoordinatesRange)
-    return [["51.0808505", "2.5987627", "plopsaland", "https://leafletjs.com/examples.html"],
-    ["50.6925", "4.5877", "walibi", "https://nl.wikipedia.org/wiki/Walibi_Belgium"]];
+    return [["51.0808505", "2.5987627", "plopsaland", "0"],
+    ["50.6925", "4.5877", "walibi", "1"]];
   }
 
   function makePopUpContent(name: string, id: string, weather: weatherInterface) {
-
-    return (`<div className="popUpMarkerContent">
+    return (`<div>
         <h5>${name}</h5>
-        <div>
           <img src=${weather.imgSrc} alt="weather icon"><br/>
           ${weather.description}<br/>
-          The temperature feels like ${weather.feelsTemp}
-        </div>
+          The temperature feels like ${weather.feelsTemp}<br/>
+          <a href=${getThrillreviewWebsiteLink('Themeparks/' + id)}>Go to themepark page</a> for further details
+
         </div>`);
   }
   async function AddThemeParkToMap(input: Array<string>) {
     const lat = input[0];
     const long = input[1];
+    const name = input[2];
+    const id = input[3];
     var map = useMap();
     const marker = L.marker([parseFloat(lat), parseFloat(long)], { icon: themeParkIcon }).addTo(map);
     const text = `${input[2]} <a href=${input[3]}> Click to go to page</a>`
     const weather = await AskWeather(lat, long);
     console.log(`the image source : ${weather.imgSrc}, desc: ${weather.description}, feels: ${weather.feelsTemp}`)
     marker.bindPopup(
-     makePopUpContent("walibi", "0", weather));
-     // I know this is stupid, but the first stime you open the pop up, something is wrong with the display.
+    makePopUpContent(name, id, weather));
+    // I know this is stupid, but the first stime you open the pop up, something is wrong with the display.
     marker.openPopup() 
     marker.closePopup()
   }
