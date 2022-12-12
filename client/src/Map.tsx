@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png"
 import { Icon } from 'leaflet'
-import { backendServer, getThrillreviewWebsiteLink} from "./helpers"
+import { backendServer, getThrillreviewWebsiteLink } from "./helpers"
 import axios from 'axios';
 import { Card } from 'react-bootstrap';
 
@@ -107,9 +107,9 @@ const Map = () => {
     const weather = await AskWeather(lat, long);
     console.log(`the image source : ${weather.imgSrc}, desc: ${weather.description}, feels: ${weather.feelsTemp}`)
     marker.bindPopup(
-    makePopUpContent(name, id, weather));
+      makePopUpContent(name, id, weather));
     // I know this is stupid, but the first stime you open the pop up, something is wrong with the display.
-    marker.openPopup() 
+    marker.openPopup()
     marker.closePopup()
   }
 
