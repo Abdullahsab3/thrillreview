@@ -24,6 +24,7 @@ function Profile() {
     function handleLogout(): void {
         axios.delete(backendServer("/user/logout"), {});
         removeUserInLocalstorage();
+        navigate("/Login");
     }
 
 
