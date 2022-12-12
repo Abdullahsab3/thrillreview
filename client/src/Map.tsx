@@ -123,7 +123,6 @@ const Map = () => {
 
 
   const LeafletMap = () => {
-    // NOG TOEVOEGEN<BoundsChange />
     return (
       <MapContainer id="map" center={[50.823010, 4.392620]} zoom={15} scrollWheelZoom={false}>
         <TileLayer
@@ -132,7 +131,7 @@ const Map = () => {
         />
         <SetToUserLocation />
         <AddThemeParksToMap />
-
+        <BoundsChange />
       </MapContainer>
 
     )
