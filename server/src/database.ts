@@ -66,6 +66,13 @@ db.run(
   (attractionID INTEGER, userID INTEGER, review TEXT, stars INTEGERS, date TEXT)",
 );
 
+db.run(
+  "CREATE TABLE IF NOT EXISTS attractionphotos \
+  ( id INTEGER PRIMARY KEY, attractionID INTEGER REFERENCES attractions (id) ON DELETE CASCADE, filename TEXT, type TEXT, content BLOB)",
+);
+  
+
+
 /* Themeparks tables */
 db.run(
 "CREATE TABLE IF NOT EXISTS themeparks \

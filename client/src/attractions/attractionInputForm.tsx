@@ -6,7 +6,7 @@ interface AttractionInputProps {
     title: string;
     text: string;
     attraction?: Attraction;
-    onFormSubmit: (a: Attraction) => FormEventHandler<HTMLFormElement>;
+    onFormSubmit: (a: Attraction, i: File[]) => FormEventHandler<HTMLFormElement>;
     validated: boolean;
 
 }
@@ -96,7 +96,7 @@ export default function AttractionInputForm(props: AttractionInputProps) {
                     <Card.Text>{props.text}</Card.Text>
                     <Form className="align-items-center"
                         validated={props.validated}
-                        onSubmit={props.onFormSubmit(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, getId()))}>
+                        onSubmit={props.onFormSubmit(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, getId()), allImages)}>
                         <Row>
                             <Col>
                                 <Form.Group>

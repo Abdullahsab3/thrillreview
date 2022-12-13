@@ -12,6 +12,7 @@ import {
 import { User } from "./User";
 
 async function addAttraction(req: any, res: any) {
+  console.log("add attraction");
   const {
     name,
     themepark,
@@ -99,10 +100,35 @@ async function addAttraction(req: any, res: any) {
             ],
           );
         }
-        return res.json({ added: true });
+        return res.json({ added: true, id: lastid });
       }
     },
   );
+}
+
+function addAttractionPhotos(req: any, res : any) {
+  console.log("photo request");
+  console.log(req.file);
+  if (!req.file) {
+    return res.status(400).json({ attractionphoto: "please provide a file" });
+  } else {
+    console.log("upload file");
+    const attractionID = parseInt(req.params.attractionID);
+    const { originalname, mimetype, buffer } = req.file;
+    db.run(
+      "INSERT INTO attractionphotos (attractionID, filename, type, content) VALUES(?, ?, ?, ?)",
+      [attractionID, originalname, mimetype, buffer],
+      function (error: Error) {
+        if (error) {
+          res.status(400).json({
+            avatar: "Something went wrong while uploading the user avatar.",
+          });
+        } else {[
+            res.status(200).json({ added: true }),
+          ];}
+      },
+    );
+  }
 }
 
 function findAttractionById(req: any, res: any) {
@@ -382,4 +408,5 @@ export {
   getAverageRating,
   setAttractionReview,
   updateAttraction,
+  addAttractionPhotos,
 };
