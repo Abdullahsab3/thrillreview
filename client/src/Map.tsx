@@ -20,7 +20,7 @@ interface weatherInterface {
 
 async function AskWeather(lat: string, lon: string) {
   const WeatherAPIKey = "dca52658168de46d84c7d32b706c5bc5";
-  const request = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WeatherAPIKey}`;
+  const request = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${WeatherAPIKey}`;
   const res = await axios.get(request, { withCredentials: false });
   const weather = res.data.weather[0]; // there is always only one weather item in array
   const icon = weather.icon;
