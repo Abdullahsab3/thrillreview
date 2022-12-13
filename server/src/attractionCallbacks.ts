@@ -4,6 +4,7 @@ import {
   db,
   findAttractionName,
   getAttraction,
+  getAttractionsByName,
   getAttractionRating,
   getAttractionReviews,
   getLastId,
@@ -139,6 +140,30 @@ function findAttractionById(req: any, res: any) {
       return res.status(400).json({
         attractionID: "No attraction found with the given ID",
       });
+    }
+  });
+}
+
+function findAttractionByName(req: any, res: any) {
+  const attractionName = req.query.query;
+  var page = parseInt(req.query.page);
+  var limit = parseInt(req.query.limit);
+  if (!attractionName) {
+    res.status(400).json({ error: "The name of the attraction is required" });
+  }
+  if (isNaN(page)) {
+    page = 0;
+  }
+  if (isNaN(limit)) {
+    limit = 0;
+  }
+  getAttractionsByName(attractionName, page, limit, function (error, result) {
+    if (error) {
+      res.status(400).json(error);
+    } else if (result) {
+      res.status(200).json(result);
+    } else {
+      res.status(400).json({ error: true, reviews: "No attractions found" });
     }
   });
 }
@@ -398,6 +423,7 @@ function getAttractionName(req: any, res: any) {
 export {
   addAttraction,
   findAttractionById,
+  findAttractionByName,
   findAttractionReviews,
   findReview,
   getAttractionName,

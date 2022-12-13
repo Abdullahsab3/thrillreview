@@ -343,6 +343,67 @@ function getAttraction(
   );
 }
 
+function getAttractionsByName(
+  name: string,
+  page: number,
+  limit: number,
+  getResult: (error: any | null, result: pagination | null) => void,
+) {
+  const startIndex: number = (page - 1) * limit;
+  db.get(
+    "SELECT COUNT(*) from attractions where name = ?",
+    [ name ],
+    function (error, countResult) {
+      if (error) {
+        getResult("Something went wrong while fetching the attractions  ", null);
+      } else {
+        if (limit === 0) {
+          limit = countResult["COUNT(*)"];
+        }
+        db.all(
+          "SELECT * FROM attractions LIMIT ?,?",
+          [
+            startIndex,
+            limit,
+          ],
+          function (error, Result) {
+            if (error) {
+              console.log(error);
+              getResult(
+                "Something went wrong while trying to get the attractions.",
+                null,
+              );
+            } else if (Result) {
+              const numberOfItems: number = countResult["COUNT(*)"];
+              const results: pagination = { result: Result };
+              const totalPages = numberOfItems / limit;
+
+              if (page < totalPages) {
+                results.next = {
+                  page: page + 1,
+                  limit: limit,
+                };
+              }
+              if (startIndex > 0) {
+                results.previous = {
+                  page: page - 1,
+                  limit: limit,
+                };
+              }
+
+              getResult(null, results);
+            } else {
+              getResult(null, null);
+            }
+          },
+        );
+      }
+    },
+  );
+
+}
+
+
 function findAttractionName(
   attractionID: number,
   getName: (error: string | null, result: string | null) => void,
@@ -496,6 +557,12 @@ interface page {
   page: number;
   limit: number;
 }
+interface pagination {
+  next?: page;
+  previous?: page;
+  totalPages?: number;
+  result: any;
+}
 interface reviewsPagination {
   next?: page;
   previous?: page;
@@ -597,6 +664,7 @@ export {
   db,
   findAttractionName,
   getAttraction,
+  getAttractionsByName,
   getAttractionRating,
   getAttractionReviews,
   getLastId,
