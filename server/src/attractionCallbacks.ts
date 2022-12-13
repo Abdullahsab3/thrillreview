@@ -12,7 +12,6 @@ import {
 import { User } from "./User";
 
 async function addAttraction(req: any, res: any) {
-  console.log("add attraction");
   const {
     name,
     themepark,
@@ -107,12 +106,9 @@ async function addAttraction(req: any, res: any) {
 }
 
 function addAttractionPhotos(req: any, res : any) {
-  console.log("photo request");
-  console.log(req.file);
   if (!req.file) {
     return res.status(400).json({ attractionphoto: "please provide a file" });
   } else {
-    console.log("upload file");
     const attractionID = parseInt(req.params.attractionID);
     const { originalname, mimetype, buffer } = req.file;
     db.run(
