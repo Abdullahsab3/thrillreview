@@ -51,8 +51,20 @@ const Map = () => {
       const maxlat = SEcorner.lat;
       const minlong = NWcorner.lng;
       const maxlong = SEcorner.lng;
+
+      axios.get(backendServer(`/themeparks`)).then((res) => {
+        // HIER EEN BUG: STUUR IETS VOOR DE LEGE DINGEN IPV NIETS
+        const { results  } = res.data
+        console.log(results);
+    });
+
+
+
+
       //console.log(``);
-      axios.get(backendServer(`themepark/in-range-of-coordinates/${minlat}&${maxlat}&${minlong}&${maxlong}`)).then((res) => {
+      //axios.get(backendServer("/themepark/coordinates"));
+      /*.then((res) => {
+        console.log(res);
         if (res.data) {
           console.log(res.data)
         }

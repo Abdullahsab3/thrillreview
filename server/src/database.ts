@@ -427,20 +427,10 @@ function getThemePark(
   );
 }
 
-function getThemeParksInCoordinatesRange(
-  minLat: number,
-  maxLat: number,
-  minLong: number,
-  maxLong: number,
+function getThemeParks(
   getResult: (error: any, result: any | null) => void,
 ){
-  db.get("SELECT * FROM themeparksopening WHERE lat BETWEEN ? AND ? AND long BETWEEN ? AND ?",
-  [
-    minLat,
-    maxLat,
-    minLong,
-    maxLong
-  ],
+  db.all("SELECT * FROM themeparks",
   function (err: Error, results: any) {
     if (err) {
       getResult("Something went wrong while getting the themeparks", null);
@@ -612,6 +602,6 @@ export {
   getLastId,
   getReview,
   getThemePark,
-  getThemeParksInCoordinatesRange,
+  getThemeParks,
   validateUserPassword,
 };
