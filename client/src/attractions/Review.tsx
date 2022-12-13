@@ -53,7 +53,7 @@ export default function Review(props: ReviewProps) {
             <Card className={props.className ? `comment ${props.className}` : "comment"}>
                 <Card.Title>
                     <div>
-                        {avatar && <img src={avatar} className="commentAvatar" />}
+                        {avatar && <img src={backendServer(`/user/${props.userID}/avatar`)} className="commentAvatar" />}
                         {username}
                         {(postedByUser && !editedClicked) &&
                             <Button variant="Link" className="edit" onClick={() => {

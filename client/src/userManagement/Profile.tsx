@@ -64,7 +64,7 @@ function Profile() {
                 <h1 className="text-center">Your account information</h1>
                 <Table striped bordered className="table" id="profilepictureTable">
                     <tbody>
-                        <tr><th>{avatarError ?  <p>{avatarError}</p> : <img src={avatar} id="profileAvatar" /> }</th></tr>
+                        <tr><th>{avatarError ?  <p>{avatarError}</p> : <img src={backendServer(`/user/${user.id}/avatar`)} id="profileAvatar"/> }</th></tr>
                         <tr><th>Your profile avatar</th></tr>
                         <tr><th><Button onClick={() => navigate("/profile/upload-avatar")}>Change your avatar</Button></th></tr>
                     </tbody>

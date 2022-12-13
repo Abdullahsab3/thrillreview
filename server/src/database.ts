@@ -7,6 +7,7 @@ import Review from "./Review";
 import { count } from "console";
 import { start } from "repl";
 import { ThemePark } from "./ThemePark";
+import { resolve } from "path";
 
 const db = new Database("thrillreview.db");
 

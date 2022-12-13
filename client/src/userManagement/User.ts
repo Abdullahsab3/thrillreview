@@ -1,5 +1,6 @@
 import Axios, { AxiosError } from "axios";
 import { SetStateAction } from "react";
+import { NumberLiteralType } from "typescript";
 import { backendServer } from "../helpers";
 
 class User {
@@ -40,11 +41,19 @@ async function getuserEmail(getRes: (email: string) => void) {
   getRes(res.data.email);
 }
 
-// vreemde bug hier: ik catch de error maar hij wordt door de browser toch gedisplayed (aka niet gecatcht)
+
+/* 
+function userAvatarExists(id: NumberLiteralType, getRes : (exists: boolean) => void) {
+  Axios.get(backendServer(`/user/${id}/avatar`)).catch((error: AxiosError) => {
+    if(error)
+  })
+}
+*/
 function getuserAvatar(
   id: number,
   getRes: (error: string | null, avatar: string | null) => void,
 ) {
+  
   Axios.get(backendServer(`/user/${id}/avatar`), {
     responseType: "blob",
     validateStatus: function (status) {
@@ -67,6 +76,6 @@ function getuserAvatar(
     console.log(error.response?.status);
     getRes("An error occured when trying to retrieve the avatar", null);
   });
-}
+} 
 
 export { getuserAvatar, getuserEmail, getUsername, User , getAttractionName};
