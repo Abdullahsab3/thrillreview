@@ -502,6 +502,66 @@ function getThemeParks(
   },
   )
 }
+function getThemeParksByName(
+  name: string,
+  page: number,
+  limit: number,
+  getResult: (error: any | null, result: pagination | null) => void,
+) {
+  const startIndex: number = (page - 1) * limit;
+  db.get(
+    "SELECT COUNT(*) from themeparks where name LIKE ?",
+    [ "%"+name+"%" ],
+    function (error, countResult) {
+      if (error) {
+        getResult("Something went wrong while fetching the themeparks  ", null);
+      } else {
+        if (limit === 0) {
+          limit = countResult["COUNT(*)"];
+        }
+        db.all(
+          "SELECT * FROM themeparks where name LIKE ? LIMIT ?,?",
+          [
+            "%"+name+"%",
+            startIndex,
+            limit,
+          ],
+          function (error, Result) {
+            if (error) {
+              console.log(error);
+              getResult(
+                "Something went wrong while trying to get the themeparks.",
+                null,
+              );
+            } else if (Result) {
+              const numberOfItems: number = countResult["COUNT(*)"];
+              const results: pagination = { result: Result };
+              const totalPages = numberOfItems / limit;
+
+              if (page < totalPages) {
+                results.next = {
+                  page: page + 1,
+                  limit: limit,
+                };
+              }
+              if (startIndex > 0) {
+                results.previous = {
+                  page: page - 1,
+                  limit: limit,
+                };
+              }
+
+              getResult(null, results);
+            } else {
+              getResult(null, null);
+            }
+          },
+        );
+      }
+    },
+  );
+
+}
 
 function getAttractionRating(
   attractionID: number,
@@ -670,6 +730,7 @@ export {
   getAttractionReviews,
   getLastId,
   getReview,
+  getThemeParksByName,
   getThemePark,
   getThemeParks,
   validateUserPassword,

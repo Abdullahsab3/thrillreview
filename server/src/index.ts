@@ -18,7 +18,7 @@ import {
   deleteUser
 } from "./userManagementCallbacks";
 import { addAttraction, findAttractionById, findAttractionByName, findAttractionReviews, findReview, getAttractionName, getAverageRating, setAttractionReview, updateAttraction, addAttractionPhotos } from "./attractionCallbacks";
-import { addThemePark, editThemePark, findThemeParkByID, findThemeParks } from "./themeParkCallbacks";
+import { addThemePark, editThemePark, findThemeParkByID, findThemeParkByName } from "./themeParkCallbacks";
 import multer from "multer";
 import {getRecentAttractions, getRecentReviews, getRecents, getRecentThemeparks} from "./home";
 import Review from "./Review";
@@ -92,7 +92,7 @@ app.get("/attractions/find", findAttractionByName)
 app.post("/themepark", validateTokens, addThemePark)
 app.get("/themepark/:themeparkID", findThemeParkByID)
 app.put("/themepark/:themeparkID", validateTokens, editThemePark)
-app.get("/themeparks", findThemeParks)
+app.get("/themeparks/find", findThemeParkByName)
 
 app.get("/feed", sendFeeds);
 

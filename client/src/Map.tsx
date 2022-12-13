@@ -52,7 +52,7 @@ const Map = () => {
       const minlong = NWcorner.lng;
       const maxlong = SEcorner.lng;
 
-      axios.get(backendServer(`/themeparks`)).then((res) => {
+      axios.get(backendServer(`/attractions/find?limit=${0}&page=${0}`)).then((res) => { //pagination kan toegepast worden door de limit en page aan te passen
         // HIER EEN BUG: STUUR IETS VOOR DE LEGE DINGEN IPV NIETS
         const { results  } = res.data
         console.log(results);
