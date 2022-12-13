@@ -351,8 +351,8 @@ function getAttractionsByName(
 ) {
   const startIndex: number = (page - 1) * limit;
   db.get(
-    "SELECT COUNT(*) from attractions where name = ?",
-    [ name ],
+    "SELECT COUNT(*) from attractions where name LIKE ?",
+    [ "%"+name+"%" ],
     function (error, countResult) {
       if (error) {
         getResult("Something went wrong while fetching the attractions  ", null);
@@ -361,8 +361,9 @@ function getAttractionsByName(
           limit = countResult["COUNT(*)"];
         }
         db.all(
-          "SELECT * FROM attractions LIMIT ?,?",
+          "SELECT * FROM attractions where name LIKE ? LIMIT ?,?",
           [
+            "%"+name+"%",
             startIndex,
             limit,
           ],

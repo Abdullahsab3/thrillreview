@@ -145,11 +145,11 @@ function findAttractionById(req: any, res: any) {
 }
 
 function findAttractionByName(req: any, res: any) {
-  const attractionName = req.query.query;
+  var attractionName = req.query.query;
   var page = parseInt(req.query.page);
   var limit = parseInt(req.query.limit);
   if (!attractionName) {
-    res.status(400).json({ error: "The name of the attraction is required" });
+    attractionName = "";
   }
   if (isNaN(page)) {
     page = 0;

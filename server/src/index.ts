@@ -85,7 +85,7 @@ app.get("/attraction/:attractionID/review", findReview)
 app.get("/attraction/:attractionID/reviews", findAttractionReviews)
 app.get("/attraction/:attractionID/rating", getAverageRating)
 app.get("/attraction/:attractionID/name", getAttractionName)
-app.get("attractions/find", findAttractionByName)
+app.get("/attractions/find", findAttractionByName)
 
 
 //themepark requests
