@@ -8,6 +8,7 @@ import "./styling/attractionPage.css"
 import Reviews from "./Reviews"
 import AttractionInputForm from "./attractionInputForm"
 import StarRating from "./starRating"
+import AttractionImages from "./attractionImages"
 
 export default function AttractionPage() {
     const [attraction, setAttraction] = useState<Attraction>()
@@ -107,11 +108,6 @@ export default function AttractionPage() {
     function getInformationCard() {
         return (
             <div>
-                <div className="AttractionTitle d-flex flex-column justify-content-center">
-                    <h1 className="title">{attraction?.name}
-                    </h1>
-                    <StarRating className="attractionAvgRating" rating={rating}/>
-                </div>
 
                 <div className="d-flex flex-column">
                     <Table className="table" id="attractionInfoCard">
@@ -159,9 +155,27 @@ export default function AttractionPage() {
     function AttractionPageBody() {
         return (
             <div>
-                {getInformationCard()}
-                {getInformationForm()}
-                <Reviews attractionID={parseInt(attractionID as string)} />
+                <div className="AttractionTitle d-flex flex-column justify-content-center">
+                    <h1 className="title">{attraction?.name}
+                    </h1>
+                    <StarRating className="attractionAvgRating" rating={rating} />
+                </div>
+
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col-lg">
+                            {getInformationCard()}
+                            {getInformationForm()}
+                        </div>
+                        <div className="col-lg">
+                            {AttractionImages({ attractionID: parseInt(attractionID as string) })}
+                        </div>
+
+                    </div>
+                    <div className="row">
+                        <Reviews attractionID={parseInt(attractionID as string)} />
+                    </div>
+                </div>
             </div>
         )
 

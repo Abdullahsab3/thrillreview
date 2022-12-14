@@ -1,7 +1,7 @@
 import Axios, { AxiosError } from "axios";
 import { SetStateAction } from "react";
 import { NumberLiteralType } from "typescript";
-import { backendServer } from "../helpers";
+import { backendServer, imageExists } from "../helpers";
 
 class User {
   username: string;
@@ -42,16 +42,7 @@ async function getuserEmail(getRes: (email: string) => void) {
 }
 
 
-function imageExists(url: string) {
 
-  var http = new XMLHttpRequest();
-
-  http.open('HEAD', url, false);
-  http.send();
-
-  return http.status < 400;
-
-}
 
 function userAvatarExists(id: number, getRes: (exists: boolean) => void) {
   getRes(imageExists(backendServer(`/user/${id}/avatar`)))

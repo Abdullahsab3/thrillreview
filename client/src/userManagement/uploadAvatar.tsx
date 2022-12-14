@@ -6,6 +6,7 @@ import CardWithImageUpload from '../higherOrderComponents/cardWithImageUpload';
 import { Link, useNavigate } from 'react-router-dom';
 import { backendServer } from '../helpers'
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
+import './styling/userMangement.css'
 
 
 export default function ChangeAvatar() {

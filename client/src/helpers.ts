@@ -16,3 +16,14 @@
   export function getThrillreviewWebsiteLink(route:string){
     return protocol + "://"+host+":"+clientsideport+ "/" + route;
   }
+
+  export function imageExists(url: string) {
+
+    var http = new XMLHttpRequest();
+  
+    http.open('HEAD', url, false);
+    http.send();
+  
+    return http.status < 400;
+  
+  }

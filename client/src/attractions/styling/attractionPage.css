@@ -10,3 +10,9 @@
     text-align: center;
     font-size:  xx-large;
 }
+
+.carouselImage {
+    margin: 0 auto;
+    width: 10%;
+    height: 10%;
+}

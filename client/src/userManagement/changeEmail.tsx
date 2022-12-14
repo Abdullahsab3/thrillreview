@@ -9,6 +9,7 @@ import { isValidEmail, backendServer } from '../helpers';
 import InputGroup from 'react-bootstrap/InputGroup';
 import ButtonWithLoading from '../higherOrderComponents/buttonWithLoading';
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
+import './styling/userMangement.css';
 
 
 export default function ChangeEmail() {

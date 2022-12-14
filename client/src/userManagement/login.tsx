@@ -8,6 +8,7 @@ import { setUserInLocalstorage, fetchUserFromLocalStorage } from '../localStorag
 import { backendServer } from '../helpers'
 import InputGroup from 'react-bootstrap/InputGroup';
 import './styling/login.css'
+import './styling/userMangement.css'
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import ButtonWithLoading from '../higherOrderComponents/buttonWithLoading'
 import { Link } from 'react-router-dom';

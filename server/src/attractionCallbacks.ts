@@ -33,6 +33,7 @@ async function addAttraction(req: any, res: any) {
       themepark,
     ],
     (error: Error, result: any) => {
+      console.log(error)
       if (error) {
         return res.status(400).json({ error: error.message });
       } else {

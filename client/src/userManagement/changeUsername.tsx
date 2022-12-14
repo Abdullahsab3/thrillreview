@@ -10,6 +10,8 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import ButtonWithLoading from '../higherOrderComponents/buttonWithLoading';
 
+import './styling/userMangement.css'
+
 export default function ChangeUsername() {
     const navigate = useNavigate();
     const { promiseInProgress } = usePromiseTracker()

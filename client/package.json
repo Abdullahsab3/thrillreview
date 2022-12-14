@@ -57,6 +57,7 @@
     "buffer": "^6.0.3",
     "formik": "^2.2.9",
     "react-bootstrap": "^2.5.0",
+    "react-photo-gallery": "^8.0.0",
     "react-promise-tracker": "^2.1.1"
   }
 }
