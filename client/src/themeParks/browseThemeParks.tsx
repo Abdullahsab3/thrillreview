@@ -47,23 +47,24 @@ function GetThemeParks(query: string, pageNr: number) {
     useEffect(() => {
         setLoading(true)
         setError(false)
-        let cancel: Canceler
-        axios.get(`/themeparks/find?query=${query}&page=${pageNr}&limit=${10}`, { cancelToken: new axios.CancelToken(c => cancel = c) }).then(res => {
+        //let cancel: Canceler
+        axios.get(`/themeparks/find?query=${query}&page=${pageNr}&limit=${10}`).then(res => { // { cancelToken: new axios.CancelToken(c => cancel = c) }
+            console.log("res:", res);
             setThemeParks(prevThemeParks => {
-                return [...prevThemeParks, ...res.data.themeparks.map((a: any) => { // ThemePark evt andere naam (afh v response) + DIE ANY MOET IETS ANDERS ZIJN, WSS JSON, Q AAN SERVER
+                return [...prevThemeParks, ...res.data.result.map((a: any) => { // ThemePark evt andere naam (afh v response) + DIE ANY MOET IETS ANDERS ZIJN, WSS JSON, Q AAN SERVER
                     const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = a
                     new ThemePark(name, openingdate, builder, type, height, length, inversions, duration, id)
                 })]
-            })
-            setHasMore(res.data.docs.lenght > 0);
+            });
+            setHasMore(res.data.result.lenght > 0);
             setLoading(false)
             console.log(res.data);
         }).catch(e => {
-            if (axios.isCancel(e)) return // if cancelled, it was meant to
+           // if (axios.isCancel(e)) return // if cancelled, it was meant to
             setLoading(false)
             setError(true);
         })
-        return () => cancel();
+        //return () => cancel();
     }, [query, pageNr]);
 
     return (
@@ -79,12 +80,10 @@ function BrowseThemeparks() {
     const [pageNr, setPageNr] = useState(1);
     if (initialQuery) setQuery(initialQuery)
     let { themeparks, hasMore, loading, error } = GetThemeParks(query, pageNr);
-    // HIER EEN PROBLEEM HEB AL VEEL GEKEKEN MAAR VIND HET NIET
     const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
     const lastThemeParkRef = useCallback((node: HTMLDivElement) => {
         if (loading) return // otherwise will keep sending callbacks while loading
         console.log(node)
-        // DIT HIER GEEFT MIJ FOUTEN, MAAR IS WAT JE MOET DOEN MET SERVER ANTW DUS KAN HET NOG NIET DOEN
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
         if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
         observer.current = new IntersectionObserver(entries => {
