@@ -21,3 +21,11 @@ export function setUserInLocalstorage(user: User): void {
 export function removeUserInLocalstorage(): void {
     localStorage.removeItem('user')
 }
+
+export function loggedIn(): Boolean {
+    if (fetchUserFromLocalStorage()) {
+        return true;
+    } else {
+        return false;
+    };
+}

@@ -10,7 +10,7 @@ interface themeParkPreviewInterface {
     id: number,
     name: string,
     themepark: string,
-    key:number,
+    key: number,
     ref?: (e: HTMLDivElement) => void,
 }
 
@@ -48,12 +48,7 @@ function GetThemeParks(query: string, pageNr: number) {
         setLoading(true)
         setError(false)
         let cancel: Canceler
-        axios({
-            method: 'get',
-            url: "HIER MOET DE URL KOMEN - BACKEND",
-            params: { query: query, pagenr: pageNr },
-            cancelToken: new axios.CancelToken(c => cancel = c)
-        }).then(res => {
+        axios.get(`/themeparks/find?query=${query}&page=${pageNr}&limit=${10}`, { cancelToken: new axios.CancelToken(c => cancel = c) }).then(res => {
             setThemeParks(prevThemeParks => {
                 return [...prevThemeParks, ...res.data.themeparks.map((a: any) => { // ThemePark evt andere naam (afh v response) + DIE ANY MOET IETS ANDERS ZIJN, WSS JSON, Q AAN SERVER
                     const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = a
@@ -91,18 +86,18 @@ function BrowseThemeparks() {
         console.log(node)
         // DIT HIER GEEFT MIJ FOUTEN, MAAR IS WAT JE MOET DOEN MET SERVER ANTW DUS KAN HET NOG NIET DOEN
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
-            if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
-          observer.current = new IntersectionObserver(entries => {
-              if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more
-                  setPageNr(prevPageNr => prevPageNr + 1)
-              }
-          })
-          if (node) observer.current.observe(node) 
+        if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
+        observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more
+                setPageNr(prevPageNr => prevPageNr + 1)
+            }
+        })
+        if (node) observer.current.observe(node)
     }, [loading, hasMore])
 
     //  OM TE TESTEN ZONDER BACKEND
-    themeparks = [new ThemePark("anubis",  "29/01/2003", "street", 12, "1170", "BE", "indoor", "https://myweb.be",1)]
-    
+    themeparks = [new ThemePark("anubis", "29/01/2003", "street", 12, "1170", "BE", "indoor", "https://myweb.be", 1)]
+
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         setPageNr(1);
@@ -111,7 +106,7 @@ function BrowseThemeparks() {
     }
 
     function LoadingCard() {
-        return(
+        return (
             <Card>
                 <Card.Title> We are loading the themeparks, please wait</Card.Title>
                 <Card.Body> In the mean time, grab some tea! </Card.Body>
@@ -119,12 +114,12 @@ function BrowseThemeparks() {
         );
     }
 
-    function ErrorCard(){
-        return(
+    function ErrorCard() {
+        return (
             <Card bg="danger" className="browsingCard mb-2" >
-            <Card.Title> There has been a problem loading the themeparks. Please try again.</Card.Title>
-            <Card.Body> Our apologies for the inconvenience. </Card.Body>
-        </Card>
+                <Card.Title> There has been a problem loading the themeparks. Please try again.</Card.Title>
+                <Card.Body> Our apologies for the inconvenience. </Card.Body>
+            </Card>
         );
     }
 
@@ -157,14 +152,14 @@ function BrowseThemeparks() {
                         <ThemeParkPreviewCard ref={lastThemeParkRef} key={themePark.id} id={themePark.id} name={themePark.name} themepark={"test"} />
                     );
                 } else {
-                    return(
+                    return (
                         <ThemeParkPreviewCard key={themePark.id} id={themePark.id} name={themePark.name} themepark={"test"} />
                     );
                 }
             })}
             {loading ? <LoadingCard /> : ""}
             {error ? <ErrorCard /> : ""}
-           
+
         </>
     );
 
