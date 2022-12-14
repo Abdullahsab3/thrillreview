@@ -130,7 +130,6 @@ function addAttractionPhotos(req: any, res : any) {
 }
 
 
-
 function findAttractionById(req: any, res: any) {
   const id = req.params.attractionID;
   getAttraction(id, function (error: any, attraction: Attraction | null) {
@@ -406,7 +405,7 @@ function updateAttraction(req: any, res: any) {
           ],
         );
       }
-      return res.json({ added: true });
+      return res.json({ updated: true });
     },
   );
 }

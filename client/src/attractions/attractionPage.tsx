@@ -41,14 +41,31 @@ export default function AttractionPage() {
         getAttractioninfo()
     }, [])
 
-    function submitEdits(attraction: Attraction) {
+    function submitEdits(attraction: Attraction, images: File[]) {
         const updateAttractionInfo: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault()
                 Axios.put(`/attraction/${attractionID}`, attraction.toJSON()).then((res) => {
+                    console.log(res)
                     if (res.data.updated) {
-                        setValidated(true)
-                        setEdit(false)
+                        images.forEach((image) => {
+                            const formData = new FormData();
+                            formData.append(`image`, image);
+                            Axios.post(backendServer(`/attraction/${attractionID}/photos`), formData, {
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                }
+                            }).then((res) => {
+                                console.log(res)
+                                if (res.data.added) {
+                                    setValidated(true)
+                                    setEdit(false)
+                                }
+                            }).catch(function (error) {
+                                setError(error.response.data)
+                            })
+                        })
+
                     }
                 }).catch((error) => {
                     setError(error.response.data)
@@ -108,14 +125,23 @@ export default function AttractionPage() {
     function getInformationCard() {
         return (
             <div>
+                <Table>
+                    <tbody>
+                        <tr>
+                            <th>
+                                Attraction's Information
+                            </th>
 
+                        </tr>
+
+                    </tbody>
+                </Table>
                 <div className="d-flex flex-column">
                     <Table className="table" id="attractionInfoCard">
                         <tbody>
                             {createDataRows()}
                         </tbody>
                     </Table>
-
                     <Table>
                         <tbody>
                             <tr>
@@ -125,6 +151,7 @@ export default function AttractionPage() {
                             </tr>
                         </tbody>
                     </Table>
+
                 </div>
             </div>
         )
@@ -170,7 +197,6 @@ export default function AttractionPage() {
                         <div className="col-lg">
                             {AttractionImages({ attractionID: parseInt(attractionID as string) })}
                         </div>
-
                     </div>
                     <div className="row">
                         <Reviews attractionID={parseInt(attractionID as string)} />

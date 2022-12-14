@@ -15,7 +15,7 @@ interface imageinfo {
 export default function AttractionImages(props: imageProps) {
 
     const [images, setImages] = useState<imageinfo[]>([])
-    function getImageDimension(url: string ,getdims: (height: number, width: number) => void) {
+    function getImageDimension(url: string, getdims: (height: number, width: number) => void) {
         const img = new Image();
         img.src = url;
         img.onload = function () {
@@ -25,22 +25,24 @@ export default function AttractionImages(props: imageProps) {
 
     useEffect(() => {
         let newimages: imageinfo[] = []
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 10; i++) {
             let url = backendServer(`/attractions/${props.attractionID}/photos?id=${i}`)
             if (imageExists(url)) {
                 getImageDimension(url, function (height, width) {
 
-                newimages.push({ src: url, width: width, height:  height})
-
+                    newimages.push({ src: url, width: width / 100, height: height / 100})
                 })
-
             }
         }
         setImages(newimages)
     }, [])
 
     return (
-        <Gallery photos={images} />
-        
+        <div>
+
+            {images.length === 0 ? <Gallery photos={images} /> : <i>No images available for this attraction. Be the first one to add an image! </i>}
+
+        </div>
+
     )
 }
