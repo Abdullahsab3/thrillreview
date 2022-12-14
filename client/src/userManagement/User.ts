@@ -42,18 +42,35 @@ async function getuserEmail(getRes: (email: string) => void) {
 }
 
 
-/* 
-function userAvatarExists(id: NumberLiteralType, getRes : (exists: boolean) => void) {
-  Axios.get(backendServer(`/user/${id}/avatar`)).catch((error: AxiosError) => {
-    if(error)
-  })
+function imageExists(url: string) {
+
+  var http = new XMLHttpRequest();
+
+  http.open('HEAD', url, false);
+  http.send();
+
+  return http.status < 400;
+
 }
-*/
+
+function userAvatarExists(id: number, getRes: (exists: boolean) => void) {
+  getRes(imageExists(backendServer(`/user/${id}/avatar`)))
+
+  /*   fetch(backendServer(`/user/${id}/avatar`)).then((response) => {
+      console.log(response)
+      if(response.status > 300) {
+        getRes(false)
+      } else {
+        getRes(true)
+      }
+    }) */
+}
+
 function getuserAvatar(
   id: number,
   getRes: (error: string | null, avatar: string | null) => void,
 ) {
-  
+
   Axios.get(backendServer(`/user/${id}/avatar`), {
     responseType: "blob",
     validateStatus: function (status) {
@@ -76,6 +93,6 @@ function getuserAvatar(
     console.log(error.response?.status);
     getRes("An error occured when trying to retrieve the avatar", null);
   });
-} 
+}
 
-export { getuserAvatar, getuserEmail, getUsername, User , getAttractionName};
+export { getuserAvatar, getuserEmail, getUsername, User, getAttractionName, userAvatarExists };

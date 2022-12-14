@@ -68,31 +68,33 @@ export default function ChangeUsername() {
     if (savedUser) {
 
         return (
-            <div className='col d-flex justify-content-center'>
-                <Card className='userManagementCard'>
-                    <Card.Body>
-                        <Card.Title><strong>Change your username</strong></Card.Title>
-                        <Form noValidate validated={validated} onSubmit={handleChangeUsernameSubmit}>
+            <div className='page'>
+                <div className='col d-flex justify-content-center'>
+                    <Card className='userManagementCard'>
+                        <Card.Body>
+                            <Card.Title><strong>Change your username</strong></Card.Title>
+                            <Form noValidate validated={validated} onSubmit={handleChangeUsernameSubmit}>
 
-                            <Form.Group className="mb-3">
-                                <Form.Label>New username</Form.Label>
-                                <InputGroup hasValidation>
-                                    <Form.Control
-                                        required
-                                        type="text"
-                                        onChange={(e) => setNewUsername(e.target.value)}
-                                        placeholder="Enter your new username"
-                                        isInvalid={(newUsernameError as any)} />
-                                    <Form.Control.Feedback type="invalid">
-                                        {newUsernameError}
-                                    </Form.Control.Feedback>
-                                </InputGroup>
-                                <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Submit your username!" />
-                            </Form.Group>
-                        </Form>
-                    </Card.Body>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>New username</Form.Label>
+                                    <InputGroup hasValidation>
+                                        <Form.Control
+                                            required
+                                            type="text"
+                                            onChange={(e) => setNewUsername(e.target.value)}
+                                            placeholder="Enter your new username"
+                                            isInvalid={(newUsernameError as any)} />
+                                        <Form.Control.Feedback type="invalid">
+                                            {newUsernameError}
+                                        </Form.Control.Feedback>
+                                    </InputGroup>
+                                    <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Submit your username!" />
+                                </Form.Group>
+                            </Form>
+                        </Card.Body>
 
-                </Card>
+                    </Card>
+                </div>
             </div>
         );
     } else {

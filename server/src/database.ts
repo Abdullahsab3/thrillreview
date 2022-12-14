@@ -17,7 +17,7 @@ db.run(
 (id INTEGER UNIQUE, filename TEXT, type TEXT, content BLOB)",
 );
 db.run(
-"CREATE TABLE IF NOT EXISTS user \
+"CREATE TABLE IF NOT EXISTS users \
 (id INTEGER UNIQUE PRIMARY KEY, username TEXT, email TEXT, hash TEXT)",
 );
 
@@ -121,6 +121,7 @@ function checkForUsernameExistence(
     [username],
     (err, result) => {
       if (err) {
+        console.log(err)
         getResult(
           false,
           "Something went wrong when checking for username existence",

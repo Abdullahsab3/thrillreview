@@ -80,7 +80,7 @@ function Login() {
     }
 
     return (
-        <div id='Login'>
+        <div className="page" id='Login'>
             <div className="col d-flex justify-content-center">
                 <Card className='userManagementCard' border='secondary'>
                     <Card.Body>

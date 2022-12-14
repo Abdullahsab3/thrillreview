@@ -59,6 +59,7 @@ export default function ChangeAvatar() {
     if (savedUser) {
 
         return (
+            <div className='page'>
             <div className='col d-flex justify-content-center'>
                 <CardWithImageUpload
                     title="Change your avatar"
@@ -70,6 +71,7 @@ export default function ChangeAvatar() {
                     imageWidth={360}
                     imageHeight={360}
                     promiseInProgress={promiseInProgress} />
+            </div>
             </div>
         );
     } else {

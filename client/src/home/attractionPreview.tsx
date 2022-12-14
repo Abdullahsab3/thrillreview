@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Card } from "react-bootstrap"
-import { getAttractionName, getuserAvatar, getUsername } from "../userManagement/User"
+import { backendServer } from "../helpers"
+import { getAttractionName, userAvatarExists, getUsername } from "../userManagement/User"
 
 interface attractionpreviewProps {
     name: string,
@@ -12,15 +13,15 @@ interface attractionpreviewProps {
 export function AttractionPreview(props: attractionpreviewProps) {
     const [userName, setUsername] = useState("")
     const [attractionName, setAttractionName] = useState("")
-    const [avatar, setAvatar] = useState("")
+    const [avatar, setAvatar] = useState(false)
 
     useEffect(() => {
         getUsername(props.userID, function (error, result) {
             setUsername(result as string)
         })
-        getuserAvatar(props.userID, function (error, avatar) {
-            if (avatar) {
-                setAvatar(avatar as string)
+        userAvatarExists(props.userID, function (exists) {
+            if (exists) {
+                setAvatar(exists)
             }
         })
     }, [])
@@ -33,7 +34,7 @@ export function AttractionPreview(props: attractionpreviewProps) {
                     <Card.Body>
                         <Card.Title>
                             <div>
-                                {avatar && <img src={avatar} className="commentAvatar" />}
+                                {avatar ? <img src={backendServer(`/user/${props.userID}/avatar`)} className="commentAvatar" /> : <i className="bi bi-square"/> }
                                 {`${userName} added a new attraction `}
                             </div>
                         </Card.Title>

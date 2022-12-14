@@ -94,7 +94,7 @@ function Register() {
 
 
   return (
-    <div id='register'>
+    <div className='page' id='register'>
       <div className="col d-flex justify-content-center">
         <Card className='userManagementCard'>
           <Card.Body>

@@ -1,7 +1,7 @@
 import Axios from 'axios'
 import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import { getuserAvatar, getuserEmail, User } from './User'
+import { getuserEmail, User, userAvatarExists } from './User'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table'
@@ -17,7 +17,7 @@ function Profile() {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("")
-    const [avatar, setAvatar] = useState("")
+    const [avatar, setAvatar] = useState(false)
     const [avatarError, setAvatarError] = useState("")
     var user: User | null = fetchUserFromLocalStorage();
 
@@ -35,16 +35,12 @@ function Profile() {
                 setEmail(res)
             });
             try {
-                getuserAvatar(user.id,
-                    function (error: string | null, res: string | null) {
-                        if (res) {
-
-                            setAvatar(res as string)
-
-                        }
-                        else if (error) {
-                            setAvatarError(error)
-
+                userAvatarExists(user.id,
+                    function (exists: boolean) {
+                        if(exists) {
+                            setAvatar(true)
+                        } else {
+                            setAvatarError("No avatar available")
                         }
                     });
 

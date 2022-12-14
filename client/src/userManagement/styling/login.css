@@ -1,13 +1,4 @@
 #Login {
-  position:fixed;
-  width:100%;
-  height:100%;
   background-image: url(/public/loginbg.jpg);
-  background-size: cover;
 }
 
-.userManagementCard {
-  justify-content: center;
-  margin-top: 10%;
-  opacity: 0.9;
-}

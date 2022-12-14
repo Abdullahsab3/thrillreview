@@ -149,12 +149,12 @@ function CardWithImageUpload(cardProps: cardProps) {
 
     return (
 
-        <Card className='card' border='secondary'
+        <Card className='userManagementCard' border='secondary'
             onDrop={dropHandler}
             onDragOver={dragOverhandler}>
             <Card.Body>
                 <Card.Title ><strong>{cardProps.title}</strong></Card.Title>
-                <Form noValidate validated={cardProps.serverValidated} onSubmit={cardProps.onSubmit((uploadedFile as File), function (error: string) {
+                <Form validated={cardProps.serverValidated} onSubmit={cardProps.onSubmit((uploadedFile as File), function (error: string) {
                     if (error) {
                         setFileError(error)
                     }

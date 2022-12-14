@@ -76,43 +76,45 @@ export default function ChangePassword() {
 
     if (savedUser) {
         return (
-            <div className='col d-flex justify-content-center'>
-                <Card className='userManagementCard'>
-                    <Card.Body>
-                        <Card.Title><strong>Change your password</strong></Card.Title>
-                        <Form validated={validated} onSubmit={handleChangePassword}>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Password</Form.Label>
-                                <InputGroup hasValidation>
-                                    <Form.Control
-                                        required
-                                        type="password"
-                                        onChange={(e) => setOldPassword(e.target.value)}
-                                        placeholder="Enter your old password"
-                                        isInvalid={(oldPasswordError as any)} />
-                                    <Form.Control.Feedback type="invalid">
-                                        {oldPasswordError}
-                                    </Form.Control.Feedback>
-                                </InputGroup>
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Your new password</Form.Label>
-                                <InputGroup hasValidation>
-                                    <Form.Control required
-                                        type="password"
-                                        onChange={(e) => setNewPassword(e.target.value)}
-                                        placeholder="Enter your new Password"
-                                        isInvalid={(newPasswordError as any)} />
-                                    <Form.Control.Feedback type="invalid">
-                                        {newPasswordError}
-                                    </Form.Control.Feedback>
-                                </InputGroup>
-                                <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Submit!" />
-                            </Form.Group>
-                        </Form>
-                    </Card.Body>
+            <div className='page'>
+                <div className='col d-flex justify-content-center'>
+                    <Card className='userManagementCard'>
+                        <Card.Body>
+                            <Card.Title><strong>Change your password</strong></Card.Title>
+                            <Form validated={validated} onSubmit={handleChangePassword}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Password</Form.Label>
+                                    <InputGroup hasValidation>
+                                        <Form.Control
+                                            required
+                                            type="password"
+                                            onChange={(e) => setOldPassword(e.target.value)}
+                                            placeholder="Enter your old password"
+                                            isInvalid={(oldPasswordError as any)} />
+                                        <Form.Control.Feedback type="invalid">
+                                            {oldPasswordError}
+                                        </Form.Control.Feedback>
+                                    </InputGroup>
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Your new password</Form.Label>
+                                    <InputGroup hasValidation>
+                                        <Form.Control required
+                                            type="password"
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            placeholder="Enter your new Password"
+                                            isInvalid={(newPasswordError as any)} />
+                                        <Form.Control.Feedback type="invalid">
+                                            {newPasswordError}
+                                        </Form.Control.Feedback>
+                                    </InputGroup>
+                                    <ButtonWithLoading disabled={!isFormValid() || promiseInProgress} promiseInProgress={promiseInProgress} message="Submit!" />
+                                </Form.Group>
+                            </Form>
+                        </Card.Body>
 
-                </Card>
+                    </Card>
+                </div>
             </div>
         );
     } else {
