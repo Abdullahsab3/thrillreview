@@ -17,7 +17,7 @@ import {
   getUserName,
   deleteUser
 } from "./userManagementCallbacks";
-import { addAttraction, findAttractionById, findAttractionByName, findAttractionReviews, findReview, getAttractionName, getAverageRating, setAttractionReview, updateAttraction, addAttractionPhotos } from "./attractionCallbacks";
+import { addAttraction, findAttractionById, findAttractionByName, findAttractionReviews, findReview, getAttractionName, getAverageRating, setAttractionReview, updateAttraction, addAttractionPhotos, getAttractionPhoto } from "./attractionCallbacks";
 import { addThemePark, editThemePark, findThemeParkByID, findThemeParkByName } from "./themeParkCallbacks";
 import multer from "multer";
 import {getRecentAttractions, getRecentReviews, getRecents, getRecentThemeparks} from "./home";
@@ -86,6 +86,7 @@ app.get("/attraction/:attractionID/reviews", findAttractionReviews)
 app.get("/attraction/:attractionID/rating", getAverageRating)
 app.get("/attraction/:attractionID/name", getAttractionName)
 app.get("/attractions/find", findAttractionByName)
+app.get("/attractions/:attractionID/photos", getAttractionPhoto)
 
 
 //themepark requests

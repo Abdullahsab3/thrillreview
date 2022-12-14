@@ -357,7 +357,7 @@ function deleteUser(req: any, res: any) {
   db.run("DELETE FROM users WHERE id = ?", [userid], function (error) {
     if (error) {
       res.status(400).json({
-        error: "something went wrong while deleting the user accound",
+        error: "something went wrong while deleting the user account",
       });
     }
   });

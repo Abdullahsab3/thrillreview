@@ -681,7 +681,6 @@ function getAttractionReviews(
                   limit: limit,
                 };
               }
-
               getResult(null, results);
             } else {
               getResult(null, null);
@@ -715,6 +714,9 @@ function checkForUserAvatar(
     },
   );
 }
+
+
+
 
 export {
   checkForEmailExistence,

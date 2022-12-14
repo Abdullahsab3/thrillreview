@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { Button, Card } from "react-bootstrap"
 import { backendServer } from "../helpers"
 import { fetchUserFromLocalStorage } from "../localStorageProcessing"
-import { getuserAvatar, getUsername, User } from "../userManagement/User"
+import { userAvatarExists, getUsername, User } from "../userManagement/User"
 import WriteReview from "./reviewForm"
 import StarRating from "./starRating"
 import "./styling/review.css"
@@ -19,7 +19,7 @@ interface ReviewProps {
 export default function Review(props: ReviewProps) {
     const [Error, setError] = useState("")
     const [username, setUsername] = useState("")
-    const [avatar, setAvatar] = useState("")
+    const [avatar, setAvatar] = useState(false)
     const [postedByUser, setPostedByUser] = useState(false)
     const [editedClicked, setEditedClicked] = useState(false)
 
@@ -32,9 +32,9 @@ export default function Review(props: ReviewProps) {
         if (user && ((user as User).id === props.userID)) {
             setPostedByUser(true)
         }
-        getuserAvatar(props.userID, function (error, avatar) {
-            if (avatar) {
-                setAvatar(avatar as string)
+        userAvatarExists(props.userID, function (exists: boolean) {
+            if (exists) {
+                setAvatar(exists)
             }
         })
         getUsername(props.userID, function (error, username) {

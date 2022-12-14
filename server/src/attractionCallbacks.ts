@@ -128,6 +128,8 @@ function addAttractionPhotos(req: any, res : any) {
   }
 }
 
+
+
 function findAttractionById(req: any, res: any) {
   const id = req.params.attractionID;
   getAttraction(id, function (error: any, attraction: Attraction | null) {
@@ -420,6 +422,29 @@ function getAttractionName(req: any, res: any) {
   });
 }
 
+function getAttractionPhoto(req: any, res: any) {
+  const attractionID = req.params.attractionID
+  const imageID = parseInt(req.query.id)
+  db.all("SELECT * FROM attractionphotos WHERE attractionID = ?", [attractionID], (error, result) => {
+    if(error) {
+      return res.status(400).json({error: "Something when wrong while getting the attraction photo"})
+    }
+    if(result) {
+      let image = result[imageID]
+
+      if(image) {
+        res.set("Content-Type", image.type);
+        res.status(200).send(image.content);
+      } else {
+        res.status(404).json({error: "The attraction image is not found"})
+      }
+    } else {
+      res.status(404).json({error: "The attraction image is not found"})
+    }
+  })
+}
+
+
 export {
   addAttraction,
   findAttractionById,
@@ -431,4 +456,5 @@ export {
   setAttractionReview,
   updateAttraction,
   addAttractionPhotos,
+  getAttractionPhoto
 };
