@@ -3,6 +3,7 @@ import { db } from "./database";
 import { AttractionPreview, ThemeParkPreview } from "./Previews";
 import Review from "./Review";
 
+
 export function getRecentReviews(
   getResult: (error: string | null, reviews: Review[] | null) => void,
 ) {
@@ -91,31 +92,28 @@ export function getRecentThemeparks(
 
 export function getRecents(getResult: (error: string | null, recents: any[] | null) => void) {
     var results: any[] = []
-    getRecentReviews(function (error, result) {
+    getRecentReviews(function (error, recentReviews) {
         if(error) {
             getResult(error, null)
         }
-        if(result) {
-            results = results.concat(result.map((review) => review.toJSON()))
+        if(recentReviews) {
+          getRecentAttractions(function (error, recentAttractions) {
+            if(error) {
+              getResult(error, null)
+            } if(recentAttractions) {
+              getRecentThemeparks(function (error, recentThemeParks) {
+                if(error) {
+                  getResult(error, null)
+                } if(recentThemeParks) {
+                  let results: any[] = []
+                  results = results.concat(recentReviews, recentAttractions, recentThemeParks)
+                  results.map((val) => val.toJSON())
+                  results.sort((a, b) => 0.5 - Math.random())
+                  getResult(null, results)
+                }
+              })
+            }
+          })
         }
     })
-    getRecentAttractions(function (error, result) {
-        if(error) {
-            getResult(error, null)
-        }
-        if(result) {
-            results = results.concat(result.map((val) => val.toJSON()))
-        }
-    })
-    getRecentThemeparks(function (error, result) {
-        if(error) {
-            getResult(error, null)
-        }
-        if(result) {
-            results = results.concat(result.map((val) => val.toJSON()))
-            getResult(null, results.sort((a, b) => 0.5 - Math.random()))
-        }
-    })
-
-
 }

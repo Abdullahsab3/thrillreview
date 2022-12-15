@@ -5,15 +5,22 @@ import { AttractionPreview } from "./attractionPreview";
 import { ReviewPreview } from "./reviewPreview";
 import { ThemeparkPreview } from "./themeparkPreview";
 import "./styling/feeds.css"
+import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 
 const Home = () => {
+    const { promiseInProgress } = usePromiseTracker()
+
+
     const [feeds, setFeeds] = useState<any[]>([])
     useEffect(() => {
-        Axios.get(backendServer("/feed")).then((res) => {
-            if (res.data.feeds) {
-                setFeeds(res.data.feeds)
-            }
-        })
+        trackPromise(
+            Axios.get(backendServer("/feed")).then((res) => {
+                if (res.data.feeds) {
+                    setFeeds(res.data.feeds)
+                }
+            })
+        )
+
     }, [])
 
     function publishFeeds() {
@@ -52,7 +59,7 @@ const Home = () => {
             <div className="d-flex flex-column justify-content-center  align-items-center">
                 <h3 className="feedsTitle">Recents</h3>
 
-            {publishFeeds()}
+            {promiseInProgress ? <i>Loading the feeds</i> :  publishFeeds()}
 
             </div>
 

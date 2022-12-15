@@ -48,15 +48,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-/*
- app.post('/refreshToken', (req, res) => {
-    const refreshToken = req.body.token
 
-    if(!refreshToken) {
-        return res.status(401).json({error: "You are not authenticated"})
-    }
- })
-*/
 
 // usermanagement requests
 app.post("/user", registerNewUser);

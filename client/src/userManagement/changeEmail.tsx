@@ -70,8 +70,10 @@ export default function ChangeEmail() {
     if (savedUser) {
 
         return (
+            <div className='page'>
+                
             <div className='col d-flex justify-content-center'>
-                <Card className='userManagementCard'>
+            <Card className='userManagementCard'>
                     <Card.Body>
                         <Card.Title><strong>Change your email</strong></Card.Title>
                         <Form validated={validated} onSubmit={handleChangeEmail}>
@@ -97,7 +99,10 @@ export default function ChangeEmail() {
                         </Form>
                     </Card.Body>
 
-                </Card>
+                </Card> 
+
+            </div>
+
             </div>
         );
     } else {

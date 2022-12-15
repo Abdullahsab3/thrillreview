@@ -39,7 +39,7 @@ export default function AttractionPage() {
 
     useEffect(() => {
         getAttractioninfo()
-    }, [])
+    }, [validated])
 
     function submitEdits(attraction: Attraction, images: File[]) {
         const updateAttractionInfo: React.FormEventHandler<HTMLFormElement> =
