@@ -11,27 +11,26 @@ interface themeParkPreviewInterface {
     name: string,
     country: string,
     key: number,
-    ref?: any,//(e: HTMLDivElement) => void,
+    refs?: (e: HTMLDivElement) => void,
 }
 
 function ThemeParkPreviewCard(props: themeParkPreviewInterface) {
-    console.log("ref:",  props.ref)
-    if (props.ref) {
-        console.log("LAST")
-        return(
-        <Card className="browsingCard" ref={props.ref}>
-            <Card.Title>{props.name}</Card.Title>
-            <ListGroup className="list-group-flush">
-                <ListGroup.Item>Country: {props.country}</ListGroup.Item>
-            </ListGroup>
-            <Card.Body>
-                <Link to={`/Themeparks/${props.id}`}>
-                    <Button>
-                        Go to themePark!
-                    </Button>
-                </Link>
-            </Card.Body>
-        </Card>);
+    if (props.refs) {
+       // console.log("ref:", props.refs)
+        return (
+            <Card className="browsingCard" ref={props.refs}>
+                <Card.Title>{props.name}</Card.Title>
+                <ListGroup className="list-group-flush">
+                    <ListGroup.Item>Country: {props.country}</ListGroup.Item>
+                </ListGroup>
+                <Card.Body>
+                    <Link to={`/Themeparks/${props.id}`}>
+                        <Button>
+                            Go to themePark!
+                        </Button>
+                    </Link>
+                </Card.Body>
+            </Card>);
     } else {
         return (
             <Card className="browsingCard">
@@ -51,33 +50,63 @@ function ThemeParkPreviewCard(props: themeParkPreviewInterface) {
     }
 }
 
+function isIdInArray(a: ThemePark[], i:number): Boolean {
+    let res = false;
+    a.forEach(t => {
+        if (t.id === i) res = true;
+    });
+    return res;
+}
+
 // took inspiration from https://www.youtube.com/watch?v=NZKUirTtxcg
 function GetThemeParks(query: string, pageNr: number) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [hasMore, setHasMore] = useState(false);
     const [themeparks, setThemeParks] = useState<ThemePark[]>([]);
+    const LIMIT_RETURNS = 6;
+
+    /** Q: waarom wordt die map 2x opgeropen?  */
 
     // to set themeparks to empty
     useEffect(() => {
+        console.log("test")
         setThemeParks([]);
+       /* console.log("wait")
+        console.log("wait")
+        console.log("wait")
+        console.log("wait") */
+        console.log(themeparks)
     }, [query])
     // to load new themeparks
     useEffect(() => {
         setLoading(true)
         setError(false)
-        //let cancel: Canceler
-        axios.get(`/themeparks/find?query=${query}&page=${pageNr}&limit=${4}`).then(res => { // { cancelToken: new axios.CancelToken(c => cancel = c) }
-            console.log("page:", pageNr)
+       // console.log("query:", query);
+        //console.log("pnr:", pageNr);
+        //let cancel: Canceled
+        axios.get(`/themeparks/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`).then(res => { // { cancelToken: new axios.CancelToken(c => cancel = c) }
+            //console.log("page:", pageNr)
             console.log("res:", res);
-            const prevThemeparks = themeparks
+            /*const newThemeParks =  res.data.result.map((park: any) => {
+                const { name, openingdate, country, street, postalcode, streetnumber, type, website, id } = park
+                return new ThemePark(name, openingdate, street, streetnumber, postalcode, country, type, website, id);
+            }); */
+            let prevThemeparks = themeparks;
+            /*setThemeParks((prev) => {
+                return [...new Set([...prev, ...newThemeParks])];
+            })
+            console.log(themeparks)*/
             res.data.result.map((park: any) => {
                 const { name, openingdate, country, street, postalcode, streetnumber, type, website, id } = park
+                if (!isIdInArray(prevThemeparks, id))
                 prevThemeparks.push(new ThemePark(name, openingdate, street, streetnumber, postalcode, country, type, website, id));
             });
             setThemeParks(prevThemeparks);
-            console.log("res lenght", res.data.result.length);
-            setHasMore(res.data.result.length > 0);
+           // console.log("res lenght", res.data.result.length);
+            //setHasMore(res.data.result.length > 0);
+            setHasMore(res.data.result.length === LIMIT_RETURNS)
+            //console.log("has more", hasMore, res.data.result.length > 0)
             setLoading(false);
         }).catch(e => {
             // if (axios.isCancel(e)) return // if cancelled, it was meant to
@@ -111,23 +140,25 @@ function ErrorCard() {
 }
 
 function BrowseThemeparks() {
-    const { initialQuery } = useParams();
+    //const { initialQuery } = useParams();
     //console.log("query:", initialQuery);
     const [query, setQuery] = useState("");
     const [intermediateQuery, setIntermediateQuery] = useState("");
     const [pageNr, setPageNr] = useState(1);
-    if (initialQuery) setQuery(initialQuery);
+    //if (initialQuery) setQuery(initialQuery);
     let { themeparks, hasMore, loading, error } = GetThemeParks(query, pageNr); //
     const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
     const lastThemeParkRef = useCallback((node: HTMLDivElement) => {
-        console.log("TRIGGERED");
+       // console.log("REF")
         if (loading) return // otherwise will keep sending callbacks while loading
-        console.log("node:", node);
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
         if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
-        observer.current = new IntersectionObserver(entries => {
+        observer.current = new IntersectionObserver(entries => { 
+          //  console.log("HAS MORE HERE", hasMore)
             if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more
+               
                 setPageNr(prevPageNr => prevPageNr + 1);
+               // console.log("p:", pageNr);
             }
         })
         if (node) observer.current.observe(node)
@@ -138,8 +169,10 @@ function BrowseThemeparks() {
 
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+       // console.log("HANDLE SUBMIT")
         setPageNr(1);
         setQuery(intermediateQuery)
+        console.log("thprk", themeparks)
         event.preventDefault()
     }
 
@@ -165,17 +198,17 @@ function BrowseThemeparks() {
                     </Form>
                 </Card.Body>
             </Card>
+            <div>
             {themeparks.map((themePark: ThemePark, i: number) => {
+              //  console.log("maken", i)
                 //console.log("themeparks:", themeparks);
                 //console.log("thprk:", themePark);
-
-                console.log("id:", themePark.id)
-                console.log("len:", themeparks.length )
+                //console.log("id:", themePark.id)
+                //console.log("len:", themeparks.length)
                 if (themeparks.length === i + 1) {
-                    (console.log("LENGTH"))
                     // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
                     return (
-                        <ThemeParkPreviewCard ref={lastThemeParkRef} key={themePark.id} id={themePark.id} name={themePark.name} country={themePark.country} />
+                        <ThemeParkPreviewCard refs={lastThemeParkRef} key={themePark.id} id={themePark.id} name={themePark.name} country={themePark.country} />
                     );
                 } else {
                     return (
@@ -183,6 +216,7 @@ function BrowseThemeparks() {
                     );
                 }
             })}
+            </div>
             {loading ? <LoadingCard /> : ""}
             {error ? <ErrorCard /> : ""}
         </>
