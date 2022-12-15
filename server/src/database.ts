@@ -7,6 +7,7 @@ import Review from "./Review";
 import { count } from "console";
 import { start } from "repl";
 import { ThemePark } from "./ThemePark";
+import { Event } from "./Event";
 import { resolve } from "path";
 
 const db = new Database("thrillreview.db");
@@ -95,6 +96,18 @@ db.run(
  (id      INTEGER UNIQUE REFERENCES themeparks (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, website STRING)",
 );
 
+/* event tables */
+db.run(
+  "CREATE TABLE IF NOT EXISTS events \
+  (id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, themepark STRING, date STRING, hour STRING, description TEXT)",
+  );
+
+db.run(
+  "CREATE TABLE IF NOT EXISTS eventjoin \
+  (eventID  REFERENCES events (id) ON DELETE CASCADE ON UPDATE CASCADE, userID   REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE)",
+  );
+
+/* JWT tables */
 db.run(
   "CREATE TABLE IF NOT EXISTS JWT \
  (token TEXT)",
@@ -715,6 +728,215 @@ function checkForUserAvatar(
   );
 }
 
+function getEvent(
+  eventID: number,
+  getResult: (error: any, event: Event | null) => void,
+) {
+  db.get(
+    "SELECT * FROM events WHERE id = ?",
+    [eventID],
+    function (err: Error, result: any) {
+      if (err){
+        getResult("Something went wrong while getting the event.", null);
+      } else if (result){
+        getResult(null, 
+          new Event(
+            result.name,
+            result.themapark,
+            result.date,
+            result.hour,
+            result.description,
+            result.id,
+            result.userID
+          ),
+        );
+      } else {
+        getResult(null, null);
+      }
+    }
+  );
+}
+
+function getEvents(
+  name: string,
+  page: number,
+  limit: number,
+  getResult: (error: any | null, result: pagination | null) => void,
+) {
+  const startIndex: number = (page - 1) * limit;
+  db.get(
+    "SELECT COUNT(*) from events where name LIKE ?",
+    [ "%"+name+"%" ],
+    function (error, countResult) {
+      if (error) {
+        getResult("Something went wrong while fetching the events  ", null);
+      } else {
+        if (limit === 0) {
+          limit = countResult["COUNT(*)"];
+        }
+        db.all(
+          "SELECT * FROM events where name LIKE ? LIMIT ?,?",
+          [
+            "%"+name+"%",
+            startIndex,
+            limit,
+          ],
+          function (error, Result) {
+            if (error) {
+              console.log(error);
+              getResult(
+                "Something went wrong while trying to get the events.",
+                null,
+              );
+            } else if (Result) {
+              const numberOfItems: number = countResult["COUNT(*)"];
+              const results: pagination = { result: Result };
+              const totalPages = numberOfItems / limit;
+
+              if (page < totalPages) {
+                results.next = {
+                  page: page + 1,
+                  limit: limit,
+                };
+              }
+              if (startIndex > 0) {
+                results.previous = {
+                  page: page - 1,
+                  limit: limit,
+                };
+              }
+
+              getResult(null, results);
+            } else {
+              getResult(null, null);
+            }
+          },
+        );
+      }
+    },
+  );
+}
+
+function getEventAttendees(
+  eventID: number,
+  page: number,
+  limit: number,
+  getResult: (error: any | null, result: pagination | null) => void,
+) {
+  const startIndex: number = (page - 1) * limit;
+  db.get(
+    "SELECT COUNT(*) from eventjoin where eventID = ?",
+    [ eventID ],
+    function (error, countResult) {
+      if (error) {
+        getResult("Something went wrong while fetching the events  ", null);
+      } else {
+        if (limit === 0) {
+          limit = countResult["COUNT(*)"];
+        }
+        db.all(
+          "SELECT * FROM eventjoin where eventID = ? LIMIT ?,?",
+          [
+            eventID,
+            startIndex,
+            limit,
+          ],
+          function (error, Result) {
+            if (error) {
+              console.log(error);
+              getResult(
+                "Something went wrong while trying to get the events.",
+                null,
+              );
+            } else if (Result) {
+              const numberOfItems: number = countResult["COUNT(*)"];
+              const results: pagination = { result: Result };
+              const totalPages = numberOfItems / limit;
+
+              if (page < totalPages) {
+                results.next = {
+                  page: page + 1,
+                  limit: limit,
+                };
+              }
+              if (startIndex > 0) {
+                results.previous = {
+                  page: page - 1,
+                  limit: limit,
+                };
+              }
+
+              getResult(null, results);
+            } else {
+              getResult(null, null);
+            }
+          },
+        );
+      }
+    },
+  );
+}
+
+function getEventsJoinedByUser(
+  userID: number,
+  page: number,
+  limit: number,
+  getResult: (error: any | null, result: pagination | null) => void,
+) {
+  const startIndex: number = (page - 1) * limit;
+  db.get(
+    "SELECT COUNT(*) from eventjoin where userID = ?",
+    [ userID ],
+    function (error, countResult) {
+      if (error) {
+        getResult("Something went wrong while fetching the events  ", null);
+      } else {
+        if (limit === 0) {
+          limit = countResult["COUNT(*)"];
+        }
+        db.all(
+          "SELECT * FROM eventjoin where userID = ? LIMIT ?,?",
+          [
+            userID,
+            startIndex,
+            limit,
+          ],
+          function (error, Result) {
+            if (error) {
+              console.log(error);
+              getResult(
+                "Something went wrong while trying to get the events.",
+                null,
+              );
+            } else if (Result) {
+              const numberOfItems: number = countResult["COUNT(*)"];
+              const results: pagination = { result: Result };
+              const totalPages = numberOfItems / limit;
+
+              if (page < totalPages) {
+                results.next = {
+                  page: page + 1,
+                  limit: limit,
+                };
+              }
+              if (startIndex > 0) {
+                results.previous = {
+                  page: page - 1,
+                  limit: limit,
+                };
+              }
+
+              getResult(null, results);
+            } else {
+              getResult(null, null);
+            }
+          },
+        );
+      }
+    },
+  );
+}
+
 
 
 
@@ -738,4 +960,8 @@ export {
   getThemePark,
   getThemeParks,
   validateUserPassword,
+  getEvent,
+  getEvents,
+  getEventAttendees,
+  getEventsJoinedByUser,
 };

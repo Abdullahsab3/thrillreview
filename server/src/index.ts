@@ -23,6 +23,7 @@ import multer from "multer";
 import {getRecentAttractions, getRecentReviews, getRecents, getRecentThemeparks} from "./home";
 import Review from "./Review";
 import { sendFeeds } from "./feedsCallbacks";
+import { addEvent, findEvents, findEventUsers, findUserJoinedEvents, userJoinedEvent, eventAttendeesCount, userJoinEvent } from "./eventCallbacks";
 
 const app = express();
 const upload = multer({
@@ -87,6 +88,18 @@ app.get("/themepark/:themeparkID", findThemeParkByID)
 app.put("/themepark/:themeparkID", validateTokens, editThemePark)
 app.get("/themeparks/find", findThemeParkByName)
 
+//event requests
+app.post("/event", validateTokens, addEvent)
+app.get("/event/:eventID", findAttractionById)
+app.get("/events/find", findEvents)
+app.post("/event/:eventID/join", validateTokens, userJoinEvent)
+app.get("/event/:eventID/userjoined", validateTokens, userJoinedEvent)
+app.get("/event/:eventID/attendees", validateTokens, findEventUsers)
+app.get("/event/:eventID/attendees/count", eventAttendeesCount)
+app.get("/event/userJoined", validateTokens, findUserJoinedEvents)
+
+
+//feed requests
 app.get("/feed", sendFeeds);
 
 app.listen(5001, () => {
