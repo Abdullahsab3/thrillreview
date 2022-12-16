@@ -288,11 +288,11 @@ function findReview(req: any, res: any) {
 
 function getAverageRating(req: any, res: any) {
   const attractionID = req.params.attractionID;
-  getAttractionRating(attractionID, function (error, result) {
+  getAttractionRating(attractionID, function (error, average, total) {
     if (error) {
       res.status(400).json({ error: error });
-    } else if (result) {
-      res.status(200).json({ rating: result });
+    } else if (average) {
+      res.status(200).json({ rating: average , ratingCount: total});
     }
   });
 }
@@ -301,6 +301,14 @@ function findAttractionReviews(req: any, res: any) {
   const attractionID = parseInt(req.params.attractionID);
   var page = parseInt(req.query.page);
   var limit = parseInt(req.query.limit);
+  var order = req.query.orderBy;
+  var isDescending = req.query.sort === "desc"
+  if(order === undefined) {
+    order = "date"
+  }
+  if(isDescending === undefined) {
+    isDescending = false
+  }
   if (isNaN(attractionID)) {
     res.status(400).json({ error: "The number of the attraction is required" });
   }
@@ -310,7 +318,7 @@ function findAttractionReviews(req: any, res: any) {
   if (isNaN(limit)) {
     limit = 0;
   }
-  getAttractionReviews(attractionID, page, limit, function (error, result) {
+  getAttractionReviews(attractionID, page, limit, order, isDescending, function (error, result) {
     if (error) {
       res.status(400).json(error);
     } else if (result) {

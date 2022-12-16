@@ -23,7 +23,7 @@
   
     http.open('HEAD', url, false);
     http.send();
-  
+    
     return http.status < 400;
   
   }

@@ -28,14 +28,12 @@ function Profile() {
         window.location.reload();
     }
 
-
-
     useEffect(() => {
+        
         if (user) {
             getuserEmail(function (res: string) {
                 setEmail(res)
             });
-            try {
                 userAvatarExists(user.id,
                     function (exists: boolean) {
                         if(exists) {
@@ -45,54 +43,59 @@ function Profile() {
                         }
                     });
 
-            } catch(error: any) {
-                if(error.response.data.status == 404) {
-                    setAvatarError("No avatar available")
-                }
-
-            }
-
         }
     }, [])
+
+    function AvatarInfo() {
+      return(
+        <Table striped bordered className="table" id="profilepictureTable">
+        <tbody>
+            <tr><th>{avatarError ?  <p>{avatarError}</p> : <img src={backendServer(`/user/${user?.id}/avatar`)} id="profileAvatar"/> }</th></tr>
+            <tr><th>Your profile avatar</th></tr>
+            <tr><th><Button onClick={() => navigate("/profile/upload-avatar")}>Change your avatar</Button></th></tr>
+        </tbody>
+    </Table>
+      )
+    }
+
+    function UserInfo() {
+        return(
+            <Table striped bordered className="table">
+
+            <tbody>
+                <tr>
+                    <th className="info">user ID</th>
+                    <td>{user?.id}</td>
+                    <td><Button variant="primary" disabled={true} type="submit">Your ID is unique, just like you</Button></td>
+                </tr>
+                <tr>
+                    <th className="info">Username</th>
+                    <td>{user?.username}</td>
+                    <td>
+                        <Button onClick={() => navigate("/profile/change-username")}>Change username</Button>
+                    </td>
+                </tr>
+                <tr>
+                    <th className="info">Email</th>
+                    <td>{email}</td>
+                    <td>
+                        <Button onClick={() => navigate("/profile/change-email")}>Change Email</Button>
+                    </td>
+                </tr>
+            </tbody>
+        </Table>
+        )
+
+    }
 
     if (user) {
         return (
             <div id="profile">
                 <h1 className="text-center">Your account information</h1>
-                <Table striped bordered className="table" id="profilepictureTable">
-                    <tbody>
-                        <tr><th>{avatarError ?  <p>{avatarError}</p> : <img src={backendServer(`/user/${user.id}/avatar`)} id="profileAvatar"/> }</th></tr>
-                        <tr><th>Your profile avatar</th></tr>
-                        <tr><th><Button onClick={() => navigate("/profile/upload-avatar")}>Change your avatar</Button></th></tr>
-                    </tbody>
-                </Table>
+                <AvatarInfo/>
 
                 <div className='table-responsive'>
-
-                    <Table striped bordered className="table">
-
-                        <tbody>
-                            <tr>
-                                <th className="info">user ID</th>
-                                <td>{user.id}</td>
-                                <td><Button variant="primary" disabled={true} type="submit">Your ID is unique, just like you</Button></td>
-                            </tr>
-                            <tr>
-                                <th className="info">Username</th>
-                                <td>{user.username}</td>
-                                <td>
-                                    <Button onClick={() => navigate("/profile/change-username")}>Change username</Button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th className="info">Email</th>
-                                <td>{email}</td>
-                                <td>
-                                    <Button onClick={() => navigate("/profile/change-email")}>Change Email</Button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </Table>
+                    <UserInfo/>
                     <Table>
                         <tbody>
                             <tr>
@@ -109,7 +112,6 @@ function Profile() {
                             </tr>
                         </tbody>
                     </Table>
-
                 </div>
             </div>
         )
