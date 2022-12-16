@@ -23,7 +23,8 @@ function getLocationCoordinates(
     if (data === undefined || data.length === 0) {
       getResult("Coordinates for this location are not found", null, null);
     } else {
-      getResult(null, data[0].lat, data[0].long);
+      console.log("zero", data[0])
+      getResult(null, data[0].lat, data[0].lon);
     }
   });
 }
@@ -50,6 +51,7 @@ function addThemePark(req: any, res: any) {
         return res.status(418).json({ error: error }); // indien adress niet bestaat error terug geven
       } else {
         // eerst alle verplichte info toevoegen
+        console.log("lat", lat, "long", long)
         db.get(
           "INSERT INTO themeparks (userID, name, street, streetnumber, postalcode, country, lat, long) VALUES(?, ?, ?, ?, ?, ?, ?, ?) RETURNING id",
           [

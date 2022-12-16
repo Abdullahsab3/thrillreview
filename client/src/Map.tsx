@@ -1,21 +1,29 @@
 import 'leaflet/dist/leaflet.css';
 import { Popup, MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import './styling/map.css';
-import L from 'leaflet'
+import L, { map } from 'leaflet'
 import { LatLngBounds } from 'leaflet';
-import { Helmet } from 'react-helmet-async';
-import { useState, useEffect } from 'react';
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png"
 import { Icon } from 'leaflet'
 import { backendServer, getThrillreviewWebsiteLink } from "./helpers"
 import axios from 'axios';
 import { Card } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
 
 interface weatherInterface {
   imgSrc: string;
   description: string;
   feelsTemp: string;
+}
+
+interface popUpInfoInterface {
+  markerLat: string;
+  markerLong: string;
+  themeParkName: string;
+  // themeParkUrl: string;
+  themeParkId: string;
+  weather: weatherInterface;
 }
 
 async function AskWeather(lat: string, lon: string) {
@@ -31,53 +39,16 @@ async function AskWeather(lat: string, lon: string) {
   const weatherInfo: weatherInterface = {
     imgSrc: `http://openweathermap.org/img/wn/${icon}@2x.png`,
     description: weatherDescription,
-    feelsTemp: `${feelsLike}&deg;C`,
+    feelsTemp: `${feelsLike}`,
   };
 
   return weatherInfo;
 }
 
 const Map = () => {
+  const [allPopupInfo, setAllPopupInfo] = useState<popUpInfoInterface[]>([]);
+  const [triggerState, setTriggerState] = useState(false);
 
-
-
-  function BoundsChange() {
-    var map = useMap()
-    function onChange() {
-      const bounds: LatLngBounds = map.getBounds();
-      const NWcorner = bounds.getNorthWest(); // min latlong
-      const SEcorner = bounds.getSouthEast(); // maxlatlong
-      const minlat = NWcorner.lat;
-      const maxlat = SEcorner.lat;
-      const minlong = NWcorner.lng;
-      const maxlong = SEcorner.lng;
-
-      axios.get(backendServer(`/themeparks/find?page=0&limit=0`)).then((res) => { //pagination kan toegepast worden door de limit en page aan te passen
-        // HIER EEN BUG: STUUR IETS VOOR DE LEGE DINGEN IPV NIETS
-        const { result  } = res.data
-        console.log(result);
-    });
-
-
-
-
-      //console.log(``);
-      //axios.get(backendServer("/themepark/coordinates"));
-      /*.then((res) => {
-        console.log(res);
-        if (res.data) {
-          console.log(res.data)
-        }
-      })/*.catch(function (error) {
-        if (error.response) {
-          alert(`error: ${error.response}`)
-        } else alert(`an error but no error response ${error}`);
-      })*/
-    }
-
-    map.on('moveend', onChange)
-    return null;
-  }
 
   var themeParkIcon = L.icon({
     iconUrl: markerIconPng,
@@ -90,49 +61,48 @@ const Map = () => {
     return null;
   }
 
-  function getAllThemeParks() {
-    // Breedtegraad (latitude): 51.0808505
-    //Lengtegraad (longitude): 
-    //axios.get("themepark/in-range-of-coordinates", findThemeParksInCoordinatesRange)
-    return [["51.0808505", "2.5987627", "plopsaland", "0"],
-    ["50.6925", "4.5877", "walibi", "1"]];
+  function isIdInArray(a: popUpInfoInterface[], i: number): Boolean {
+    let res = false;
+    a.forEach(t => {
+      if (t.themeParkId == i.toString()) res = true;
+    });
+    return res;
   }
 
-  function makePopUpContent(name: string, id: string, weather: weatherInterface) {
-    return (`<div>
-        <h5>${name}</h5>
-          <img src=${weather.imgSrc} alt="weather icon"><br/>
-          ${weather.description}<br/>
-          The temperature feels like ${weather.feelsTemp}<br/>
-          <a href=${getThrillreviewWebsiteLink('Themeparks/' + id)}>Go to themepark page</a> for further details
+  useEffect(() => {
+ //   console.log("EFFECT TRIGGERED")
+    axios.get(backendServer(`/themeparks/find?page=0&limit=0`)).then((res) => {
+      //pagination kan toegepast worden door de limit en page aan te passen
+    //  console.log("axios request")
+      const { result } = res.data
+      //let prevPopUpInfo = allPopupInfo;
+      let prevPopUpInfo: popUpInfoInterface[] = []
+      result.map((info: any) => {
+        const { lat, long, name, id } = info;
+        //console.log("name:", name, "lat:", lat, "long:", long);
+        AskWeather(lat, long).then((weatherInfo: weatherInterface) => {
+          const popUpInfo: popUpInfoInterface = {
+            markerLat: lat,
+            markerLong: long,
+            themeParkName: name,
+            themeParkId: id,
+            weather: weatherInfo,
+          }
+          if (!isIdInArray(prevPopUpInfo, id)) {
+          //  console.log("not in array", id, prevPopUpInfo)
+            prevPopUpInfo.push(popUpInfo);
+          //  console.log("before", allPopupInfo)
+            setAllPopupInfo(prevPopUpInfo);
+          //  console.log("after", allPopupInfo)
+          }
+        });
 
-        </div>`);
-  }
-  async function AddThemeParkToMap(input: Array<string>) {
-    const lat = input[0];
-    const long = input[1];
-    const name = input[2];
-    const id = input[3];
-    var map = useMap();
-    const marker = L.marker([parseFloat(lat), parseFloat(long)], { icon: themeParkIcon }).addTo(map);
-    const text = `${input[2]} <a href=${input[3]}> Click to go to page</a>`
-    const weather = await AskWeather(lat, long);
-    console.log(`the image source : ${weather.imgSrc}, desc: ${weather.description}, feels: ${weather.feelsTemp}`)
-    marker.bindPopup(
-      makePopUpContent(name, id, weather));
-    // I know this is stupid, but the first stime you open the pop up, something is wrong with the display.
-    marker.openPopup()
-    marker.closePopup()
-  }
-
-  function AddThemeParksToMap() {
-
-    var themeParkInfo = getAllThemeParks()
-    themeParkInfo.forEach(AddThemeParkToMap)
-
-    return null;
-  }
-
+      });
+   /*   console.log("before", allPopupInfo)
+      setAllPopupInfo(prevPopUpInfo);
+      console.log("after", allPopupInfo) */
+    });
+  }, []);
 
   const LeafletMap = () => {
     return (
@@ -142,19 +112,30 @@ const Map = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <SetToUserLocation />
-        <AddThemeParksToMap />
-        <BoundsChange />
+
+        {allPopupInfo.map((p: popUpInfoInterface, i: number) => {
+        //  console.log("HERE")
+          return (
+            <Marker key={p.themeParkId} icon={themeParkIcon} position={[parseFloat(p.markerLat), parseFloat(p.markerLong)]}>
+              <Popup>
+                <h5>{p.themeParkName}</h5>
+                <img src={p.weather.imgSrc} alt="weather icon" /><br />
+                weather.description<br />
+                The temperature feels like {p.weather.feelsTemp} &deg;C<br />
+                <a href={getThrillreviewWebsiteLink('Themeparks/' + p.themeParkId)}>Go to themepark page</a> for further details
+
+              </Popup>
+            </Marker>
+          );
+        })}
+
       </MapContainer>
 
     )
   }
 
   return (
-
-
     <LeafletMap />
-
-
   );
 
 }
