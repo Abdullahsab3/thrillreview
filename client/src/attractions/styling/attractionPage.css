@@ -1,0 +1,18 @@
+#attractionInfoCard {
+    width: 60%;
+}
+
+.AttractionTitle{
+    display: inline-block;
+}
+
+.attractionAvgRating{
+    text-align: center;
+    font-size:  xx-large;
+}
+
+.carouselImage {
+    margin: 0 auto;
+    width: 10%;
+    height: 10%;
+}

@@ -1,0 +1,9 @@
+.preview {
+    width: 360px;
+    height: 360px;
+    object-fit: cover;
+}
+
+#removeButton {
+    margin-left: 1%;
+}

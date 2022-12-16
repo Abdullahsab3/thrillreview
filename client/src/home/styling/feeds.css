@@ -1,0 +1,22 @@
+.feeds {
+    width: 40%;
+    margin-top: 2%;
+}
+
+.feedsTitle {
+    align-items: left;
+    text-align: left;
+}
+
+.feeds a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.reviewinFeeds {
+    margin: 0 auto;
+}
+
+.feedstext {
+    text-align: center;
+}

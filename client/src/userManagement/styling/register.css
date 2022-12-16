@@ -1,0 +1,9 @@
+#register {
+    background-image: url(/public/registerbg.jpeg);
+  }
+
+.Register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
