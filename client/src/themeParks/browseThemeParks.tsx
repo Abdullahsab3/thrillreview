@@ -5,6 +5,7 @@ import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
 import "../styling/browsingPage.css";
 import { ThemePark } from './themePark';
+import { ErrorCard, LoadingCard} from '../higherOrderComponents/generalCardsForBrowsing';
 
 interface themeParkPreviewInterface {
     id: number,
@@ -103,23 +104,8 @@ function GetThemeParks(query: string, pageNr: number) {
     );
 }
 
-function LoadingCard() {
-    return (
-        <Card>
-            <Card.Title> We are loading the themeparks, please wait</Card.Title>
-            <Card.Body> In the mean time, grab some tea! </Card.Body>
-        </Card>
-    );
-}
 
-function ErrorCard() {
-    return (
-        <Card bg="danger" className="browsingCard mb-2" >
-            <Card.Title> There has been a problem loading the themeparks. Please try again.</Card.Title>
-            <Card.Body> Our apologies for the inconvenience. </Card.Body>
-        </Card>
-    );
-}
+
 
 function BrowseThemeparks() {
     //const { initialQuery } = useParams();
@@ -194,8 +180,8 @@ function BrowseThemeparks() {
                 }
             })}
             
-            {loading ? <LoadingCard /> : ""}
-            {error ? <ErrorCard /> : ""}
+            {loading ? <LoadingCard topic={"themeparks" } /> : ""}
+            {error ? <ErrorCard topic={"themeparks"}/> : ""}
         </>
     );
 

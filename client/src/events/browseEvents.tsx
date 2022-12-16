@@ -5,6 +5,7 @@ import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
 import "../styling/browsingPage.css";
 import { Event } from './Event';
+import { ErrorCard, LoadingCard} from '../higherOrderComponents/generalCardsForBrowsing';
 
 interface eventPreviewInterface {
     id: number,
@@ -110,24 +111,6 @@ function BrowseEvents() {
         Event.preventDefault()
     }
 
-    function LoadingCard() {
-        return(
-            <Card>
-                <Card.Title> We are loading the events, please wait</Card.Title>
-                <Card.Body> In the mean time, grab some tea! </Card.Body>
-            </Card>
-        );
-    }
-
-    function ErrorCard(){
-        return(
-            <Card bg="danger" className="browsingCard mb-2" >
-            <Card.Title> There has been a problem loading the events. Please try again.</Card.Title>
-            <Card.Body> Our apologies for the inconvenience. </Card.Body>
-        </Card>
-        );
-    }
-
     //Q : zou ik iedere keer opnieuw laten linken zodat de query update in de link?
     //  <Link to={`/browse-events/${query}`}>   </Link> rond submit knop
     // nadeel: elke keer via routing
@@ -162,8 +145,8 @@ function BrowseEvents() {
                     );
                 }
             })}
-            {loading ? <LoadingCard /> : ""}
-            {error ? <ErrorCard /> : ""}
+            {loading ? <LoadingCard  topic={"events"}/> : ""}
+            {error ? <ErrorCard topic={"events"}/> : ""}
            
         </>
     );
