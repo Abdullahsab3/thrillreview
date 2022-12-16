@@ -186,8 +186,12 @@ function CardWithImageUpload(cardProps: cardProps) {
                     </Form.Group>
                     {fileError && <Alert key='warning' variant='warning'>{fileError}</Alert>}
                 </Form>
-                {uploadedFile && <Form.Label className="center">Selected file: {uploadedFile?.name}</Form.Label>}
-                {preview && <Card.Img variant="bottom" className="preview" src={preview} />}
+                <div className='container-fluid '>
+                    {uploadedFile && <Form.Label className="row center">Selected file: {uploadedFile?.name}</Form.Label>}
+                    {preview && <Card.Img variant="row bottom" className="preview" src={preview} />}
+
+                </div>
+
             </Card.Body>
         </Card>
     );

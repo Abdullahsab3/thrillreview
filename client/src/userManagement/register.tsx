@@ -108,6 +108,7 @@ function Register() {
                   <Form.Control
                     required
                     type=" text"
+                    maxLength={20}
                     onChange={(e) => setusername(e.target.value)}
                     placeholder="Enter your username"
                     isInvalid={(usernameError as any)} />
@@ -138,9 +139,10 @@ function Register() {
                   <Form.Control
                     required
                     type="password"
+                    minLength={8}
                     onChange={(e) => setpassword(e.target.value)}
                     placeholder="Enter your password"
-                    isInvalid={(passwordError as any)} />
+                    isInvalid={(passwordError as any)}/>
                   <Form.Control.Feedback type="invalid">
                     {passwordError}
                   </Form.Control.Feedback>

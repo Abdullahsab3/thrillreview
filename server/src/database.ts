@@ -580,18 +580,18 @@ function getThemeParksByName(
 
 function getAttractionRating(
   attractionID: number,
-  getAverage: (error: string | null, result: number | null) => void,
+  getAverage: (error: string | null, result: number | null, totalRatings: number | null) => void,
 ) {
-  db.get("SELECT avg(stars) FROM attractionreview WHERE attractionID = ?", [
+  db.get("SELECT avg(stars), COUNT(stars) FROM attractionreview WHERE attractionID = ?", [
     attractionID,
   ], function (error: any, result: any) {
     if (result) {
-      getAverage(null, result["avg(stars)"]);
+      getAverage(null, result["avg(stars)"], result["COUNT(stars)"]);
     } else {
       console.log(error);
       getAverage(
         "Something went wrong while calculating the average of rating of this attraction",
-        null,
+        null, null
       );
     }
   });
@@ -649,60 +649,75 @@ function getAttractionReviews(
   attractionID: number,
   page: number,
   limit: number,
+  order: string,
+  isDescending: boolean,
   getResult: (error: any | null, result: reviewsPagination | null) => void,
 ) {
-  const startIndex: number = (page - 1) * limit;
-  const endIndex: number = page * limit;
-  db.get(
-    "SELECT COUNT(*) from attractionreview WHERE attractionID = ?",
-    [attractionID],
-    function (error, countResult) {
-      if (error) {
-        getResult("Something went wrong while fetching the reviews", null);
-      } else {
-        if (limit === 0) {
-          limit = countResult["COUNT(*)"];
-        }
-        db.all(
-          "SELECT * FROM attractionreview WHERE attractionID = ? LIMIT ?,?",
-          [
-            attractionID,
-            startIndex,
-            limit,
-          ],
-          function (error, ReviewsResult) {
-            if (error) {
-              console.log(error);
-              getResult(
-                "Something went wrong while trying to get the reviews.",
-                null,
-              );
-            } else if (ReviewsResult) {
-              const numberOfReviews: number = countResult["COUNT(*)"];
-              const results: reviewsPagination = { reviews: ReviewsResult };
-              const totalPages = numberOfReviews / limit;
-
-              if (page < totalPages) {
-                results.next = {
-                  page: page + 1,
-                  limit: limit,
-                };
-              }
-              if (startIndex > 0) {
-                results.previous = {
-                  page: page - 1,
-                  limit: limit,
-                };
-              }
-              getResult(null, results);
-            } else {
-              getResult(null, null);
-            }
-          },
-        );
+  db.all("PRAGMA table_info(attractionreview);", function (error, result) {
+    if(error) {
+      getResult("Something went wrong while featching the reviews", null)
+    } if(result) {
+      if(!result.map((val) => val.name).includes(order)) {
+        order = "date"
       }
-    },
-  );
+     
+      const startIndex: number = (page - 1) * limit;
+      db.get(
+        "SELECT COUNT(*) from attractionreview WHERE attractionID = ?",
+        [attractionID],
+        function (error, countResult) {
+          if (error) {
+            getResult("Something went wrong while fetching the reviews", null);
+          } else {
+            if (limit === 0) {
+              limit = countResult["COUNT(*)"];
+            }
+            /* String formatting had to be applied here, but the parameters are thoroughly
+            * tested by the server */
+            db.all(
+              `SELECT * FROM attractionreview WHERE attractionID = ?  ORDER BY ${order.concat(isDescending ? " DESC" :" ASC")} LIMIT ?,?`,
+              [
+                attractionID,
+                startIndex,
+                limit,
+              ],
+              function (error, ReviewsResult) {
+                if (error) {
+                  console.log(error);
+                  getResult(
+                    "Something went wrong while trying to get the reviews.",
+                    null,
+                  );
+                } else if (ReviewsResult) {
+                  const numberOfReviews: number = countResult["COUNT(*)"];
+                  const results: reviewsPagination = { reviews: ReviewsResult };
+                  const totalPages = numberOfReviews / limit;
+
+                  if (page < totalPages) {
+                    results.next = {
+                      page: page + 1,
+                      limit: limit,
+                    };
+                  }
+                  if (startIndex > 0) {
+                    results.previous = {
+                      page: page - 1,
+                      limit: limit,
+                    };
+                  }
+                  getResult(null, results);
+                } else {
+                  getResult(null, null);
+                }
+              },
+            );
+          }
+        },
+      );
+
+    }
+  })
+  
 }
 
 function checkForUserAvatar(

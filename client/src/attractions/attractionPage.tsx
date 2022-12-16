@@ -13,6 +13,7 @@ import AttractionImages from "./attractionImages"
 export default function AttractionPage() {
     const [attraction, setAttraction] = useState<Attraction>()
     const [rating, setRating] = useState(0)
+    const [total, setTotal] = useState(0)
     const [error, setError] = useState("")
     const [validated, setValidated] = useState(false)
     const [edit, setEdit] = useState(false)
@@ -23,7 +24,6 @@ export default function AttractionPage() {
     function getAttractioninfo() {
 
         Axios.get(backendServer(`/attraction/${attractionID}`)).then((res) => {
-            // HIER EEN BUG: STUUR IETS VOOR DE LEGE DINGEN IPV NIETS
             const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = res.data
             setAttraction(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, id))
         }).catch(function (error: any) {
@@ -31,7 +31,8 @@ export default function AttractionPage() {
         })
 
         Axios.get(backendServer(`/attraction/${attractionID}/rating`)).then((res) => {
-            setRating(res.data.rating)
+            setRating(res.data.rating);
+            setTotal(res.data.ratingCount);
         }).catch(function (error: any) {
             setError(error.reponse.data)
         })
@@ -185,7 +186,14 @@ export default function AttractionPage() {
                 <div className="AttractionTitle d-flex flex-column justify-content-center">
                     <h1 className="title">{attraction?.name}
                     </h1>
-                    <StarRating className="attractionAvgRating" rating={rating} />
+                        <div className="row mx-auto ratingpreview">
+                            <div className="col">
+                                <StarRating className="attractionAvgRating" rating={rating} />
+                            </div>
+                            <div className="col p-3">
+                                <p>{total} Reviews</p>
+                            </div>
+                        </div>
                 </div>
 
                 <div className="container-fluid">

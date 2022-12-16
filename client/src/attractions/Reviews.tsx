@@ -1,9 +1,10 @@
 import Axios from "axios"
 import { useEffect, useState } from "react"
-import { Pagination } from "react-bootstrap"
+import { Dropdown, Pagination } from "react-bootstrap"
 import { backendServer } from "../helpers"
 import Review from "./Review"
 import WriteReview from "./reviewForm"
+import "./styling/reviews.css"
 
 interface ReviewsProps {
     attractionID: number
@@ -20,10 +21,12 @@ export default function Reviews(props: ReviewsProps) {
     const [prevPage, setPrevPage] = useState(disabledPage)
     const [prevLimit, setPrevLimit] = useState(initialLimit)
     const [limit, setLimit] = useState(initialLimit)
+    const [order, setOrder] = useState("date")
+    const [sort, setSort] = useState("desc")
 
     function getReviews() {
         setReviews([])
-        Axios.get(backendServer(`/attraction/${props.attractionID}/reviews?limit=${limit}&page=${page}`)).then((res) => {
+        Axios.get(backendServer(`/attraction/${props.attractionID}/reviews?limit=${limit}&page=${page}&orderBy=${order}&sort=${sort}`)).then((res) => {
             setReviews(res.data.reviews)
             if(res.data.next) {
                 setNextPage(res.data.next.page)
@@ -61,22 +64,56 @@ export default function Reviews(props: ReviewsProps) {
     }
 
     useEffect(() => {
+        console.log("opgeroepen")
         getReviews()
-    }, [page])
+    }, [page, order, sort])
 
 
+
+    function OrderMenu() {
+        return (
+          <Dropdown title="Sort by">
+            <Dropdown.Toggle variant="Secondary" size="sm"  className="dropmenu">
+              Sort by
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item 
+                onClick={(ev) => {
+                    setOrder("date")
+                    setSort("desc")}}>Date: newest first</Dropdown.Item>
+              <Dropdown.Item 
+                onClick={(ev) => {
+                    setOrder("date")
+                    setSort("asc")
+                }}>Date: oldest first action</Dropdown.Item>
+              <Dropdown.Item 
+                onClick={(ev) => {
+                    setOrder("stars")
+                    setSort("desc")
+                }}>Stars: highest first</Dropdown.Item>
+              <Dropdown.Item 
+                onClick={(ev) => {
+                    setOrder("stars")
+                    setSort("asc")
+                }}>Stars: Lowest first</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        );
+      }
 
     return (
         <div className="d-flex flex-column">
             <h1>Reviews</h1>
             <WriteReview attractionID={props.attractionID} />
+            
+            <OrderMenu/>
             {reviews.map(review => {
                 return (<Review attractionID={props.attractionID} userID={(review as any).userID} reviewText={(review as any).review} rating={(review as any).stars} date={(review as any).date} />)
             })}
-            <Pagination className="pagination">
-                <Pagination.Prev disabled={prevPage == disabledPage} onClick={handlePrev}/>
-                <Pagination.Item active>{page}</Pagination.Item>
-                <Pagination.Next disabled={nextPage == disabledPage} onClick={handleNext}/>
+            <Pagination className="pagination paginationReview" size="lg">
+                <Pagination.Prev disabled={prevPage == disabledPage} onClick={handlePrev}>Previous</Pagination.Prev>
+                
+                <Pagination.Next disabled={nextPage == disabledPage} onClick={handleNext}>Next</Pagination.Next>
             </Pagination>
         </div>
     )
