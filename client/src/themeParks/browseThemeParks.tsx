@@ -72,48 +72,30 @@ function GetThemeParks(query: string, pageNr: number) {
     useEffect(() => {
         console.log("test")
         setThemeParks([]);
-       /* console.log("wait")
-        console.log("wait")
-        console.log("wait")
-        console.log("wait") */
         console.log(themeparks)
     }, [query])
     // to load new themeparks
     useEffect(() => {
         setLoading(true)
         setError(false)
-       // console.log("query:", query);
-        //console.log("pnr:", pageNr);
-        //let cancel: Canceled
-        axios.get(`/themeparks/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`).then(res => { // { cancelToken: new axios.CancelToken(c => cancel = c) }
-            //console.log("page:", pageNr)
+        axios.get(`/themeparks/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`).then(res => { 
             console.log("res:", res);
-            /*const newThemeParks =  res.data.result.map((park: any) => {
-                const { name, openingdate, country, street, postalcode, streetnumber, type, website, id } = park
-                return new ThemePark(name, openingdate, street, streetnumber, postalcode, country, type, website, id);
-            }); */
             let prevThemeparks = themeparks;
-            /*setThemeParks((prev) => {
-                return [...new Set([...prev, ...newThemeParks])];
-            })
-            console.log(themeparks)*/
+            if (pageNr <= 1) {
+                prevThemeparks = []
+            }
             res.data.result.map((park: any) => {
                 const { name, openingdate, country, street, postalcode, streetnumber, type, website, id } = park
                 if (!isIdInArray(prevThemeparks, id))
                 prevThemeparks.push(new ThemePark(name, openingdate, street, streetnumber, postalcode, country, type, website, id));
             });
             setThemeParks(prevThemeparks);
-           // console.log("res lenght", res.data.result.length);
-            //setHasMore(res.data.result.length > 0);
-            setHasMore(res.data.result.length === LIMIT_RETURNS)
-            //console.log("has more", hasMore, res.data.result.length > 0)
+            setHasMore(res.data.result.length === LIMIT_RETURNS);
             setLoading(false);
         }).catch(e => {
-            // if (axios.isCancel(e)) return // if cancelled, it was meant to
             setLoading(false)
             setError(true);
         })
-        //return () => cancel();
     }, [query, pageNr]);
 
     return (
@@ -198,13 +180,8 @@ function BrowseThemeparks() {
                     </Form>
                 </Card.Body>
             </Card>
-            <div>
+            
             {themeparks.map((themePark: ThemePark, i: number) => {
-              //  console.log("maken", i)
-                //console.log("themeparks:", themeparks);
-                //console.log("thprk:", themePark);
-                //console.log("id:", themePark.id)
-                //console.log("len:", themeparks.length)
                 if (themeparks.length === i + 1) {
                     // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
                     return (
@@ -216,7 +193,7 @@ function BrowseThemeparks() {
                     );
                 }
             })}
-            </div>
+            
             {loading ? <LoadingCard /> : ""}
             {error ? <ErrorCard /> : ""}
         </>
