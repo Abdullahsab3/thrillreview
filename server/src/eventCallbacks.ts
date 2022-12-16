@@ -10,6 +10,7 @@ import { db, getEvent, getEvents, getEventAttendees, getEventsJoinedByUser } fro
 -van een bepaalde user de events teug geven waaraan die meedoet
 */
 
+// event toevoegen
 function addEvent(req: any, res: any){
     const {
         name,
@@ -19,6 +20,7 @@ function addEvent(req: any, res: any){
         description,
     } = req.body;
     const userID = req.user.id;
+    //eerst checken of alle info klopt/bestaat
     db.run(
         "INSERT INTO events (userID, name, themepark, date, hour, description) VALUES(?,?,?,?,?,?)",
         [
@@ -39,6 +41,7 @@ function addEvent(req: any, res: any){
     );
 }
 
+// gegeven een ID (in params) geef alle info van een event terug
 function findEventByID(req: any, res: any){
     const id = req.params.eventID;
     getEvent(id, function (error: any, event: Event | null) {
@@ -55,17 +58,18 @@ function findEventByID(req: any, res: any){
     });
 }
 
+// search voor events
 function findEvents(req: any, res: any){
     var eventName = req.query.query;
     var page = parseInt(req.query.page);
     var limit = parseInt(req.query.limit);
-    if (!eventName) {
+    if (!eventName) { // indien naam niet meegegeven, zet als lege sting, wat als wildcard werkt
       eventName = "";
     }
-    if (isNaN(page)) {
+    if (isNaN(page)) { // indien geen pagina gegeven zet pagina op 0, wat zelfde is als pagina 1
       page = 0;
     }
-    if (isNaN(limit)) {
+    if (isNaN(limit)) { // indien geen limiet gegeven, zet limiet op 0, geeft alles terug
       limit = 0;
     }
     getEvents(eventName, page, limit, function (error, result) {
@@ -79,6 +83,7 @@ function findEvents(req: any, res: any){
     });
 }
 
+// linkt een user aan een event (record toevoegen aan eventjoin table met link tussen userID en eventID)
 function userJoinEvent(req: any, res: any){
     const eventID = req.params.eventID;
     const userID = req.body.user.id;
@@ -98,6 +103,7 @@ function userJoinEvent(req: any, res: any){
     );
 }
 
+// gegeven een event in params geeft terug of user meedoet aan event of niet
 function userJoinedEvent(res: any, req: any){
     const eventID = req.params.eventID;
     const userID = req.user.id;
@@ -119,15 +125,16 @@ function userJoinedEvent(res: any, req: any){
     );
 }
 
+// geeft alle attendees van een event terug met pagination
 function findEventUsers(req: any, res: any){
     const eventID = req.params.eventID;
     const userID = req.user.id;
     var page = parseInt(req.query.page);
     var limit = parseInt(req.query.limit);
-    if (isNaN(page)) {
+    if (isNaN(page)) { //indien geen pagina pagina wodt 0, is zelfde als pagina 1
       page = 0;
     }
-    if (isNaN(limit)) {
+    if (isNaN(limit)) { // indien geen limiet gegeven, zet limiet op 0, geeft alles terug
       limit = 0;
     }
     getEvent(eventID, function (error: any, event: Event | null) {
@@ -135,7 +142,7 @@ function findEventUsers(req: any, res: any){
             return res.status(400).json({ error: error });
           }
           if (event) {
-            if (event.userID === userID){
+            if (event.userID === userID){ // kan enkel opgevraagd worden door de user die het event heeft aangemaakt
                 getEventAttendees(eventID, page, limit, function (error, result) {
                     if (error) {
                       res.status(400).json(error);
@@ -156,6 +163,7 @@ function findEventUsers(req: any, res: any){
     });
 }
 
+// geeft het aantal deelnemers van een event terug
 function eventAttendeesCount(req: any, res: any){
     const eventID = req.body.eventID;
     db.get(
@@ -170,14 +178,15 @@ function eventAttendeesCount(req: any, res: any){
         });
 }
 
+// geeft alle event mee waar een user aan deel neemt met pagination
 function findUserJoinedEvents(req: any, res: any){
     const userID = req.user.id
     var page = parseInt(req.query.page);
     var limit = parseInt(req.query.limit);
-    if (isNaN(page)) {
+    if (isNaN(page)) { //indien geen pagina pagina wodt 0, is zelfde als pagina 1
       page = 0;
     }
-    if (isNaN(limit)) {
+    if (isNaN(limit)) { // indien geen limiet gegeven, zet limiet op 0, geeft alles terug
       limit = 0;
     }
     getEventsJoinedByUser(userID, page, limit, function (error, result) {

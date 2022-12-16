@@ -12,6 +12,7 @@ import {
 } from "./database";
 import { User } from "./User";
 
+// attractie toevoegen aan db
 async function addAttraction(req: any, res: any) {
   const {
     name,
@@ -25,6 +26,8 @@ async function addAttraction(req: any, res: any) {
     duration,
   } = req.body;
   const userid = req.user.id;
+  //eerst nog form validation doen
+  //verplichte fields invullen
   db.get(
     "INSERT INTO attractions (userID, name, themepark) VALUES(?, ?, ?) RETURNING id",
     [
@@ -37,7 +40,8 @@ async function addAttraction(req: any, res: any) {
       if (error) {
         return res.status(400).json({ error: error.message });
       } else {
-        const lastid = result.id;
+        const lastid = result.id; //id terug geven zodat we optionele informatie kunnen binden aan een attractie
+        //telkens testen of de informattie gegeven wordt en dan toevoegen
         if (openingdate) {
           db.run(
             "INSERT INTO attractionsopening (id, opening) VALUES(?, ?)",
@@ -107,6 +111,7 @@ async function addAttraction(req: any, res: any) {
   );
 }
 
+// een foto toevoegen aan een attractie
 function addAttractionPhotos(req: any, res : any) {
   if (!req.file) {
     return res.status(400).json({ attractionphoto: "please provide a file" });
@@ -146,17 +151,18 @@ function findAttractionById(req: any, res: any) {
   });
 }
 
+// search voor attracties met pagination 
 function findAttractionByName(req: any, res: any) {
   var attractionName = req.query.query;
   var page = parseInt(req.query.page);
   var limit = parseInt(req.query.limit);
-  if (!attractionName) {
+  if (!attractionName) { //indien niet gegeven, lege string dus wildcard
     attractionName = "";
   }
-  if (isNaN(page)) {
+  if (isNaN(page)) { // indien niet gegeven pagina 0, geeft de eerste pagina terug
     page = 0;
   }
-  if (isNaN(limit)) {
+  if (isNaN(limit)) { // indien niet gegeven wordt de limiet op 0 gezet dit zal resulteren in alles teruggeven
     limit = 0;
   }
   getAttractionsByName(attractionName, page, limit, function (error, result) {

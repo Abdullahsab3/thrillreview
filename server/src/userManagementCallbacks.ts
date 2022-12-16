@@ -109,7 +109,7 @@ function loginUser(req: any, res: any) {
             if (error) {
               return res.status(400).json({ password: error });
             } else if (validated) {
-              const refreshToken = createRefreshToken(user as User);
+              const refreshToken = createRefreshToken(user as User); // maak refresh en acces tokens aan
               const accessToken = createAccesToken(user as User);
 
               res.cookie("refresh-token", refreshToken, {
@@ -139,6 +139,7 @@ function loginUser(req: any, res: any) {
   );
 }
 
+// als de user uitlogt, tokens verwijderen
 function logoutUser(req: any, res: any) {
   console.log("logout");
 removeRefreshToken(req, res);
