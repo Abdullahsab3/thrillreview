@@ -3,6 +3,7 @@ import { db, getLastId, getThemePark, getThemeParks, getThemeParksByName } from 
 import { User } from "./User";
 import axios from "axios";
 
+// geeft de coordinaten terug gegeven een adres
 function getLocationCoordinates(
   street: string,
   streetNumber: number,
@@ -22,10 +23,12 @@ function getLocationCoordinates(
     if (data === undefined || data.length === 0) {
       getResult("Coordinates for this location are not found", null, null);
     } else {
-      getResult(null, data[0].lat, data[0].long);
+      console.log("zero", data[0])
+      getResult(null, data[0].lat, data[0].lon);
     }
   });
 }
+// voegt een themepark toe
 function addThemePark(req: any, res: any) {
   const {
     name,
@@ -38,14 +41,17 @@ function addThemePark(req: any, res: any) {
     website,
   } = req.body;
   const userid = req.user.id;
-  getLocationCoordinates(
+  // eerst cheken op user input
+  getLocationCoordinates( // coordinaten opvragen
     street,
     streetNumber,
     postalCode,
     function (error, lat, long) {
       if (error) {
-        return res.status(418).json({ error: error });
+        return res.status(418).json({ error: error }); // indien adress niet bestaat error terug geven
       } else {
+        // eerst alle verplichte info toevoegen
+        console.log("lat", lat, "long", long)
         db.get(
           "INSERT INTO themeparks (userID, name, street, streetnumber, postalcode, country, lat, long) VALUES(?, ?, ?, ?, ?, ?, ?, ?) RETURNING id",
           [
@@ -63,7 +69,8 @@ function addThemePark(req: any, res: any) {
               return res.status(400).json({ error: error.message });
             } else {
               if (result) {
-                const lastid = result.id;
+                const lastid = result.id; // id nodig voor linken aan themepark (normalisatie van db)
+                // indien info bestaat, toevoegen aan db
                 if (openingsdate) {
                   db.run(
                     "INSERT INTO themeparksopening (id, opening) VALUES(?, ?)",
@@ -194,17 +201,18 @@ function findThemeParkByID(req: any, res: any) {
   });
 }
 
+//seerch voor themeparks
 function findThemeParkByName(req: any, res: any) {
   var themeParkName = req.query.query;
   var page = parseInt(req.query.page);
   var limit = parseInt(req.query.limit);
-  if (!themeParkName) {
+  if (!themeParkName) { // indien geen query, zoeken op lege string wat wildcard is
     themeParkName = "";
   }
-  if (isNaN(page)) {
+  if (isNaN(page)) { //indien geen page pagina 0 kiezen wat dezelfde als pagina 1 is
     page = 0;
   }
-  if (isNaN(limit)) {
+  if (isNaN(limit)) { // indien geen limiet, stel limiet in op 0, wat alles terug geeft
     limit = 0;
   }
   getThemeParksByName(themeParkName, page, limit, function (error, result) {

@@ -14,7 +14,7 @@ function createRefreshToken(user: User) {
   return refreshToken
 }
 
-
+// verwijderd de refreshtoken uit de db en stuurt lege cookies naar de user zodat deze verwijderd worden
 function removeRefreshToken(req: Request, res: Response) {
   const refreshToken = req.cookies["refresh-token"]
   removeToken(refreshToken);
@@ -28,29 +28,31 @@ function removeRefreshToken(req: Request, res: Response) {
   });
 }
 
+// maakt nieuwe accestoken
 function createAccesToken(user: User) {
   return sign({ username: user.username, id: user.id }, accesSecret , { expiresIn: '15m'} );
 }
 
   
+// valideerd de tokens van de user, indien alles inorde is roept hij next op
 function validateTokens(req: Request, res: Response, next: Function) {
   const accessToken = req.cookies["access-token"];
   const refreshToken = req.cookies["refresh-token"]
 
-  if (!accessToken) {
+  if (!accessToken) {// indien accestoken vervallen is checken of refreschtoken nog geldig is
     if(refreshToken){ 
       checkForTokenExistence(refreshToken, (existance: Boolean) => {
-        if (existance){
-          verify(refreshToken, refreshSecret, (err: any, info: any) => {
+        if (existance){ // kijkt of de refreschtoken nog in de db zit
+          verify(refreshToken, refreshSecret, (err: any, info: any) => { //controleert de geldigheid van de token
           if(err) {
-            removeToken(refreshToken);
+            removeToken(refreshToken); //indien niet meer geldig verwijder uit db
             return res.status(400).json({error: "refresh-token is not valid"})
           } else {
-            removeToken(refreshToken);
+            removeToken(refreshToken); //indien de token geldig verwijder uit de db (voor aanmaak nieuwe)
   
             const user: User = new User(info.username, info.id);
-            const newRefreshToken = createRefreshToken(user);
-            const accessToken = createAccesToken(user);
+            const newRefreshToken = createRefreshToken(user); // maak nieuwe refreschtoken
+            const accessToken = createAccesToken(user); // maak nieuwe accestoken
   
             res.cookie("refresh-token", newRefreshToken, {
               expires: new Date(Date.now() + daysToMilliseconds(1)), // 1 dag
@@ -72,7 +74,7 @@ function validateTokens(req: Request, res: Response, next: Function) {
       return res.status(400)
       .json({ error: "user not authenticated!" });
     }
-  } else {
+  } else { // indien er een accestoken is, verifieer en voer next uit indien geldig
   verify(accessToken, accesSecret, (err: any, info: any) => {
     if(err) {
       return res.status(400).json({error: "token is not valid"})
