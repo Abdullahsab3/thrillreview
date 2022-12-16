@@ -85,7 +85,7 @@ export default function Reviews(props: ReviewsProps) {
                 onClick={(ev) => {
                     setOrder("date")
                     setSort("asc")
-                }}>Date: oldest first action</Dropdown.Item>
+                }}>Date: oldest first</Dropdown.Item>
               <Dropdown.Item 
                 onClick={(ev) => {
                     setOrder("stars")
