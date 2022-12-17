@@ -5,7 +5,7 @@ import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
 import "../styling/browsingPage.css";
 import { ThemePark } from './themePark';
-import { ErrorCard, LoadingCard } from '../higherOrderComponents/generalCardsForBrowsing';
+import { ErrorCard, LoadingCard, NoMatchesCard } from '../higherOrderComponents/generalCardsForBrowsing';
 
 interface themeParkPreviewInterface {
     id: number,
@@ -152,18 +152,20 @@ function BrowseThemeparks() {
                 </Card.Body>
             </Card>
 
-            {themeparks.map((themePark: ThemePark, i: number) => {
-                if (themeparks.length === i + 1) {
-                    // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
-                    return (
-                        <ThemeParkPreviewCard refs={lastThemeParkRef} key={themePark.id} id={themePark.id} name={themePark.name} country={themePark.country} />
-                    );
-                } else {
-                    return (
-                        <ThemeParkPreviewCard key={themePark.id} id={themePark.id} name={themePark.name} country={themePark.country} />
-                    );
-                }
-            })}
+            {themeparks.length ?
+                themeparks.map((themePark: ThemePark, i: number) => {
+                    if (themeparks.length === i + 1) {
+                        // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
+                        return (
+                            <ThemeParkPreviewCard refs={lastThemeParkRef} key={themePark.id} id={themePark.id} name={themePark.name} country={themePark.country} />
+                        );
+                    } else {
+                        return (
+                            <ThemeParkPreviewCard key={themePark.id} id={themePark.id} name={themePark.name} country={themePark.country} />
+                        );
+                    }
+                }) :
+                <NoMatchesCard topic={"themeparks"} topicSingular={"themepark"} />}
 
             {loading ? <LoadingCard topic={"themeparks"} /> : ""}
             {error ? <ErrorCard topic={"themeparks"} /> : ""}

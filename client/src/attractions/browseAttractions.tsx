@@ -6,7 +6,7 @@ import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
 import StarRating from "./starRating";
 import { Search } from 'react-bootstrap-icons';
 import "../styling/browsingPage.css";
-import { ErrorCard, LoadingCard } from '../higherOrderComponents/generalCardsForBrowsing';
+import { ErrorCard, LoadingCard, NoMatchesCard } from '../higherOrderComponents/generalCardsForBrowsing';
 
 
 interface attractionPreviewInterface {
@@ -210,7 +210,8 @@ function BrowseAttractions() {
                 </Card.Body>
             </Card>
 
-            {attractions.map((attraction: AttractionPreviewInfoInterface, i: number) => {
+            {attractions.length ?  
+            attractions.map((attraction: AttractionPreviewInfoInterface, i: number) => {
                 console.log("IN MAP", attraction);
                 if (attractions.length === i + 1) {
                     // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
@@ -222,7 +223,7 @@ function BrowseAttractions() {
                         <AttractionPreviewCard key={attraction.id} attractionInfo={attraction} />
                     );
                 }
-            })}
+            }) : <NoMatchesCard topic={"attractions"} topicSingular={"attraction"}/> }
             {loading ? <LoadingCard topic={"attractions"} /> : ""}
             {error ? <ErrorCard topic={"attractions"} /> : ""}
 

@@ -5,7 +5,7 @@ import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
 import "../styling/browsingPage.css";
 import { Event } from './Event';
-import { ErrorCard, LoadingCard} from '../higherOrderComponents/generalCardsForBrowsing';
+import { ErrorCard, LoadingCard, NoMatchesCard} from '../higherOrderComponents/generalCardsForBrowsing';
 
 interface eventPreviewInterface {
     id: number,
@@ -162,7 +162,8 @@ function BrowseEvents() {
                 </Card.Body>
             </Card>
 
-            {events.map((event: Event, i: number) => {
+            { events.length ?
+            events.map((event: Event, i: number) => {
                 if (events.length === i + 1) {
                     // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
                     return (
@@ -173,7 +174,8 @@ function BrowseEvents() {
                         <EventPreviewCard key={event.id} id={event.id} name={event.name} event={"test"} />
                     );
                 }
-            })}
+            }) :
+            <NoMatchesCard topic={"events"} topicSingular={"event"}/>}
             {loading ? <LoadingCard  topic={"events"}/> : ""}
             {error ? <ErrorCard topic={"events"}/> : ""}
            
