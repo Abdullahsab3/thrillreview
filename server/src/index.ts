@@ -21,7 +21,7 @@ import { addAttraction, findAttractionById, findAttractionByName, findAttraction
 import { addThemePark, editThemePark, findThemeParkByID, findThemeParkByName } from "./themeParkCallbacks";
 import multer from "multer";
 import { sendFeeds } from "./feedsCallbacks";
-import { addEvent, findEvents, findEventUsers, findUserJoinedEvents, userJoinedEvent, eventAttendeesCount, userJoinEvent } from "./eventCallbacks";
+import { addEvent, findEvents, findEventByID, findEventUsers, findUserJoinedEvents, userJoinedEvent, eventAttendeesCount, userJoinEvent } from "./eventCallbacks";
 
 
 /* 
@@ -98,7 +98,7 @@ app.get("/themeparks/find", findThemeParkByName) //search voor alle bestaande pr
 
 //event requests
 app.post("/event", validateTokens, addEvent) //basic event toevoegen zoals attracties toevoegen
-app.get("/event/:eventID", findAttractionById) //basic event informatie krijgen zoals get attraction
+app.get("/event/:eventID", findEventByID) //basic event informatie krijgen zoals get attraction
 app.get("/events/find", findEvents) //search voor alle bestaande events zoals de find van attracties ?query=&limit=&page= allemaal optioneel
 app.post("/event/:eventID/join", validateTokens, userJoinEvent) //laat een user een event joinen geen body of query params nodig
 app.get("/event/:eventID/userjoined", validateTokens, userJoinedEvent) // checked of een user deel neemt aan een bepaald event geen body of query nodig, geeft result: true terug als deelneemt of false indien niet

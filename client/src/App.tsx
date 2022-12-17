@@ -24,6 +24,7 @@ import BrowseThemeparks from './themeParks/browseThemeParks';
 import EventsMainPage from './events/eventsMainPage'
 import AddEvent from './events/addEvent';
 import BrowseEvents from './events/browseEvents';
+import EventPage from './events/eventPage';
 
 function App() {
 
@@ -69,6 +70,7 @@ function App() {
             <Route path='/addEvent' element={<AddEvent />} />
             <Route path='/browse-events/:query' element={<BrowseEvents />} />
             <Route path='/browse-events/' element={<BrowseEvents />} />
+            <Route path='Events/:eventId' element={<EventPage />}/>
           </Routes>
           </div>
         </Router>
