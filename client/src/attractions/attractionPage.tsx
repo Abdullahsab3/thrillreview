@@ -110,8 +110,6 @@ export default function AttractionPage() {
         <TableData data={attraction?.duration} />
     ]
 
-
-
     function createDataRows() {
         const rows = []
         for (let i = 0; i < data.length; i++) {

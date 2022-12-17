@@ -108,15 +108,6 @@ function GetAttractions(query: string, pageNr: number) {
             res.data.result.map((attr: any, i: number) => {
                 const { name, themepark, id } = attr
 
-                //   axios.get(`/attraction/${id}/rating`).then(starRes => {
-
-
-                // console.log("id not in array,", id, prevAttractions)
-                //    const stars = starRes.data.rating
-                //   console.log("starres", stars);
-                // axios.get(`/attractions/${id}/photos`).then(imgRes => {
-                //     console.log("imgres:", imgRes);
-                // const image = "blabla"
                 if (!isIdInArray(prevAttractions, id)) {
                     const attrInfo = {
                         id: id,

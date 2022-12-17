@@ -1,23 +1,71 @@
-import { Col } from 'react-bootstrap';
+import { Col, ListGroup } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Search } from 'react-bootstrap-icons';
 import InputGroup from 'react-bootstrap/InputGroup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CardWithLinkTo from '../higherOrderComponents/HigherOrderComponents';
 import { Link } from 'react-router-dom';
+import { Attraction } from './Attraction';
+import axios from 'axios';
+import { backendServer } from '../helpers';
+
+
+interface AttractionPreviewInfoInterface {
+    id: number,
+    name: string,
+    themepark: string,
+}
+
+function isIdInArray(a: AttractionPreviewInfoInterface[], i: number): Boolean {
+    let res = false;
+    a.forEach(t => {
+        if (t.id === i) res = true;
+    });
+    console.log("id:", i, "a:", a, "res", res)
+    return res;
+}
 
 function Attractions() {
+    const [topAttractions, setTopAttractions] = useState<AttractionPreviewInfoInterface[]>([]);
+
+    useEffect(() => {
+        axios.get(backendServer(`/attractions/find?query=&page=0&limit=10`)).then((res) => {
+            console.log(res)
+            let prevtopAttractions: AttractionPreviewInfoInterface[] = [];
+            res.data.result.map((attr: any) => {
+                const { name, themepark, id } = attr
+                if (!isIdInArray(prevtopAttractions, id)) {
+                    const attrInfo = {
+                        id: id,
+                        name: name,
+                        themepark: themepark,
+                    }
+                    prevtopAttractions.push(attrInfo)
+                }
+                setTopAttractions(prevtopAttractions);
+            });
+        }
+        )
+    }, [])
 
     function TopTenAttractions() {
-
         return (
             <Card>
                 <Card.Body>
                     <Card.Title>Top Ten Attractions Rated by our users</Card.Title>
-                    <Card.Text> there will be a top 10, when there are users! </Card.Text>
+                    <ListGroup numbered>
+                        {topAttractions.map((a: AttractionPreviewInfoInterface, i: number) => {
+                            return (
+                                <Link to={`/Attractions/${a.id}`} >
+                                <ListGroup.Item> {a.name} in {a.themepark} </ListGroup.Item>
+                                </Link>
+                            );
+                        })}
+                    </ListGroup>
+
                 </Card.Body>
             </Card>
         );
@@ -44,10 +92,10 @@ function Attractions() {
                     <Form>
                         <InputGroup>
                             <Form.Control type="search" onChange={(e) => setquery(e.target.value)} placeholder="Search" />
-                            <Link to={`/browse-attractions/${query}`}>        
-                            <Button type="submit">
-                                <Search />
-                            </Button>   
+                            <Link to={`/browse-attractions/${query}`}>
+                                <Button type="submit">
+                                    <Search />
+                                </Button>
                             </Link>
                         </InputGroup>
                     </Form>
