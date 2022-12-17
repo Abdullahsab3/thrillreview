@@ -1,4 +1,5 @@
 import { Card } from 'react-bootstrap';
+import "../styling/browsingPage.css";
 
 interface browsingInfoCardInterface{
     topic:string;
