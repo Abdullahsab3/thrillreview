@@ -17,7 +17,7 @@ async function getUsername(
   id: number,
   getRes: (error: string | null, username: string | null) => void,
 ) {
-  Axios.get(`/user/${id}/username`).then((res) => {
+  Axios.get(backendServer(`/user/${id}/username`)).then((res) => {
     getRes(null, res.data.username);
   }).catch(function (error: any) {
     getRes(error.response.data.username, null);
@@ -28,7 +28,7 @@ async function getAttractionName(
   id: number,
   getRes: (error: string | null, username: string | null) => void,
 ) {
-  Axios.get(`/attraction/${id}/name`).then((res) => {
+  Axios.get(backendServer(`/attraction/${id}/name`)).then((res) => {
     getRes(null, res.data.name);
   }).catch(function (error) {
     getRes(error.response.data.error, null);

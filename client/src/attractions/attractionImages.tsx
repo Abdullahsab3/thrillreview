@@ -28,7 +28,6 @@ export default function AttractionImages(props: imageProps) {
     }
 
     useEffect(() => {
-
         Axios.get(backendServer(`/attractions/${props.attractionID}/photos/count`)).then((res) => {
             setImagesCount(res.data.count)
         })
