@@ -148,17 +148,17 @@ function checkForUsernameExistence(
 
 function checkForEmailExistence(
   email: string,
-  getResult: (error: any) => void,
+  getResult: (exists: boolean, error: string) => void,
 ): void {
   db.get(
     "SELECT * from users WHERE email = ?",
     [email],
     (err, result) => {
       if (err) {
-        getResult("Something went wrong when checking for email existence");
+        getResult(false, "Something went wrong when checking for email existence");
       } else if (result) {
-        getResult("Email is already used");
-      } else getResult(null);
+        getResult(true, "");
+      } else getResult(false, "");
     },
   );
 }
