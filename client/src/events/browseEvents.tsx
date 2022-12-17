@@ -12,25 +12,52 @@ interface eventPreviewInterface {
     name: string,
     event: string,
     key:number,
-    ref?: (e: HTMLDivElement) => void,
+    refs?: (e: HTMLDivElement) => void,
 }
 
 function EventPreviewCard(props: eventPreviewInterface) {
-    return (
-        <Card className="browsingCard">
-            <Card.Title>{props.name}</Card.Title>
-            <ListGroup className="list-group-flush">
-                <ListGroup.Item>Event: {props.event}</ListGroup.Item>
-            </ListGroup>
-            <Card.Body>
-                <Link to={`/Events/${props.id}`}>
-                    <Button>
-                        Go to Event!
-                    </Button>
-                </Link>
-            </Card.Body>
-        </Card>
-    );
+    if (props.refs) {
+        return ( 
+            <Card ref={props.refs} className="browsingCard">
+                <Card.Title>{props.name}</Card.Title>
+                <ListGroup className="list-group-flush">
+                    <ListGroup.Item>Event: {props.event}</ListGroup.Item>
+                </ListGroup>
+                <Card.Body>
+                    <Link to={`/Events/${props.id}`}>
+                        <Button>
+                            Go to Event!
+                        </Button>
+                    </Link>
+                </Card.Body>
+            </Card>
+        );
+    } else {
+        return ( 
+            <Card className="browsingCard">
+                <Card.Title>{props.name}</Card.Title>
+                <ListGroup className="list-group-flush">
+                    <ListGroup.Item>Event: {props.event}</ListGroup.Item>
+                </ListGroup>
+                <Card.Body>
+                    <Link to={`/Events/${props.id}`}>
+                        <Button>
+                            Go to Event!
+                        </Button>
+                    </Link>
+                </Card.Body>
+            </Card>
+        );
+    };
+    
+}
+
+function isIdInArray(a: Event[], i: number): Boolean {
+    let res = false;
+    a.forEach(t => {
+        if (t.id === i) res = true;
+    });
+    return res;
 }
 
 // took inspiration from https://www.youtube.com/watch?v=NZKUirTtxcg
@@ -39,6 +66,7 @@ function GetEvents(query: string, pageNr: number) {
     const [error, setError] = useState(false);
     const [hasMore, setHasMore] = useState(false);
     const [events, setEvents] = useState<Event[]>([]);
+    const LIMIT_RETURNS = 6;
 
     // to set events to empty
     useEffect(() => {
@@ -48,28 +76,34 @@ function GetEvents(query: string, pageNr: number) {
     useEffect(() => {
         setLoading(true)
         setError(false)
-        let cancel: Canceler
-        axios({
-            method: 'get',
-            url: "HIER MOET DE URL KOMEN - BACKEND",
-            params: { query: query, pagenr: pageNr },
-            cancelToken: new axios.CancelToken(c => cancel = c)
-        }).then(res => {
-            setEvents(prevEvents => {
+        axios.get(`/events/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`).then(res => {
+            console.log("res:", res);
+            let prevEvents = events;
+            if (pageNr <= 1) {
+                prevEvents = []
+            }
+            res.data.result.map((e: any) => {
+                const { name, date, hour, themepark, description, id } = e   
+
+                 if (!isIdInArray(prevEvents, id))
+                    prevEvents.push(new Event(id, name, date, hour, themepark, description));
+            });
+            setEvents(prevEvents);
+       /*     setEvents(prevEvents => {
                 return [...prevEvents, ...res.data.events.map((a: any) => { // Event evt andere naam (afh v response) + DIE ANY MOET IETS ANDERS ZIJN, WSS JSON, Q AAN SERVER
                     const { name, date, hour, themepark, description, id } = a
                     new Event(name, date, hour, themepark, description, id)
                 })]
-            })
-            setHasMore(res.data.docs.lenght > 0);
+            })*/
+            setHasMore(res.data.result.length === LIMIT_RETURNS);
             setLoading(false)
             console.log(res.data);
         }).catch(e => {
-            if (axios.isCancel(e)) return // if cancelled, it was meant to
+          //  if (axios.isCancel(e)) return // if cancelled, it was meant to
             setLoading(false)
             setError(true);
         })
-        return () => cancel();
+     //   return () => cancel();
     }, [query, pageNr]);
 
     return (
@@ -90,7 +124,6 @@ function BrowseEvents() {
     const lastEventRef = useCallback((node: HTMLDivElement) => {
         if (loading) return // otherwise will keep sending callbacks while loading
         console.log(node)
-        // DIT HIER GEEFT MIJ FOUTEN, MAAR IS WAT JE MOET DOEN MET SERVER ANTW DUS KAN HET NOG NIET DOEN
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
             if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
           observer.current = new IntersectionObserver(entries => {
@@ -102,7 +135,7 @@ function BrowseEvents() {
     }, [loading, hasMore])
 
     //  OM TE TESTEN ZONDER BACKEND
-    events = [new Event(0, "my amazing event", "29/01/2003", "09:00", "walibi", "this is an event wowhow what a description this needs to be long enough to actually test whaoopdfi kdsfjkldjkfsd ty gty kdjmfskdhkfdjhdqff")]
+   // events = [new Event(0, "my amazing event", "29/01/2003", "09:00", "walibi", "this is an event wowhow what a description this needs to be long enough to actually test whaoopdfi kdsfjkldjkfsd ty gty kdjmfskdhkfdjhdqff")]
     
 
     function handleSubmit(Event: React.FormEvent<HTMLFormElement>) {
@@ -111,10 +144,6 @@ function BrowseEvents() {
         Event.preventDefault()
     }
 
-    //Q : zou ik iedere keer opnieuw laten linken zodat de query update in de link?
-    //  <Link to={`/browse-events/${query}`}>   </Link> rond submit knop
-    // nadeel: elke keer via routing
-    // voordeel: link wordt geupdatet
     return (
         <>
             <Card className="browsingCard">
@@ -137,7 +166,7 @@ function BrowseEvents() {
                 if (events.length === i + 1) {
                     // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
                     return (
-                        <EventPreviewCard ref={lastEventRef} key={event.id} id={event.id} name={event.name} event={"test"} />
+                        <EventPreviewCard refs={lastEventRef} key={event.id} id={event.id} name={event.name} event={"test"} />
                     );
                 } else {
                     return(
