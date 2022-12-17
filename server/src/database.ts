@@ -757,7 +757,7 @@ function getEvent(
         getResult(null, 
           new Event(
             result.name,
-            result.themapark,
+            result.themepark,
             result.date,
             result.hour,
             result.description,
