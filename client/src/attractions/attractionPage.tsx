@@ -1,7 +1,7 @@
 import Axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { Attraction } from "./Attraction"
+import { Attraction, getAttractionRating } from "./Attraction"
 import { backendServer } from "../helpers"
 import { Button, Card, Form, Modal, Table } from "react-bootstrap"
 import "./styling/attractionPage.css"
@@ -29,12 +29,13 @@ export default function AttractionPage() {
         }).catch(function (error: any) {
             setError(error.response.data)
         })
-
-        Axios.get(backendServer(`/attraction/${attractionID}/rating`)).then((res) => {
-            setRating(res.data.rating);
-            setTotal(res.data.ratingCount);
-        }).catch(function (error: any) {
-            setError(error.reponse.data)
+        getAttractionRating(parseInt(attractionID as string), function (rating, total ,error) {
+            if(error) {
+                setError(error)
+            } else {
+                setRating(rating);
+                setTotal(total)
+            }
         })
     }
 
@@ -46,7 +47,7 @@ export default function AttractionPage() {
         const updateAttractionInfo: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault()
-                Axios.put(`/attraction/${attractionID}`, attraction.toJSON()).then((res) => {
+                Axios.put(backendServer(`/attraction/${attractionID}`), attraction.toJSON()).then((res) => {
                     console.log(res)
                     if (res.data.updated) {
                         images.forEach((image) => {

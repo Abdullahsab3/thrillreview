@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Card } from "react-bootstrap"
 import { backendServer } from "../helpers"
-import { getAttractionName, getuserAvatar, getUsername, userAvatarExists } from "../userManagement/User"
+import { getUsername, userAvatarExists } from "../userManagement/User"
 
 interface themeParkProps {
     name: string,

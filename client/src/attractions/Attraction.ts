@@ -1,3 +1,6 @@
+import Axios from "axios";
+import { backendServer } from "../helpers";
+
 class Attraction {
     name: string;
     themepark: string; //change to object in future
@@ -49,6 +52,27 @@ class Attraction {
         }
         return jsonObj
     }
+    
 }
 
-export {Attraction};
+async function getAttractionName(
+    id: number,
+    getRes: (error: string | null, username: string | null) => void,
+  ) {
+    Axios.get(backendServer(`/attraction/${id}/name`)).then((res) => {
+      getRes(null, res.data.name);
+    }).catch(function (error) {
+      getRes(error.response.data.error, null);
+    });
+  }
+
+function getAttractionRating(id: number, getRating: (rating: number, total: number, error: string) => void) {
+    Axios.get(backendServer(`/attraction/${id}/rating`)).then((res) => {
+        getRating(res.data.rating, res.data.ratingCount, "");
+    }).catch(function (error: any) {
+        getRating(0, 0, error.reponse.data)
+    })
+
+}
+
+export {Attraction, getAttractionName, getAttractionRating };

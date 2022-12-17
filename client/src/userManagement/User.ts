@@ -1,6 +1,4 @@
 import Axios, { AxiosError } from "axios";
-import { SetStateAction } from "react";
-import { NumberLiteralType } from "typescript";
 import { backendServer, imageExists } from "../helpers";
 
 class User {
@@ -24,37 +22,17 @@ async function getUsername(
   });
 }
 
-async function getAttractionName(
-  id: number,
-  getRes: (error: string | null, username: string | null) => void,
-) {
-  Axios.get(backendServer(`/attraction/${id}/name`)).then((res) => {
-    getRes(null, res.data.name);
-  }).catch(function (error) {
-    getRes(error.response.data.error, null);
-  });
-}
 
-// TODO: zorg voor de error handling
+
+
 async function getuserEmail(getRes: (email: string) => void) {
   const res = await Axios.get(backendServer("/user/email"));
   getRes(res.data.email);
 }
 
-
-
-
 function userAvatarExists(id: number, getRes: (exists: boolean) => void) {
   getRes(imageExists(backendServer(`/user/${id}/avatar`)))
 
-  /*   fetch(backendServer(`/user/${id}/avatar`)).then((response) => {
-      console.log(response)
-      if(response.status > 300) {
-        getRes(false)
-      } else {
-        getRes(true)
-      }
-    }) */
 }
 
 function getuserAvatar(
@@ -69,7 +47,7 @@ function getuserAvatar(
     },
   }).then(
     (res) => {
-      if (res.status == 404) {
+      if (res.status === 404) {
         getRes("No user avatar available", null);
       } else if (res.data) {
         let reader = new window.FileReader();
@@ -86,4 +64,4 @@ function getuserAvatar(
   });
 }
 
-export { getuserAvatar, getuserEmail, getUsername, User, getAttractionName, userAvatarExists };
+export { getuserAvatar, getuserEmail, getUsername, User, userAvatarExists };

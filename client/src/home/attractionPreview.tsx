@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Card } from "react-bootstrap"
 import { backendServer } from "../helpers"
-import { getAttractionName, userAvatarExists, getUsername } from "../userManagement/User"
+import { userAvatarExists, getUsername } from "../userManagement/User"
 
 interface attractionpreviewProps {
     name: string,
