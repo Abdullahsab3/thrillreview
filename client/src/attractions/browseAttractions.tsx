@@ -92,17 +92,17 @@ function GetAttractions(query: string, pageNr: number) {
         setError(false)
         axios.get(`/attractions/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`).then(res => {
             console.log("res:", res);
-
+            let prevAttractions = attractions;
+            if ((pageNr <= 1)) {
+                prevAttractions = []
+            }
             res.data.result.map((attr: any, i: number) => {
                 const { name, themepark, id } = attr
 
                 //   axios.get(`/attraction/${id}/rating`).then(starRes => {
-                let prevAttractions = attractions;
-                if ((pageNr <= 1) && (i <= 1)) {
-                    prevAttractions = []
-                }
 
-                console.log("id not in array,", id, prevAttractions)
+
+                // console.log("id not in array,", id, prevAttractions)
                 //    const stars = starRes.data.rating
                 //   console.log("starres", stars);
                 // axios.get(`/attractions/${id}/photos`).then(imgRes => {
