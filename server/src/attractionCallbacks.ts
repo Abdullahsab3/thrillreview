@@ -441,7 +441,7 @@ function getAttractionPhoto(req: any, res: any) {
   const imageID = parseInt(req.query.id)
   db.all("SELECT * FROM attractionphotos WHERE attractionID = ?", [attractionID], (error, result) => {
     if(error) {
-      return res.status(400).json({error: "Something when wrong while getting the attraction photo"})
+      return res.status(500).json({error: "Something when wrong while getting the attraction photo"})
     }
     if(result) {
       let image = result[imageID]
@@ -458,6 +458,20 @@ function getAttractionPhoto(req: any, res: any) {
   })
 }
 
+function getAttractionPhotosCount(req: any, res: any) {
+  const attractionID = req.params.attractionID
+  db.get("SELECT COUNT(*) FROM attractionphotos WHERE attractionID = ?", [attractionID], (error, result) => {
+    if(error) {
+      res.status(500).json({error: "Something went wrong while getting the count of the attractions photos"})
+    }
+    if(result) {
+      res.status(200).json({count: result["COUNT(*)"]})
+    } else {
+      res.status(404).json({count: "The count could not be found"})
+    }
+  })
+}
+
 
 export {
   addAttraction,
@@ -470,5 +484,6 @@ export {
   setAttractionReview,
   updateAttraction,
   addAttractionPhotos,
-  getAttractionPhoto
+  getAttractionPhoto,
+  getAttractionPhotosCount 
 };

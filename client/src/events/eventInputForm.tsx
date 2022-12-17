@@ -61,8 +61,11 @@ function EventInputForm(props: EventInputFormProps) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Description</Form.Label>
-                            <Form.Control as="textarea" onChange={(e) => setDescription(e.target.value)} value={description}/>
+                            <Form.Label>Description*</Form.Label>
+                            <Form.Control required as="textarea" onChange={(e) => setDescription(e.target.value)} value={description}/>
+                            <Form.Control.Feedback type="invalid">
+                                Adding a description for your event is required
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Button type="submit">Submit event</Button>
                     </Form>

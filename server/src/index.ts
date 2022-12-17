@@ -7,7 +7,7 @@ import {
   loginUser,
   logoutUser,
   registerNewUser,
-  sendProfileInformation,
+  getEmail,
   updateEmail,
   updateUsername,
   addAvatar,
@@ -17,14 +17,16 @@ import {
   getUserName,
   deleteUser
 } from "./userManagementCallbacks";
-import { addAttraction, findAttractionById, findAttractionByName, findAttractionReviews, findReview, getAttractionName, getAverageRating, setAttractionReview, updateAttraction, addAttractionPhotos, getAttractionPhoto } from "./attractionCallbacks";
+import { addAttraction, findAttractionById, findAttractionByName, findAttractionReviews, findReview, getAttractionName, getAverageRating, setAttractionReview, updateAttraction, addAttractionPhotos, getAttractionPhoto, getAttractionPhotosCount } from "./attractionCallbacks";
 import { addThemePark, editThemePark, findThemeParkByID, findThemeParkByName } from "./themeParkCallbacks";
 import multer from "multer";
-import {getRecentAttractions, getRecentReviews, getRecents, getRecentThemeparks} from "./home";
-import Review from "./Review";
 import { sendFeeds } from "./feedsCallbacks";
 import { addEvent, findEvents, findEventUsers, findUserJoinedEvents, userJoinedEvent, eventAttendeesCount, userJoinEvent } from "./eventCallbacks";
 
+
+/* 
+  Setting the server environment up
+*/
 const app = express();
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -52,10 +54,15 @@ app.use(cors(corsOptions));
 
 
 // usermanagement requests
+
+/* 
+  Registers a new user given the username, email address and password
+*/
 app.post("/user", registerNewUser);
 app.post("/user/login", loginUser); // logs de user in (first check on password) retturns acces-token (15 min valid) & refreschtoken (1d valid) ook  returnt het user for local storage
 app.delete("/user/logout", logoutUser); //logs de user uit, verwijderd acces and refreshtoken en devalidates de refreshtoken door hem te verwijderen uit de db
-app.get("/user/email", validateTokens, sendProfileInformation);
+
+app.get("/user/email", validateTokens, getEmail);
 app.get("/user/:id/username", getUserName)
 
 app.post("/user/avatar", [validateTokens, upload.single("avatar")], setAvatar);
@@ -80,6 +87,7 @@ app.get("/attraction/:attractionID/rating", getAverageRating)
 app.get("/attraction/:attractionID/name", getAttractionName)
 app.get("/attractions/find", findAttractionByName) //search voor alle bestaande attractties query is op naam ?query=&limit=&page= allemaal optioneel
 app.get("/attractions/:attractionID/photos", getAttractionPhoto)
+app.get("/attractions/:attractionID/photos/count", getAttractionPhotosCount)
 
 
 //themepark requests

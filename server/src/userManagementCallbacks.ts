@@ -12,20 +12,47 @@ import {
 import bcrypt from "bcrypt";
 import { createRefreshToken, removeRefreshToken, createAccesToken } from "./JWT";
 
+/* 
+  Register a new user given its name, email and password
+
+  The callback is expecting in the body of the request:
+  username:   the desired username of the user
+  email:      the email of the user
+  password:   the desired user password.
+
+  callback responses:
+  400: The username or the email are already in use.
+       returns: JSON response with the error
+
+  500: A server encountered an internal error
+       while checking the username or email existence
+       or while registering the new user
+       returns: JSON response with the error
+
+  200: The user is successfully regisrered
+  returns: JSON response indicating a successful registration
+
+*/
 function registerNewUser(req: any, res: any) {
   const { username, email, password } = req.body;
+  // The callback will first if the username already exists in the database.
   checkForUsernameExistence(
     username,
     function (exists: boolean, message: string | null) {
       if (message) {
-        res.status(400).json({ username: message });
+        res.status(500).json({ username: message });
       } else if (exists) {
         res.status(400).json({ username: "username is already used" });
       } else {
-        checkForEmailExistence(email, function (error) {
+        // The callback will check whether the email is already used
+        checkForEmailExistence(email, function (exists, error) {
           if (error) {
-            res.status(400).json({ email: error });
-          } else {
+            res.status(500).json({ email: error });
+          } else if(exists) {
+            res.status(400).json({email: "username is already used"})
+          }
+          else {
+            // hashing the password by a one-way hashing
             // hashing factor = 15
             bcrypt.hash(password, 15).then((hash) => {
               db.run(
@@ -37,7 +64,7 @@ function registerNewUser(req: any, res: any) {
                 ],
                 (error: Error) => {
                   if (error) {
-                    return res.status(400).json(
+                    return res.status(500).json(
                       {
                         error:
                           "Something went wrong while trying to register the user.",
@@ -56,6 +83,23 @@ function registerNewUser(req: any, res: any) {
   );
 }
 
+/* 
+  A callback to change the password.
+  The user is required to be authenticated.
+
+  Expteced in request body:
+  password: the old password of the user
+  newPassword: the new password
+
+  callback responses:
+  400: wrong password
+
+  500: internal server error while checking or updating the password
+
+  200: Password succesfully updated.
+
+
+*/
 function ChangePassword(req: any, res: any) {
   const user: User = req.user;
   const oldPassword: string = req.body.password;
@@ -66,7 +110,7 @@ function ChangePassword(req: any, res: any) {
     oldPassword,
     function (validated: boolean, error: string | null) {
       if (error) {
-        return res.status(401).json({ password: error });
+        return res.status(500).json({ password: error });
       } else if (validated) {
         bcrypt.hash(newPassword, 15).then((hash) => {
           db.run(
@@ -74,16 +118,14 @@ function ChangePassword(req: any, res: any) {
             [hash, id],
             function (error: Error) {
               if (error) {
-                res.status(400).json({
+                res.status(500).json({
                   newPassword:
                     "Something went wrong while trying to update the user password.",
                 });
-              } else {[
-                  /* TODO: zorg ervoor dat de gebruiker afgemeld wordt en dat een
-                    token gegenereerd moet worden.
-                */
-                  res.status(200).json({ updated: true }),
-                ];}
+              } else {
+                  removeRefreshToken(req, res)
+                  res.status(200).json({ updated: true })
+                }
             },
           );
         });
@@ -100,14 +142,14 @@ function loginUser(req: any, res: any) {
     username,
     function (exists: boolean, message: string | null) {
       if (message) {
-        return res.status(400).json({ username: message });
+        return res.status(500).json({ username: message });
       } else if (exists) {
         validateUserPassword(
           username,
           password,
           function (validated: boolean, error: string | null, user?: User) {
             if (error) {
-              return res.status(400).json({ password: error });
+              return res.status(500).json({ password: error });
             } else if (validated) {
               const refreshToken = createRefreshToken(user as User); // maak refresh en acces tokens aan
               const accessToken = createAccesToken(user as User);
@@ -146,7 +188,7 @@ removeRefreshToken(req, res);
 res.status(200).json({ success: true, message: 'User logged out successfully' });
 }
 
-function sendProfileInformation(req: any, res: any) {
+function getEmail(req: any, res: any) {
   const user: User = (req as any).user;
   const userid = user.id;
   db.get(
@@ -160,7 +202,6 @@ function sendProfileInformation(req: any, res: any) {
         });
       }
       if (result) {
-        // hier kan je informatie over de profiel sturen naar de client
         res.status(200).json({ email: result.email });
       } else {
         res.status(400).json({
@@ -380,7 +421,7 @@ export {
   loginUser,
   logoutUser,
   registerNewUser,
-  sendProfileInformation,
+  getEmail,
   setAvatar,
   updateAvatar,
   updateEmail,

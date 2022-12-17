@@ -120,7 +120,7 @@ const Map = () => {
               <Popup>
                 <h5>{p.themeParkName}</h5>
                 <img src={p.weather.imgSrc} alt="weather icon" /><br />
-                weather.description<br />
+                {p.weather.description}<br />
                 The temperature feels like {p.weather.feelsTemp} &deg;C<br />
                 <a href={getThrillreviewWebsiteLink('Themeparks/' + p.themeParkId)}>Go to themepark page</a> for further details
 

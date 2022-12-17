@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { backendServer } from '../helpers';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import { setSyntheticTrailingComments } from 'typescript';
+import { isEmptyStatement, NewLineKind, setSyntheticTrailingComments } from 'typescript';
 import axios from 'axios';
 import { allowedNodeEnvironmentFlags } from 'process';
 import EventInputForm from './eventInputForm';
@@ -25,6 +25,20 @@ function AddEvent() {
         const handleSubmit: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
                 const form = event.currentTarget
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                } else {
+                    axios.post(backendServer("/event"), e.toJSON()).then((response) => {
+                        if (response.data.added) {
+                            alert("Your event has successfully been added!")
+                        }
+                    }
+                    ).catch(function (error) {
+                        alert(`something went wrong: ${error.message}`)
+                        console.log(error)
+                    })
+                }
                 event.preventDefault();
                 setValidated(true);
             }
