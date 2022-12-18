@@ -41,6 +41,8 @@ export default function AttractionInputForm(props: AttractionInputProps) {
         if (props.attraction) {
             setName(props.attraction.name)
             setThemepark(props.attraction.themepark)
+            setThemeparkName(props.attraction.themepark)
+            setThemeParkSelected(true)
             setOpeningdate(props.attraction.openingdate)
             setBuilder(props.attraction.builder)
             setType(props.attraction.type)
