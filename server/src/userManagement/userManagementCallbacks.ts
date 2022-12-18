@@ -1,4 +1,4 @@
-import { daysToMilliseconds, minutsToMilliseconds } from "./helpers";
+import { daysToMilliseconds, minutsToMilliseconds } from "../helpers";
 import { User } from "./User";
 import {
   checkForEmailExistence,
@@ -8,9 +8,9 @@ import {
   removeToken,
   db,
   validateUserPassword,
-} from "./database";
+} from "../database";
 import bcrypt from "bcrypt";
-import { createRefreshToken, removeRefreshToken, createAccesToken } from "./JWT";
+import { createRefreshToken, removeRefreshToken, createAccesToken } from "../JWT";
 
 /* 
   Register a new user given its name, email and password
@@ -401,6 +401,17 @@ function setAvatar(req: any, res: any) {
   });
 }
 
+function checkIfAvatarExists(req: any, res: any) {
+  const id : number = parseInt(req.params.id)
+  checkForUserAvatar(id, function (error, result) {
+    if(error) {
+      return res.status(500).json({error: error})
+    }else {
+      return res.status(200).json({avatar: result})
+    }
+  })
+}
+
 /* Delete the user from the database */
 function deleteUser(req: any, res: any) {
   const userid: number = req.user.id;
@@ -434,4 +445,5 @@ export {
   updateAvatar,
   updateEmail,
   updateUsername,
+  checkIfAvatarExists
 };

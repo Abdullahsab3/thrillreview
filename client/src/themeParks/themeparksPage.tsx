@@ -2,7 +2,7 @@ import Axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { backendServer } from "../helpers"
-import { Button, Card, Form, Modal, Table } from "react-bootstrap"
+import { Button, Modal, Table } from "react-bootstrap"
 import { ThemePark } from "./themePark"
 import ThemeParkInputForm from "./themeParkInputForm"
 
@@ -15,10 +15,9 @@ export default function ThemeParkPage() {
 
     const { themeParkID } = useParams()
 
-    function getAttractioninfo() {
+    function getThemeparkInfo() {
 
         Axios.get(backendServer(`/themePark/${themeParkID}`)).then((res) => {
-            // HIER EEN BUG: STUUR IETS VOOR DE LEGE DINGEN IPV NIETS
             const { name, openingdate, street, streetNumber, postalCode, country, type, website, id } = res.data
             setThemePark(new ThemePark(name, openingdate, street, streetNumber, postalCode, country, type, website, id))
         }).catch(function (error: any) {
@@ -28,24 +27,28 @@ export default function ThemeParkPage() {
     }
 
     useEffect(() => {
-        getAttractioninfo()
+        getThemeparkInfo()
     }, [])
 
     function submitEdits(themePark: ThemePark) {
         const updateAttractionInfo: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault()
-                Axios.put(`/themePark/${themeParkID}`, themePark.toJSON()).then((res) => {
+                Axios.put(backendServer(`/themePark/${themeParkID}`), themePark.toJSON()).then((res) => {
+                    console.log(res)
                     if (res.data.updated) {
+                        getThemeparkInfo()
                         setValidated(true)
                         setEdit(false)
                     }
                 }).catch((error) => {
+                    if (error.response.status === 418) {
+                        alert("Address not found")
+                    }
                     setError(error.response.data)
                 })
             }
         return (updateAttractionInfo)
-
     }
 
     interface tableDataProps {

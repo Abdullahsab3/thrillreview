@@ -5,14 +5,9 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
-import { backendServer } from '../helpers';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import { setSyntheticTrailingComments } from 'typescript';
-import axios from 'axios';
-import { allowedNodeEnvironmentFlags } from 'process';
 import { ThemePark } from './themePark';
-import { url } from 'inspector';
 
 interface ThemeParkInputFormProps {
     title: string;
@@ -46,7 +41,6 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
             setCountry(props.themepark.country)
             setUrl(props.themepark.website)
         }
-
     }, [])
 
 

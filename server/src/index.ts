@@ -15,13 +15,14 @@ import {
   updateAvatar,
   setAvatar,
   getUserName,
-  deleteUser
-} from "./userManagementCallbacks";
-import { addAttraction, findAttractionById, findAttractionByName, findAttractionReviews, findReview, getAttractionName, getAverageRating, setAttractionReview, updateAttraction, addAttractionPhotos, getAttractionPhoto, getAttractionPhotosCount } from "./attractionCallbacks";
-import { addThemePark, editThemePark, findThemeParkByID, findThemeParkByName } from "./themeParkCallbacks";
+  deleteUser,
+  checkIfAvatarExists
+} from "./userManagement/userManagementCallbacks";
+import { addAttraction, findAttractionById, findAttractionByName, findAttractionReviews, findReview, getAttractionName, getAverageRating, setAttractionReview, updateAttraction, addAttractionPhotos, getAttractionPhoto, getAttractionPhotosCount } from "./attractions/attractionCallbacks";
+import { addThemePark, editThemePark, findThemeParkByID, findThemeParkByName } from "./themeparks/themeParkCallbacks";
 import multer from "multer";
-import { sendFeeds } from "./feedsCallbacks";
-import { addEvent, findEvents, findEventByID, findEventUsers, findUserJoinedEvents, userJoinedEvent, eventAttendeesCount, userJoinEvent } from "./eventCallbacks";
+import { sendFeeds } from "./feeds/feedsCallbacks";
+import { addEvent, findEvents, findEventByID, findEventUsers, findUserJoinedEvents, userJoinedEvent, eventAttendeesCount, userJoinEvent } from "./events/eventCallbacks";
 
 
 /* 
@@ -94,6 +95,7 @@ app.put("/user/avatar", [validateTokens, upload.single("avatar")], setAvatar)
  * @apiError (Error 500) {String} error The server encountered an internal error while fetching the avatar.
  */
 app.get("/user/:id/avatar", getAvatar)
+app.get("/user/:id/avatar/exists", checkIfAvatarExists)
 
 app.put("/user/username", validateTokens, updateUsername);
 app.put("/user/email", validateTokens, updateEmail);

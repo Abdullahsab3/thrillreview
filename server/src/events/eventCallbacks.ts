@@ -1,5 +1,5 @@
 import { Event } from "./Event";
-import { db, getEvent, getEvents, getEventAttendees, getEventsJoinedByUser } from "./database";
+import { db, getEvent, getEvents, getEventAttendees, getEventsJoinedByUser } from "../database";
 
 /*
 -event aanmaken

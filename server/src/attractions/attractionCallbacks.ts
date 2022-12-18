@@ -7,10 +7,9 @@ import {
   getAttractionsByName,
   getAttractionRating,
   getAttractionReviews,
-  getLastId,
   getReview,
-} from "./database";
-import { User } from "./User";
+} from "../database";
+import { User } from "../userManagement/User";
 
 // attractie toevoegen aan db
 async function addAttraction(req: any, res: any) {
@@ -431,7 +430,7 @@ function updateAttraction(req: any, res: any) {
           ],
         );
       }
-      return res.json({ updated: true });
+      return res.status(200).json({ updated: true });
     },
   );
 }

@@ -1,9 +1,15 @@
-import { Attraction } from "./Attraction";
-import { db } from "./database";
-import { AttractionPreview, ThemeParkPreview } from "./Previews";
-import Review from "./Review";
+import { db } from "../database";
+import { AttractionPreview, ThemeParkPreview } from "../attractions/Previews";
+import Review from "../attractions/Review";
 
 
+/* 
+ * Get the first 3 items of attractions/themeparks/reviews
+ * and mix them together.
+ *
+ * 
+ * 
+*/
 export function getRecentReviews(
   getResult: (error: string | null, reviews: Review[] | null) => void,
 ) {
@@ -90,8 +96,9 @@ export function getRecentThemeparks(
   );
 }
 
+/* 
+*/
 export function getRecents(getResult: (error: string | null, recents: any[] | null) => void) {
-    var results: any[] = []
     getRecentReviews(function (error, recentReviews) {
         if(error) {
             getResult(error, null)
@@ -107,7 +114,14 @@ export function getRecents(getResult: (error: string | null, recents: any[] | nu
                 } if(recentThemeParks) {
                   let results: any[] = []
                   results = results.concat(recentReviews, recentAttractions, recentThemeParks)
+                  /**
+                   * All items has a toJSON method
+                   * polymorphism to the rescue!
+                   */
                   results.map((val) => val.toJSON())
+                  /**
+                   * Randomly mix all items together
+                   */
                   results.sort((a, b) => 0.5 - Math.random())
                   getResult(null, results)
                 }

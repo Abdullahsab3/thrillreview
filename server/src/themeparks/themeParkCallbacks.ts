@@ -1,6 +1,6 @@
 import { ThemePark } from "./ThemePark";
-import { db, getLastId, getThemePark, getThemeParks, getThemeParksByName } from "./database";
-import { User } from "./User";
+import { db, getLastId, getThemePark, getThemeParks, getThemeParksByName } from "../database";
+import { User } from "../userManagement/User";
 import axios from "axios";
 
 // geeft de coordinaten terug gegeven een adres
@@ -177,6 +177,7 @@ function editThemePark(req: any, res: any) {
                   ],
                 );
               }
+              return(res.status(200).json({updated: true}))
             }
           },
         );

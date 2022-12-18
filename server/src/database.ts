@@ -1,13 +1,13 @@
 import { Database } from "sqlite3";
-import { User } from "./User";
+import { User } from "./userManagement/User";
 import bcrypt from "bcrypt";
-import { Attraction } from "./Attraction";
+import { Attraction } from "./attractions/Attraction";
 import { AnyARecord } from "dns";
-import Review from "./Review";
+import Review from "./attractions/Review";
 import { count } from "console";
 import { start } from "repl";
-import { ThemePark } from "./ThemePark";
-import { Event } from "./Event";
+import { ThemePark } from "./themeparks/ThemePark";
+import { Event } from "./events/Event";
 import { resolve } from "path";
 
 const db = new Database("thrillreview.db");
@@ -989,15 +989,18 @@ export {
   checkForUserAvatar,
   checkForUserExistence,
   checkForUsernameExistence,
+
   addToken,
   removeToken,
   checkForTokenExistence,
   db,
+
   findAttractionName,
   getAttraction,
   getAttractionsByName,
   getAttractionRating,
   getAttractionReviews,
+  
   getLastId,
   getReview,
   getThemeParksByName,

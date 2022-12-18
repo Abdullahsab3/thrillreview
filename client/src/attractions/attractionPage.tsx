@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Attraction, getAttractionRating } from "./Attraction"
 import { backendServer } from "../helpers"
-import { Button, Card, Form, Modal, Table } from "react-bootstrap"
+import { Button, Modal, Table } from "react-bootstrap"
 import "./styling/attractionPage.css"
 import Reviews from "./Reviews"
 import AttractionInputForm from "./attractionInputForm"
@@ -48,7 +48,6 @@ export default function AttractionPage() {
             (event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault()
                 Axios.put(backendServer(`/attraction/${attractionID}`), attraction.toJSON()).then((res) => {
-                    console.log(res)
                     if (res.data.updated) {
                         images.forEach((image) => {
                             const formData = new FormData();
@@ -58,8 +57,8 @@ export default function AttractionPage() {
                                     'Content-Type': 'multipart/form-data'
                                 }
                             }).then((res) => {
-                                console.log(res)
-                                if (res.data.added) {
+                                if (res.data.updated) {
+                                    getAttractioninfo()
                                     setValidated(true)
                                     setEdit(false)
                                 }
