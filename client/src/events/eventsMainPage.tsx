@@ -31,11 +31,12 @@ function EventsMainPage() {
         );
     }
 
-
+// <SearchEvents />
     return (
         <div className="ContentOfPage">
             <h1> Events</h1>
-            <SearchEvents />
+            
+            <CardWithLinkTo to="/browse-events/" title="Browse all Events"/>
             <CardWithLinkTo to="/addEvent" title="Add an Event" />
 
         </div>

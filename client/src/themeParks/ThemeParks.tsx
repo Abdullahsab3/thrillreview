@@ -35,7 +35,7 @@ function ThemePark() {
     return (
         <div className="ContentOfPage">
             <h1> themeparks</h1>
-            <SearchThemeParks />
+            <CardWithLinkTo to="/browse-themeparks/" title="Browse all Theme parks"/>
             <CardWithLinkTo to="/addThemePark" title="Add a ThemePark" />
 
         </div>
