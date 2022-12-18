@@ -34,15 +34,23 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
 
     useEffect(() => {
         if (props.themepark) {
-            setName(props.themepark.name)
-            setOpening(props.themepark.openingdate)
+            setName(props.themepark.name) 
             setStreet(props.themepark.street)
             setStreetNr(props.themepark.streetNumber.toString())
             setPostalCode(props.themepark.postalCode)
             setCountry(props.themepark.country)
-            setUrl(props.themepark.website)
+            const opn = props.themepark.openingdate
+            if (opn) setOpening(opn)
+            const rl = props.themepark.website
+            if (opn) setUrl(rl)
+
         }
     }, [])
+
+    function setTypes(types: string) {
+        if (types.includes("indoor")) setIndoor(true);
+        if (types.includes("outdoor")) setOutdoor(true);
+    }
 
     function getTypesAsString() {
         let res = ""
@@ -125,8 +133,8 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
                                 <Col>
                                     <Form.Group>
                                         <Form.Label >Type</Form.Label>
-                                        <InputGroup><Form.Check label="Indoor park" onChange={(e) => indoor ? setIndoor(false) : setIndoor(true)} /> </InputGroup>
-                                        <InputGroup><Form.Check label="Outdoor park" onChange={(e) => outdoor ? setOutdoor(false) : setOutdoor(true)} /> </InputGroup>
+                                        <InputGroup><Form.Check label="Indoor park" defaultChecked={indoor} onChange={(e) => indoor ? setIndoor(false) : setIndoor(true)} /> </InputGroup>
+                                        <InputGroup><Form.Check label="Outdoor park" defaultChecked={outdoor} onChange={(e) => outdoor ? setOutdoor(false) : setOutdoor(true)} /> </InputGroup>
                                     </Form.Group>
                                 </Col>
                                 <Col>

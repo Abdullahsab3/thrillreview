@@ -6,7 +6,7 @@ import { backendServer } from '../helpers';
 import AttractionInputForm from './attractionInputForm';
 import { Attraction } from './Attraction';
 import { loggedIn } from '../localStorageProcessing'
-import CardWithLinkTo from '../higherOrderComponents/HigherOrderComponents';
+import CardWithLinkTo from '../higherOrderComponents/cardWithLinkTo';
 
 function AddAttraction() {
     const navigate = useNavigate()

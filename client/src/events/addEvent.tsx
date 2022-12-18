@@ -14,7 +14,7 @@ import { allowedNodeEnvironmentFlags } from 'process';
 import EventInputForm from './eventInputForm';
 import { Event } from './Event';
 import { loggedIn } from '../localStorageProcessing'
-import CardWithLinkTo from '../higherOrderComponents/HigherOrderComponents';
+import CardWithLinkTo from '../higherOrderComponents/cardWithLinkTo';
 
 function AddEvent() {
     const navigate = useNavigate();

@@ -1,6 +1,7 @@
 import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
+import './styling/cardWithLinkTo.css'
 
 interface LinkToPage {
     to: string;
@@ -8,7 +9,7 @@ interface LinkToPage {
 }
 function CardWithLinkTo(props: LinkToPage) {
     return (
-        <Card>
+        <Card className="cardWithLinkTo">
             <Card.Body>
                 <Card.Title>{props.title}</Card.Title>
                 <Link to={props.to}>

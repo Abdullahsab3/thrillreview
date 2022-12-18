@@ -12,7 +12,7 @@ import { setSyntheticTrailingComments } from 'typescript';
 import axios from 'axios';
 import { allowedNodeEnvironmentFlags } from 'process';
 import { loggedIn } from '../localStorageProcessing'
-import CardWithLinkTo from '../higherOrderComponents/HigherOrderComponents';
+import CardWithLinkTo from '../higherOrderComponents/cardWithLinkTo';
 import ThemeParkInputForm from './themeParkInputForm';
 import { ThemePark } from './themePark';
 
