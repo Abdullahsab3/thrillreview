@@ -122,7 +122,7 @@ const Map = () => {
                 <img src={p.weather.imgSrc} alt="weather icon" /><br />
                 {p.weather.description}<br />
                 The temperature feels like {p.weather.feelsTemp} &deg;C<br />
-                <a href={getThrillreviewWebsiteLink('Themeparks/' + p.themeParkId)}>Go to themepark page</a> for further details
+                <a href={getThrillreviewWebsiteLink('themeparks/' + p.themeParkId)}>Go to themepark page</a> for further details
 
               </Popup>
             </Marker>

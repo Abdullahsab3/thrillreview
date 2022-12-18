@@ -38,11 +38,6 @@ function EventPage() {
         return rows;
     }
 
-    function EventBody() {
-
-
-    }
-
     if (event) {
         return (
             <div>

@@ -37,6 +37,7 @@ function Navigationbar() {
                     <Nav.Link as={RouterLink} className="pageLink" eventKey="3" to="/Attractions">Attractions</Nav.Link>
                     <Nav.Link as={RouterLink} className="pageLink" eventKey="4" to="/Themeparks">Themeparks</Nav.Link>
                     <Nav.Link as={RouterLink} className="pageLink" eventKey="6" to="/Events">Events</Nav.Link>
+                    <Nav.Link as={RouterLink} className="pageLink" eventKey="8" to='/api'>API</Nav.Link>
                     {!user && <Nav.Link as={RouterLink} id="loginLink" className="pageLink" eventKey="5" to="/login">Login</Nav.Link>}
                     {user && <Nav.Link as={RouterLink} className="pageLink" eventKey="7" to="/Profile">Profile</Nav.Link>}
                 </Nav>
