@@ -116,7 +116,6 @@ export default function AttractionInputForm(props: AttractionInputProps) {
 
 
     function getTypesAsString() {
-        console.log(type.toString())
         return type.toString();
     }
 

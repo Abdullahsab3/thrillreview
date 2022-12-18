@@ -40,7 +40,7 @@ db.run(
 
 db.run(
 "CREATE TABLE IF NOT EXISTS attractionstype \
-(id      INTEGER UNIQUE REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, opening STRING)",
+(id      INTEGER UNIQUE REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, type STRING)",
 );
 
 db.run(
