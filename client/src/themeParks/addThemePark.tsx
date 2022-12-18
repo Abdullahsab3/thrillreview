@@ -12,7 +12,7 @@ import { setSyntheticTrailingComments } from 'typescript';
 import axios from 'axios';
 import { allowedNodeEnvironmentFlags } from 'process';
 import { loggedIn } from '../localStorageProcessing'
-import CardWithLinkTo from '../higherOrderComponents/cardWithLinkTo';
+import { LoginFirstCard }  from '../higherOrderComponents/cardWithLinkTo';
 import ThemeParkInputForm from './themeParkInputForm';
 import { ThemePark } from './themePark';
 
@@ -77,7 +77,7 @@ function AddThemePark() {
             </div >);
     } else {
         return (
-            <CardWithLinkTo to='/Login' title='Please log in first.' />
+            <LoginFirstCard />
         );
     }
 

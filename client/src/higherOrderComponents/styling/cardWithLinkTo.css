@@ -1,4 +1,5 @@
-.cardWithLinkTo{
-    width: 90%;
+.loginCard{
     align-self: center;
+    align-items: center;
+    width: 90%;
 }

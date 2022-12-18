@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import { Search } from 'react-bootstrap-icons';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useEffect, useState } from 'react';
-import CardWithLinkTo from '../higherOrderComponents/cardWithLinkTo';
+import { CardWithLinkTo } from '../higherOrderComponents/cardWithLinkTo';
 import { Link } from 'react-router-dom';
 import { Attraction } from './Attraction';
 import axios from 'axios';

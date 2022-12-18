@@ -6,7 +6,7 @@ import { backendServer } from '../helpers';
 import AttractionInputForm from './attractionInputForm';
 import { Attraction } from './Attraction';
 import { loggedIn } from '../localStorageProcessing'
-import CardWithLinkTo from '../higherOrderComponents/cardWithLinkTo';
+import  { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 
 function AddAttraction() {
     const navigate = useNavigate()
@@ -72,7 +72,7 @@ function AddAttraction() {
         );
     } else {
         return(
-            <CardWithLinkTo to='/Login' title='Please log in first.' />
+            <LoginFirstCard />
         );
     }
 }

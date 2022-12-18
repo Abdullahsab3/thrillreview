@@ -14,7 +14,7 @@ import { allowedNodeEnvironmentFlags } from 'process';
 import EventInputForm from './eventInputForm';
 import { Event } from './Event';
 import { loggedIn } from '../localStorageProcessing'
-import CardWithLinkTo from '../higherOrderComponents/cardWithLinkTo';
+import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 
 function AddEvent() {
     const navigate = useNavigate();
@@ -51,7 +51,7 @@ function AddEvent() {
                 <EventInputForm title="Add Event" text="Add your really fun event!" validated={validated} onFormSubmit={submit} />
             </div >);
     } else {
-        return (<CardWithLinkTo to='/Login' title='Please log in first.' />);
+        return (  <LoginFirstCard />);
     }
 }
 export default AddEvent;

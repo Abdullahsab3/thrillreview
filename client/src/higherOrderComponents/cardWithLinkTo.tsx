@@ -6,10 +6,11 @@ import './styling/cardWithLinkTo.css'
 interface LinkToPage {
     to: string;
     title: string
+    className?:string
 }
-function CardWithLinkTo(props: LinkToPage) {
+export function CardWithLinkTo(props: LinkToPage) {
     return (
-        <Card className="cardWithLinkTo">
+        <Card className={props.className ? props.className : "cardWithLinkTo"}>
             <Card.Body>
                 <Card.Title>{props.title}</Card.Title>
                 <Link to={props.to}>
@@ -20,5 +21,6 @@ function CardWithLinkTo(props: LinkToPage) {
     );
 }
 
-
-export default CardWithLinkTo;
+export function LoginFirstCard() {
+    return  <CardWithLinkTo className="loginCard" to='/Login' title='Please log in first.' />;
+}
