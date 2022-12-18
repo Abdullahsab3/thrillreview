@@ -7,7 +7,6 @@ import {
   getAttractionsByName,
   getAttractionRating,
   getAttractionReviews,
-  getLastId,
   getReview,
 } from "./database";
 import { User } from "./User";

@@ -1,5 +1,5 @@
 import Axios, { AxiosError } from "axios";
-import { backendServer, imageExists } from "../helpers";
+import { backendServer } from "../helpers";
 
 class User {
   username: string;
@@ -31,7 +31,11 @@ async function getuserEmail(getRes: (email: string) => void) {
 }
 
 function userAvatarExists(id: number, getRes: (exists: boolean) => void) {
-  getRes(imageExists(backendServer(`/user/${id}/avatar`)))
+  Axios.get(backendServer(`/user/${id}/avatar/exists`)).then((res) => {
+    getRes(res.data.exists)
+  }).catch((error)  => {
+    getRes(false)
+  })
 
 }
 

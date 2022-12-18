@@ -66,7 +66,6 @@ export default function AttractionInputForm(props: AttractionInputProps) {
             }
             setAllImages(alreadyUploaded)
             setImagesSelected(true)
-            console.log(allImages)
         }
     }
 

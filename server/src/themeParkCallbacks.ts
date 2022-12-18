@@ -30,6 +30,7 @@ function getLocationCoordinates(
 }
 // voegt een themepark toe
 function addThemePark(req: any, res: any) {
+  console.log("opgeroepen")
   const {
     name,
     openingsdate,

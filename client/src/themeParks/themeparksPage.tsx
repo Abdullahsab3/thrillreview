@@ -2,7 +2,7 @@ import Axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { backendServer } from "../helpers"
-import { Button, Card, Form, Modal, Table } from "react-bootstrap"
+import { Button, Modal, Table } from "react-bootstrap"
 import { ThemePark } from "./themePark"
 import ThemeParkInputForm from "./themeParkInputForm"
 
@@ -18,7 +18,6 @@ export default function ThemeParkPage() {
     function getAttractioninfo() {
 
         Axios.get(backendServer(`/themePark/${themeParkID}`)).then((res) => {
-            // HIER EEN BUG: STUUR IETS VOOR DE LEGE DINGEN IPV NIETS
             const { name, openingdate, street, streetNumber, postalCode, country, type, website, id } = res.data
             setThemePark(new ThemePark(name, openingdate, street, streetNumber, postalCode, country, type, website, id))
         }).catch(function (error: any) {
@@ -45,7 +44,6 @@ export default function ThemeParkPage() {
                 })
             }
         return (updateAttractionInfo)
-
     }
 
     interface tableDataProps {
