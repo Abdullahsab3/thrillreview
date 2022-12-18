@@ -15,7 +15,7 @@
     ],
     "template": {
       "showRequiredLabels": false,
-      "withCompare": true,
+      "withCompare": false,
       "withGenerator": true,
       "aloneDisplay": false
     }

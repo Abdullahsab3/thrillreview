@@ -262,12 +262,18 @@ app.get("/event/:eventID/userjoined", validateTokens, userJoinedEvent) // checke
 app.get("/event/:eventID/attendees", validateTokens, findEventUsers) // geeft een lijst van attendees mee (kan enkel door de user die het event aanmaakte opgevraagd worden) met pagination ?limit=&page=?
 app.get("/event/:eventID/attendees/count", eventAttendeesCount) // geeft het aantal deelnemers van een event terug bv result: 13
 app.get("/event/userJoined", validateTokens, findUserJoinedEvents) // geeft een lijst van events mee waar een user aan deel neemt met pagination ?limit=&page=
-
+app.use("/API", express.static(__dirname + '/APIDocumentation/'))
 
 //feed requests
 app.get("/feed", sendFeeds);
+
+
+
+
 
 const port = 5001
 app.listen(port, () => {
   console.log(`server is running on port ${port}`);
 });
+
+
