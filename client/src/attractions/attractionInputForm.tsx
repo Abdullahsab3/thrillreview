@@ -41,20 +41,20 @@ export default function AttractionInputForm(props: AttractionInputProps) {
             setThemepark(props.attraction.themepark);
             setThemeparkName(props.attraction.themepark);
             setThemeParkSelected(true);
-            const opdate = props.attraction.openingdate;
+           const opdate = props.attraction.openingdate;
             if (opdate) setOpeningdate(opdate);
             const bldr = props.attraction.builder;
             if (bldr) setBuilder(bldr);
             const hght = props.attraction.height;
             if (hght) setHeight(hght);
             const lngth = props.attraction.length;
-            setLength(lngth)
+            if (lngth) setLength(lngth);
             const invrs = props.attraction.inversions;
             if (invrs) setInversions(invrs);
             const duratn = props.attraction.duration;
-            setDuration(duratn)
+            if (duratn) setDuration(duratn);
             const types = props.attraction.type
-            if (types) setType(types.split(","));
+            if (types) setType(types.split(",")); 
         }
 
 
