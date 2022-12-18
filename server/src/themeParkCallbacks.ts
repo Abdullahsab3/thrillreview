@@ -186,16 +186,20 @@ function editThemePark(req: any, res: any) {
 }
 
 function findThemeParkByID(req: any, res: any) {
-  const id = req.params.themeparkID;
-  getThemePark(id, function (error: any, attraction: ThemePark | null) {
+  const id = parseInt(req.params.themeparkID);
+
+  if(isNaN(id)) {
+    return res.status(400).json({themeparkID: "The id of the themepark is required"})
+  }
+  getThemePark(id, function (error: any, themepark: ThemePark | null) {
     if (error) {
       return res.status(400).json({ error: error });
     }
-    if (attraction) {
-      return res.status(200).json(attraction.toJSON());
+    if (themepark) {
+      return res.status(200).json(themepark.toJSON());
     } else {
-      return res.status(400).json({
-        attractionID: "No attraction found with the given ID",
+      return res.status(404).json({
+        themeparkID: "No themepark found with the given ID",
       });
     }
   });

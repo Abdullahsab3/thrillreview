@@ -136,15 +136,18 @@ function addAttractionPhotos(req: any, res : any) {
 
 
 function findAttractionById(req: any, res: any) {
-  const id = req.params.attractionID;
+  const id = parseInt(req.params.attractionID);
+  if (isNaN(id)) {
+    res.status(400).json({ error: "The id of the attraction is required" });
+  }
   getAttraction(id, function (error: any, attraction: Attraction | null) {
     if (error) {
-      return res.status(400).json({ error: error });
+      return res.status(500).json({ error: error });
     }
     if (attraction) {
       return res.status(200).json(attraction.toJSON());
     } else {
-      return res.status(400).json({
+      return res.status(404).json({
         attractionID: "No attraction found with the given ID",
       });
     }
@@ -273,7 +276,7 @@ function findReview(req: any, res: any) {
   const userID = req.query.userid;
   getReview(attractionID, userID, function (error, result) {
     if (error) {
-      res.status(400).json(error);
+      res.status(500).json({error: error});
     } else if (result) {
       res.status(200).json({
         review: result.review,
@@ -287,10 +290,13 @@ function findReview(req: any, res: any) {
 }
 
 function getAverageRating(req: any, res: any) {
-  const attractionID = req.params.attractionID;
+  const attractionID = parseInt(req.params.attractionID);
+  if(isNaN(attractionID)) {
+    return res.status(400).json({attractionID: "The id of the attraction is required"})
+  }
   getAttractionRating(attractionID, function (error, average, total) {
     if (error) {
-      res.status(400).json({ error: error });
+      res.status(500).json({ error: error });
     } else if (average) {
       res.status(200).json({ rating: average , ratingCount: total});
     }
@@ -303,14 +309,20 @@ function findAttractionReviews(req: any, res: any) {
   var limit = parseInt(req.query.limit);
   var order = req.query.orderBy;
   var isDescending = req.query.sort === "desc"
+  /**
+   * The standard sorting is date ascending if no order or sort is specified
+   */
   if(order === undefined) {
     order = "date"
   }
   if(isDescending === undefined) {
     isDescending = false
   }
+  /**
+   * An attraction id should be defined
+   */
   if (isNaN(attractionID)) {
-    res.status(400).json({ error: "The number of the attraction is required" });
+    res.status(400).json({ error: "The id of the attraction is required" });
   }
   if (isNaN(page)) {
     page = 0;
@@ -320,11 +332,11 @@ function findAttractionReviews(req: any, res: any) {
   }
   getAttractionReviews(attractionID, page, limit, order, isDescending, function (error, result) {
     if (error) {
-      res.status(400).json(error);
+      res.status(500).json({error: error});
     } else if (result) {
       res.status(200).json(result);
     } else {
-      res.status(400).json({ error: true, reviews: "No reviews found" });
+      res.status(404).json({reviews: "No reviews found" });
     }
   });
 }
@@ -425,7 +437,10 @@ function updateAttraction(req: any, res: any) {
 }
 
 function getAttractionName(req: any, res: any) {
-  const id = req.params.attractionID;
+  const id = parseInt(req.params.attractionID);
+  if(isNaN(id)) {
+    return res.status(400).json({attractionID: "The id of the attraction is required"})
+  }
   findAttractionName(id, function (error, result) {
     if (error) {
       return res.status(404).json({ error: error });
