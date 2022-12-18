@@ -1,7 +1,8 @@
 import { FormEventHandler, useEffect, useState } from "react";
-import { Button, Card, Carousel, CarouselItem, Col, Form, InputGroup, Modal, Row } from "react-bootstrap";
+import { Button, Card, Carousel, CarouselItem, Col, DropdownButton, Form, InputGroup, Modal, Row } from "react-bootstrap";
 import { Attraction } from "./Attraction";
-
+import Dropdown from 'react-bootstrap/Dropdown';
+import { map } from "leaflet";
 interface AttractionInputProps {
     title: string;
     text: string;
@@ -9,6 +10,11 @@ interface AttractionInputProps {
     onFormSubmit: (a: Attraction, i: File[]) => FormEventHandler<HTMLFormElement>;
     validated: boolean;
 
+}
+
+interface themeParkPreviewInfoInterface {
+    id: number,
+    name: string,
 }
 export default function AttractionInputForm(props: AttractionInputProps) {
 
@@ -27,8 +33,13 @@ export default function AttractionInputForm(props: AttractionInputProps) {
     const [reachedImgLimit, setReachedImgLimit] = useState(false);
     const [imagesSelected, setImagesSelected] = useState(false);
 
+    const [themeParkItems, setThemeParkItems] = useState<themeParkPreviewInfoInterface[]>([]);
+
+
+    
+
     useEffect(() => {
-        if(props.attraction) {
+        if (props.attraction) {
             setName(props.attraction.name)
             setThemepark(props.attraction.themepark)
             setOpeningdate(props.attraction.openingdate)
@@ -82,7 +93,7 @@ export default function AttractionInputForm(props: AttractionInputProps) {
     }
 
     function getId() {
-        if(props.attraction) {
+        if (props.attraction) {
             return props.attraction.id
         } else return 0
     }
@@ -123,6 +134,15 @@ export default function AttractionInputForm(props: AttractionInputProps) {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Theme park*</Form.Label>
+                                    <Dropdown>
+                                        <Dropdown.Toggle>Theme park*</Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            {themeParkItems.map((t) => {
+                                                return <Dropdown.Item eventKey={t.id} onClick={(e) => setThemepark(t.name)}>{t.name}</Dropdown.Item>;
+                                            })}
+                                           
+                                        </Dropdown.Menu>
+                                    </Dropdown>
                                     <Form.Control required type="text" onChange={(e) => setThemepark(e.target.value)} value={themepark} />
                                     <Form.Control.Feedback type="invalid">
                                         Theme park is required
