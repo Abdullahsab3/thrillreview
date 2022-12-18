@@ -218,7 +218,8 @@ export default function AttractionPage() {
     }
     return (
         <div className="AttractionPage">
-            {promiseInProgress ? <i>Loading the attraction</i> : 
+            {promiseInProgress ? 
+            <i>Loading the attraction</i> : 
                 <div>
                     {attraction ? <AttractionPageBody /> : <h1 className="title">{`No attraction found with ID ${attractionID}`}</h1>}
                 </div>}
