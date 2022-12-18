@@ -57,7 +57,8 @@ export default function AttractionPage() {
                                     'Content-Type': 'multipart/form-data'
                                 }
                             }).then((res) => {
-                                if (res.data.added) {
+                                if (res.data.updated) {
+                                    getAttractioninfo()
                                     setValidated(true)
                                     setEdit(false)
                                 }

@@ -15,7 +15,7 @@ export default function ThemeParkPage() {
 
     const { themeParkID } = useParams()
 
-    function getAttractioninfo() {
+    function getThemeparkInfo() {
 
         Axios.get(backendServer(`/themePark/${themeParkID}`)).then((res) => {
             const { name, openingdate, street, streetNumber, postalCode, country, type, website, id } = res.data
@@ -27,19 +27,24 @@ export default function ThemeParkPage() {
     }
 
     useEffect(() => {
-        getAttractioninfo()
+        getThemeparkInfo()
     }, [])
 
     function submitEdits(themePark: ThemePark) {
         const updateAttractionInfo: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault()
-                Axios.put(`/themePark/${themeParkID}`, themePark.toJSON()).then((res) => {
+                Axios.put(backendServer(`/themePark/${themeParkID}`), themePark.toJSON()).then((res) => {
+                    console.log(res)
                     if (res.data.updated) {
+                        getThemeparkInfo()
                         setValidated(true)
                         setEdit(false)
                     }
                 }).catch((error) => {
+                    if (error.response.status === 418) {
+                        alert("Address not found")
+                    }
                     setError(error.response.data)
                 })
             }

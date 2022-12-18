@@ -28,7 +28,7 @@ function AddThemePark() {
         const handleSubmit : React.FormEventHandler<HTMLFormElement> = 
         (event: React.FormEvent<HTMLFormElement>) => {
             const form = event.currentTarget
-
+            
             if (form.checkValidity() === false) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -48,7 +48,7 @@ function AddThemePark() {
                     }
                 }).catch(function (error) {
                     if (error.response.status === 418) {
-                        alert("Adress not found")
+                        alert("Address not found")
                     }
                 })
             }

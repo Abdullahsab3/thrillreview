@@ -430,7 +430,7 @@ function updateAttraction(req: any, res: any) {
           ],
         );
       }
-      return res.json({ updated: true });
+      return res.status(200).json({ updated: true });
     },
   );
 }
