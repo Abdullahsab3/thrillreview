@@ -112,22 +112,18 @@ function BrowseThemeparks() {
     let { themeparks, hasMore, loading, error } = GetThemeParks(query, pageNr); //
     const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
     const lastThemeParkRef = useCallback((node: HTMLDivElement) => {
-        // console.log("REF")
         if (loading) return // otherwise will keep sending callbacks while loading
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
         if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
         observer.current = new IntersectionObserver(entries => {
-            //  console.log("HAS MORE HERE", hasMore)
             if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more   
                 setPageNr(prevPageNr => prevPageNr + 1);
-                // console.log("p:", pageNr);
             }
         })
         if (node) observer.current.observe(node)
     }, [loading, hasMore])
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-        // console.log("HANDLE SUBMIT")
         setPageNr(1);
         setQuery(intermediateQuery)
         console.log("thprk", themeparks)

@@ -18,7 +18,7 @@ function AddAttraction() {
         const handleSubmit: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
                 const form = event.currentTarget
-                if (form.checkValidity() === false) {
+                if (form.checkValidity() === false || !attraction.themepark) {
                     event.preventDefault();
                     event.stopPropagation();
                 } else {

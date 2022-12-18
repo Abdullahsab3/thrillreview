@@ -19,15 +19,17 @@ export default function AttractionInputForm(props: AttractionInputProps) {
 
     const maxImageUploads = 5;
 
-    const [name, setName] = useState("")
-    const [themepark, setThemepark] = useState("")
-    const [openingdate, setOpeningdate] = useState("")
-    const [builder, setBuilder] = useState("")
-    const [type, setType] = useState("")
-    const [height, setHeight] = useState("")
-    const [length, setLength] = useState("")
-    const [inversions, setInversions] = useState("")
-    const [duration, setDuration] = useState("")
+    const [name, setName] = useState("");
+    const [themepark, setThemepark] = useState("");
+    const [themeparkName, setThemeparkName] = useState("Not yet chosen");
+    const [themeParkSelected, setThemeParkSelected] = useState(false);
+    const [openingdate, setOpeningdate] = useState("");
+    const [builder, setBuilder] = useState("");
+    const [type, setType] = useState("");
+    const [height, setHeight] = useState("");
+    const [length, setLength] = useState("");
+    const [inversions, setInversions] = useState("");
+    const [duration, setDuration] = useState("");
     const [allImages, setAllImages] = useState<File[]>([]);
     const [reachedImgLimit, setReachedImgLimit] = useState(false);
     const [imagesSelected, setImagesSelected] = useState(false);
@@ -94,9 +96,11 @@ export default function AttractionInputForm(props: AttractionInputProps) {
         } else return 0
     }
 
-    function connectedThemepark(thmprk: string) {
+    function connectedThemepark(id: number, thmprk: string) {
         const mouseEventHandler: React.MouseEventHandler<HTMLElement> = (ev: React.MouseEvent) => {
-            setThemepark(thmprk);
+            setThemepark(id.toString());
+            setThemeparkName(thmprk);
+            setThemeParkSelected(true);
         }
         return mouseEventHandler;
     }
@@ -137,11 +141,13 @@ export default function AttractionInputForm(props: AttractionInputProps) {
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Theme park*</Form.Label>
+                                    <InputGroup>
                                     <ConnectThemePark onClick={connectedThemepark} />
-                                    <Form.Control required type="text" onChange={(e) => setThemepark(e.target.value)} value={themepark} />
-                                    <Form.Control.Feedback type="invalid">
+                                    <Form.Control  isValid={themeParkSelected} isInvalid={!themeParkSelected} required readOnly value={`selected themepark: ${themeparkName}`} defaultValue={`selected themepark: ${themeparkName}`} />
+                                    <Form.Control.Feedback type="invalid" >
                                         Theme park is required
                                     </Form.Control.Feedback>
+                                    </InputGroup>
                                 </Form.Group>
                             </Col>
                         </Row>
