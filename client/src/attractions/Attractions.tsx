@@ -104,13 +104,23 @@ function Attractions() {
             </Card>
         );
     }
-
+//  <SearchAttractions />
+/*<Row lg={3} sm={1}>
+                <Col className="AttractionCol">
+                   
+                </Col>
+         </Row> */
     return (
         <div className='ContentOfPage'>
             <h1>attractions</h1>
             <Row lg={3} sm={1}>
                 <Col className="AttractionCol">
-                    <SearchAttractions />
+                   <Row>
+                    <CardWithLinkTo to="/browse-attractions/" title="Browse all Attractions"/>
+                    </Row>
+                    <Row>
+                         <CardWithLinkTo to="/add-attraction" title="Add an attraction" />
+                    </Row>
                 </Col>
                 <Col className="AttractionCol">
                     <TopTenAttractions />
@@ -119,11 +129,7 @@ function Attractions() {
                     <NewestAttractions />
                 </Col>
             </Row>
-            <Row lg={3} sm={1}>
-                <Col className="AttractionCol">
-                    <CardWithLinkTo to="/add-attraction" title="Add an attraction" />
-                </Col>
-            </Row>
+            
         </div>
 
     );

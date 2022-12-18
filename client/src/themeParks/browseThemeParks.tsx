@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback, MutableRefObject } from 'react';
-import axios, { Canceler, CancelTokenSource } from 'axios';
+import axios from 'axios';
 import { useParams, Link } from "react-router-dom";
 import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
@@ -17,7 +17,6 @@ interface themeParkPreviewInterface {
 
 function ThemeParkPreviewCard(props: themeParkPreviewInterface) {
     if (props.refs) {
-        // console.log("ref:", props.refs)
         return (
             <Card className="browsingCard" ref={props.refs}>
                 <Card.Title>{props.name}</Card.Title>
