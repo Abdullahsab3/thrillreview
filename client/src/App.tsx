@@ -25,6 +25,7 @@ import EventsMainPage from './events/eventsMainPage'
 import AddEvent from './events/addEvent';
 import BrowseEvents from './events/browseEvents';
 import EventPage from './events/eventPage';
+import APIPage from './apiPage';
 
 function App() {
 
@@ -71,6 +72,7 @@ function App() {
             <Route path='/browse-events/:query' element={<BrowseEvents />} />
             <Route path='/browse-events/' element={<BrowseEvents />} />
             <Route path='Events/:eventId' element={<EventPage />}/>
+            <Route path='/api' element={<APIPage />} />
           </Routes>
           </div>
         </Router>
