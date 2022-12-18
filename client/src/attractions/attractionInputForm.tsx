@@ -95,9 +95,9 @@ export default function AttractionInputForm(props: AttractionInputProps) {
         } else return 0
     }
 
-    function connectedThemepark(thmprk: string) {
+    function connectedThemepark(id: number, thmprk: string) {
         const mouseEventHandler: React.MouseEventHandler<HTMLElement> = (ev: React.MouseEvent) => {
-            setThemepark(thmprk);
+            setThemepark(id.toString());
         }
         return mouseEventHandler;
     }
