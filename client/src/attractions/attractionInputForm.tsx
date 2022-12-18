@@ -1,4 +1,4 @@
-import { FormEventHandler, useEffect, useState } from "react";
+import React, { FormEventHandler, useEffect, useState } from "react";
 import { Button, Card, Carousel, CarouselItem, Col, DropdownButton, Form, InputGroup, Modal, Row } from "react-bootstrap";
 import { Attraction } from "./Attraction";
 import ConnectThemePark from "../themeParks/connectThemeParks";
@@ -25,7 +25,7 @@ export default function AttractionInputForm(props: AttractionInputProps) {
     const [themeParkSelected, setThemeParkSelected] = useState(false);
     const [openingdate, setOpeningdate] = useState("");
     const [builder, setBuilder] = useState("");
-    const [type, setType] = useState("");
+    const [type, setType] = useState<string[]>([]);
     const [height, setHeight] = useState("");
     const [length, setLength] = useState("");
     const [inversions, setInversions] = useState("");
@@ -35,25 +35,32 @@ export default function AttractionInputForm(props: AttractionInputProps) {
     const [imagesSelected, setImagesSelected] = useState(false);
 
 
-
-
     useEffect(() => {
         if (props.attraction) {
-            setName(props.attraction.name)
-            setThemepark(props.attraction.themepark)
-            setThemeparkName(props.attraction.themepark)
-            setThemeParkSelected(true)
-            setOpeningdate(props.attraction.openingdate)
-            setBuilder(props.attraction.builder)
-            setType(props.attraction.type)
-            setHeight(props.attraction.height)
-            setLength(props.attraction.length)
-            setInversions(props.attraction.inversions)
-            setDuration(props.attraction.duration)
+            setName(props.attraction.name);
+            setThemepark(props.attraction.themepark);
+            setThemeparkName(props.attraction.themepark);
+            setThemeParkSelected(true);
+            const opdate = props.attraction.openingdate;
+            if (opdate) setOpeningdate(opdate);
+            const bldr = props.attraction.builder;
+            if (bldr) setBuilder(bldr);
+            const hght = props.attraction.height;
+            if (hght) setHeight(hght);
+            const lngth = props.attraction.length;
+            setLength(lngth)
+            const invrs = props.attraction.inversions;
+            if (invrs) setInversions(invrs);
+            const duratn = props.attraction.duration;
+            setDuration(duratn)
+            const types = props.attraction.type
+            if (types) setType(types.split(","));
         }
 
 
     }, [])
+
+
 
     function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
         const alreadyUploaded = allImages;
@@ -108,6 +115,22 @@ export default function AttractionInputForm(props: AttractionInputProps) {
     }
 
 
+    function getTypesAsString() {
+        return type.toString();
+    }
+
+    function changeTypes(e: React.ChangeEvent<HTMLInputElement>) {
+        const value = e.target.value;
+        if (e.target.checked && !type.includes(value)) {
+            // checked -> add
+            setType((prev) => [...prev, value]);
+        } else {
+            // unchecked -> remove
+            setType(type.filter((e) => {return e !== value}));
+        };
+    }
+
+
     return (
         <div className="ContentOfPage">
             <Card>
@@ -116,7 +139,7 @@ export default function AttractionInputForm(props: AttractionInputProps) {
                     <Card.Text>{props.text}</Card.Text>
                     <Form className="align-items-center"
                         validated={props.validated}
-                        onSubmit={props.onFormSubmit(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, getId()), allImages)}>
+                        onSubmit={props.onFormSubmit(new Attraction(name, themepark, openingdate, builder, getTypesAsString(), height, length, inversions, duration, getId()), allImages)}>
                         <Row>
                             <Col>
                                 <Form.Group>
@@ -144,11 +167,11 @@ export default function AttractionInputForm(props: AttractionInputProps) {
                                 <Form.Group>
                                     <Form.Label>Theme park*</Form.Label>
                                     <InputGroup>
-                                    <ConnectThemePark onClick={connectedThemepark} />
-                                    <Form.Control  isValid={themeParkSelected} isInvalid={!themeParkSelected} required readOnly value={themeparkName}  />
-                                    <Form.Control.Feedback type="invalid" >
-                                        Theme park is required
-                                    </Form.Control.Feedback>
+                                        <ConnectThemePark onClick={connectedThemepark} />
+                                        <Form.Control isValid={themeParkSelected} isInvalid={!themeParkSelected} required readOnly value={themeparkName} />
+                                        <Form.Control.Feedback type="invalid" >
+                                            Theme park is required
+                                        </Form.Control.Feedback>
                                     </InputGroup>
                                 </Form.Group>
                             </Col>
@@ -170,14 +193,14 @@ export default function AttractionInputForm(props: AttractionInputProps) {
                         <Row>
                             <Col>
                                 <Form.Group id="attraction-types">
-                                    <Form.Label >Type</Form.Label>
+                                    <Form.Label>Type</Form.Label>
                                     <div className='attraction-type-options'>
-                                        <InputGroup className="attraction-type-option"><Form.Check label="flat ride" /> </InputGroup>
-                                        <InputGroup className="attraction-type-option"><Form.Check label="steel coaster" /> </InputGroup>
-                                        <InputGroup className="attraction-type-option"><Form.Check label="wooden coaster" /> </InputGroup>
-                                        <InputGroup className="attraction-type-option"><Form.Check label="standing coaster" /> </InputGroup>
-                                        <InputGroup className="attraction-type-option"><Form.Check label="sitdown coaster" /> </InputGroup>
-                                        <InputGroup className="attraction-type-option"><Form.Check label="launch coaster" /> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="flat ride" value="flat ride" onChange={changeTypes}/> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="steel coaster" value="steel coaster" onChange={changeTypes} /> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="wooden coaster" value="wooden coaster" onChange={changeTypes}/> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="standing coaster" value="standing coaster" onChange={changeTypes}/> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="sitdown coaster" value="sitdown coaster" onChange={changeTypes}/> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="launch coaster" value="launch coaster" onChange={changeTypes}/> </InputGroup>
                                     </div>
                                 </Form.Group>
                             </Col>
