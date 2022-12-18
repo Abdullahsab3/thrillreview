@@ -22,8 +22,11 @@ function AddAttraction() {
                     event.preventDefault();
                     event.stopPropagation();
                 } else {
+                   // event.preventDefault();
+                    console.log("attraction", attraction.toJSON())
                     Axios.post(backendServer("/attraction"), attraction.toJSON()
                     ).then((response) => {
+                        alert("The attraction was successfully added!")
                         if (response.data.registered) {
                         }
                         if (images) {

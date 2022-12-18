@@ -24,7 +24,6 @@ function isIdInArray(a: AttractionPreviewInfoInterface[], i: number): Boolean {
     a.forEach(t => {
         if (t.id === i) res = true;
     });
-    console.log("id:", i, "a:", a, "res", res)
     return res;
 }
 
@@ -33,7 +32,6 @@ function Attractions() {
 
     useEffect(() => {
         axios.get(backendServer(`/attractions/find?query=&page=0&limit=10`)).then((res) => {
-            console.log(res)
             let prevtopAttractions: AttractionPreviewInfoInterface[] = [];
             res.data.result.map((attr: any) => {
                 const { name, themepark, id } = attr
@@ -59,8 +57,8 @@ function Attractions() {
                     <ListGroup numbered>
                         {topAttractions.map((a: AttractionPreviewInfoInterface, i: number) => {
                             return (
-                                <Link to={`/Attractions/${a.id}`} >
-                                <ListGroup.Item> {a.name} in {a.themepark} </ListGroup.Item>
+                                <Link key={a.id} to={`/Attractions/${a.id}`} >
+                                <ListGroup.Item > {a.name} in {a.themepark} </ListGroup.Item>
                                 </Link>
                             );
                         })}
