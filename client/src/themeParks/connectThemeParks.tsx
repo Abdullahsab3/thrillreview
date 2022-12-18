@@ -70,7 +70,7 @@ function ConnectThemePark(props: connectThemeParkInterface) {
 
     return (
         <Dropdown>
-            <Dropdown.Toggle>Theme park*</Dropdown.Toggle>
+            <Dropdown.Toggle>Select theme park</Dropdown.Toggle>
             <Dropdown.Menu>
                 {themeParkItems.map((t: themeParkPreviewInfoInterface, i: number) => {
                     if (themeParkItems.length === i + 1) {
@@ -81,6 +81,7 @@ function ConnectThemePark(props: connectThemeParkInterface) {
                 })}
             </Dropdown.Menu>
         </Dropdown>
+        
     );
 
 }
