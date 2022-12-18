@@ -195,12 +195,12 @@ export default function AttractionInputForm(props: AttractionInputProps) {
                                 <Form.Group id="attraction-types">
                                     <Form.Label>Type</Form.Label>
                                     <div className='attraction-type-options'>
-                                        <InputGroup className="attraction-type-option"><Form.Check label="flat ride" value="flat ride" onChange={changeTypes}/> </InputGroup>
-                                        <InputGroup className="attraction-type-option"><Form.Check label="steel coaster" value="steel coaster" onChange={changeTypes} /> </InputGroup>
-                                        <InputGroup className="attraction-type-option"><Form.Check label="wooden coaster" value="wooden coaster" onChange={changeTypes}/> </InputGroup>
-                                        <InputGroup className="attraction-type-option"><Form.Check label="standing coaster" value="standing coaster" onChange={changeTypes}/> </InputGroup>
-                                        <InputGroup className="attraction-type-option"><Form.Check label="sitdown coaster" value="sitdown coaster" onChange={changeTypes}/> </InputGroup>
-                                        <InputGroup className="attraction-type-option"><Form.Check label="launch coaster" value="launch coaster" onChange={changeTypes}/> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="flat ride" value="flat ride" onChange={changeTypes}  defaultChecked={type.includes("flat ride")}/> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="steel coaster" value="steel coaster" onChange={changeTypes} defaultChecked={type.includes("steel coaster")}/> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="wooden coaster" value="wooden coaster" onChange={changeTypes} defaultChecked={type.includes("wooden coaster")}/> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="standing coaster" value="standing coaster" onChange={changeTypes} defaultChecked={type.includes("standing coaster")}/> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="sitdown coaster" value="sitdown coaster" onChange={changeTypes} defaultChecked={type.includes("sitdown coaster")}/> </InputGroup>
+                                        <InputGroup className="attraction-type-option"><Form.Check label="launch coaster" value="launch coaster" onChange={changeTypes} defaultChecked={type.includes("launch coaster")}/> </InputGroup>
                                     </div>
                                 </Form.Group>
                             </Col>
