@@ -63,10 +63,36 @@ app.post("/user/login", loginUser); // logs de user in (first check on password)
 app.delete("/user/logout", logoutUser); //logs de user uit, verwijderd acces and refreshtoken en devalidates de refreshtoken door hem te verwijderen uit de db
 
 app.get("/user/email", validateTokens, getEmail);
+
+/**
+ * @api {get} /user/:id/username Request a username given the id of the user.
+ * @apiName GetUserName
+ * @apiGroup User
+ * 
+ * @apiParam {Number} id the unique id of the user
+ * 
+ * @apiSuccess (Success 200) {String} username The username
+ * 
+ * @apiError (Error 404) {String} username Username is not found in the database.
+ * @apiError (Error 500) {String} username The server encountered an internal error while fetching the username.
+ */
 app.get("/user/:id/username", getUserName)
 
-app.post("/user/avatar", [validateTokens, upload.single("avatar")], setAvatar);
+app.post("/user/avatar", [validateTokens, upload.single("avatar")], setAvatar)
 app.put("/user/avatar", [validateTokens, upload.single("avatar")], setAvatar)
+
+/**
+ * @api {get} /user/:id/avatar Get the avatar (profile picture) of a user
+ * @apiName GetUserAvatar
+ * @apiGroup User
+ * 
+ * @apiParam {Number} id The unique id of the user
+ * 
+ * @apiSuccess (Success 200) {png|jpg|jpeg} avatar The user avatar
+ * 
+ * @apiError (Error 404) {String} error The avatar is not found in the database.
+ * @apiError (Error 500) {String} error The server encountered an internal error while fetching the avatar.
+ */
 app.get("/user/:id/avatar", getAvatar)
 
 app.put("/user/username", validateTokens, updateUsername);
@@ -78,20 +104,151 @@ app.delete("/user", validateTokens, deleteUser)
 app.post("/attraction", validateTokens, addAttraction); // basic add van een attractie
 app.post("/attraction/:attractionID/photos", [validateTokens, upload.single("image")], addAttractionPhotos); // upload een afbeelding van een attracttie en sla op in db
 app.put("/attraction/:attractionID", validateTokens, updateAttraction);
-app.get("/attraction/:attractionID", findAttractionById);  // geeft alle informatie van een attractie terug
+/**
+ * @api {get} /attraction/:attractionID Get the information of the attraction
+ * @apiName GetAttraction
+ * @apiGroup Attraction
+ * 
+ * @apiParam {Number} attractionID The unique id of the attraction
+ * 
+ * @apiSuccess (Success 200) {String} opening
+ * @apiSuccess (Success 200) {String} builder
+ * @apiSuccess (Success 200) {String} type
+ * @apiSuccess (Success 200) {String} height
+ * @apiSuccess (Success 200) {String} length
+ * @apiSuccess (Success 200) {String} inversions
+ * @apiSuccess (Success 200) {String} duration
+ * @apiSuccess (Success 200) {String} id The id of the attraction in the database
+ * 
+ * @apiError (Error 404) {String} No attraction found with the given ID.
+ * @apiError (Error 500) {String} error The server encountered an internal error while fetching the attraction.
+ */
+app.get("/attraction/:attractionID", findAttractionById);
 app.post("/attraction/:attractionID/review", validateTokens, setAttractionReview)
 app.put("/attraction/:attractionID/review", validateTokens, setAttractionReview)
+
+/**
+ * @api {get} /attraction/:attractionID/review Get a users review of an attratcion
+ * @apiName GetReview
+ * @apiGroup Attraction
+ * 
+ * @apiParam {Number} attractionID the unique id of the attraction
+ * @apiQuery {Number} userid The id of the user who placed the review
+ *  
+ * @apiSuccess (Success 200) {string} review The review text
+ * @apiSuccess (Success 200) {Number} rating The rating that the user gave to the attraction
+ * @apiSuccess (Success 200) {String} date The date this review was placed/modified
+ * 
+ * @apiError (Error 404) {String} review The review was not found
+ * @apiError (Error 500) {String} error The server encountered an error while fetching the reviw
+ */
 app.get("/attraction/:attractionID/review", findReview)
+
+/**
+ * @api {get} /attraction/:attractionID/reviews Get the reviews of an attraction
+ * @apiName GetReviews
+ * @apiGroup Attraction
+ * 
+ * @apiParam {Number} attractionID The unique id of the attraction
+ * @apiQuery {Number} page The reviews page
+ * @apiQuery {Number} limit How many reviews in a page
+ * @apiQuery {String} orderBy How to order the reviews (by date or stars)
+ * @apiQuery {String} sort How to sort the reviews (asc or desc)
+ * 
+ * @apiSuccess (Success 200) {Object[]} reviews An array containing all the reviews
+ * @apiSuccess (Success 200) {Object} The number and limit of the next page
+ * @apiSuccess (Success 200) {Object} previous The number and limit of the previous page
+ * 
+ * @apiError (Error 404) {String} reviews No reviews found
+ * @apiError (Error 500) {String} error The server encountered an error while fecthing the reviews.
+ */
 app.get("/attraction/:attractionID/reviews", findAttractionReviews)
+
+/**
+ * @api {get} /attraction/:attractionID/rating Get the average rating and the number of ratings of an attraction
+ * @apiName GetAverageRating
+ * @apiGroup Attraction
+ * 
+ * @apiParam {Number} attractionID The unique id of the attraction
+ * 
+ * @apiSuccess (Success 200) {Number} rating The average rating of the attraction
+ * @apiSuccess (Success 200) {Number} ratingCount The total number of ratings on this attraction
+ * 
+ * @apiError (Error 500) {String} error The server encountered an error while trying to get the ratings
+ * @apiError (Error 400) {String} attractionID The attraction id was not correctly provided.
+ */
 app.get("/attraction/:attractionID/rating", getAverageRating)
+
+/**
+ * @api {get} /attraction/:attractionID/name Get the name of an attraction
+ * @apiName GetAttractionName
+ * @apiGroup Attraction
+ * 
+ * @apiParam {Number} attractionID The unique id of the attraction
+ * 
+ * @apiSuccess (Success 200) {String} name The name of the attraction
+ * 
+ * @apiError (Error 400) {String} attractionID The attraction id was not correctly provided
+ * @apiError (Error 404) {String} error The attraction was not found
+ * 
+ */
 app.get("/attraction/:attractionID/name", getAttractionName)
 app.get("/attractions/find", findAttractionByName) //search voor alle bestaande attractties query is op naam ?query=&limit=&page= allemaal optioneel
+/**
+ * @api {get} /attractions/:attractionID/photos Get a photo of an attraction
+ * @apiName GetAttractionPhoto
+ * @apiGroup Attraction
+ * 
+ * @apiParam {Number} attractionID The unique id of the attraction
+ * 
+ * @apiQuery {Number} id The id of the photo
+ * 
+ * @apiSuccess (Success 200) {png/jpg/jpeg} photo The photo of the attraction with the given index
+ * 
+ * @apiError (Error 404) {String} error The attraction image was not found.
+ * @apiError (Error 500) {String} error The server encountered an error while fetching the photo
+ */
 app.get("/attractions/:attractionID/photos", getAttractionPhoto)
+/**
+ * @api {get} /attractions/:attractionID/photos/count The number of photos an attraction has
+ * @apiName GetAttractionphotosCount
+ * @apiGroup Attraction
+ * 
+ * @apiParam {Number} attractionID The id of the attraction
+ * 
+ * @apiSuccess (Success 200) {Number} count The number of images the attraction has.
+ * 
+ * @apiError (Error 500) error The server encountered an internal error while fetching the count
+ * @apiError (Error 404) The attraction was not found.
+ * 
+ */
 app.get("/attractions/:attractionID/photos/count", getAttractionPhotosCount)
 
 
 //themepark requests
 app.post("/themepark", validateTokens, addThemePark) //basic toevoegen van een themepark
+/**
+ * @api {get} /themepark/:themeparkID Get the information of the themepark
+ * @apiname GetThemepark
+ * @apiGroup Themepark
+ * 
+ * @apiParam {Number} themeparkID The unique id of the themepark
+ * 
+ * @apiSuccess (Success 200) {String} name The name of the themepark
+ * @apiSuccess (Success 200) {String} openingdate The opening date of the themeparl
+ * @apiSuccess (Success 200) {Number} streetNumber The street number of the themepark
+ * @apiSuccess (Success 200) {String} postalCode The postal code of the city of the themepark
+ * @apiSuccess (Success 200) {String} country The country of the themepark
+ * @apiSuccess (Success 200) {String} type The type of the themepark (indoors/outdoors)
+ * @apiSuccess (Success 200) {String} website The website of the themepark
+ * @apiSuccess (Success 200) {Number} id The id of the themepark
+ * 
+ * 
+ * @apiError (Error 400) themeparkID The themeparkID was not correctly provided.
+ * @apiError (Error 404) error Themepark was not found.
+ * @apiError (Error 500) error Internal server error
+ * 
+ */
 app.get("/themepark/:themeparkID", findThemeParkByID) //geeft alle informatie terug van een pretpark
 app.put("/themepark/:themeparkID", validateTokens, editThemePark)
 app.get("/themeparks/find", findThemeParkByName) //search voor alle bestaande pretparken query is op naam ?query=&limit=&page= allemaal optioneel
