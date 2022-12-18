@@ -145,7 +145,7 @@ export default function AttractionInputForm(props: AttractionInputProps) {
                                     <Form.Label>Theme park*</Form.Label>
                                     <InputGroup>
                                     <ConnectThemePark onClick={connectedThemepark} />
-                                    <Form.Control  isValid={themeParkSelected} isInvalid={!themeParkSelected} required readOnly value={`selected themepark: ${themeparkName}`} defaultValue={`selected themepark: ${themeparkName}`} />
+                                    <Form.Control  isValid={themeParkSelected} isInvalid={!themeParkSelected} required readOnly value={themeparkName}  />
                                     <Form.Control.Feedback type="invalid" >
                                         Theme park is required
                                     </Form.Control.Feedback>
