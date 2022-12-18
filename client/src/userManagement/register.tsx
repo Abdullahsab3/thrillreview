@@ -27,7 +27,8 @@ function Register() {
     const receivedUsernameError: string = data.username
     const receivedEmailError: string = data.email
     const receivedPasswordError: string = data.password
-    console.log(receivedUsernameError)
+
+    
     if (receivedUsernameError) {
       setusernameError(receivedUsernameError);
       return true;

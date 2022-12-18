@@ -1,6 +1,6 @@
 import { ThemePark } from "./ThemePark";
-import { db, getLastId, getThemePark, getThemeParks, getThemeParksByName } from "./database";
-import { User } from "./User";
+import { db, getLastId, getThemePark, getThemeParks, getThemeParksByName } from "../database";
+import { User } from "../userManagement/User";
 import axios from "axios";
 
 // geeft de coordinaten terug gegeven een adres
@@ -30,7 +30,6 @@ function getLocationCoordinates(
 }
 // voegt een themepark toe
 function addThemePark(req: any, res: any) {
-  console.log("opgeroepen")
   const {
     name,
     openingsdate,

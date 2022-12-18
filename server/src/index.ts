@@ -17,12 +17,12 @@ import {
   getUserName,
   deleteUser,
   checkIfAvatarExists
-} from "./userManagementCallbacks";
-import { addAttraction, findAttractionById, findAttractionByName, findAttractionReviews, findReview, getAttractionName, getAverageRating, setAttractionReview, updateAttraction, addAttractionPhotos, getAttractionPhoto, getAttractionPhotosCount } from "./attractionCallbacks";
-import { addThemePark, editThemePark, findThemeParkByID, findThemeParkByName } from "./themeParkCallbacks";
+} from "./userManagement/userManagementCallbacks";
+import { addAttraction, findAttractionById, findAttractionByName, findAttractionReviews, findReview, getAttractionName, getAverageRating, setAttractionReview, updateAttraction, addAttractionPhotos, getAttractionPhoto, getAttractionPhotosCount } from "./attractions/attractionCallbacks";
+import { addThemePark, editThemePark, findThemeParkByID, findThemeParkByName } from "./themeparks/themeParkCallbacks";
 import multer from "multer";
-import { sendFeeds } from "./feedsCallbacks";
-import { addEvent, findEvents, findEventByID, findEventUsers, findUserJoinedEvents, userJoinedEvent, eventAttendeesCount, userJoinEvent } from "./eventCallbacks";
+import { sendFeeds } from "./feeds/feedsCallbacks";
+import { addEvent, findEvents, findEventByID, findEventUsers, findUserJoinedEvents, userJoinedEvent, eventAttendeesCount, userJoinEvent } from "./events/eventCallbacks";
 
 
 /* 

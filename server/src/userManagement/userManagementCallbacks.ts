@@ -1,4 +1,4 @@
-import { daysToMilliseconds, minutsToMilliseconds } from "./helpers";
+import { daysToMilliseconds, minutsToMilliseconds } from "../helpers";
 import { User } from "./User";
 import {
   checkForEmailExistence,
@@ -8,9 +8,9 @@ import {
   removeToken,
   db,
   validateUserPassword,
-} from "./database";
+} from "../database";
 import bcrypt from "bcrypt";
-import { createRefreshToken, removeRefreshToken, createAccesToken } from "./JWT";
+import { createRefreshToken, removeRefreshToken, createAccesToken } from "../JWT";
 
 /* 
   Register a new user given its name, email and password

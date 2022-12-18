@@ -8,8 +8,8 @@ import {
   getAttractionRating,
   getAttractionReviews,
   getReview,
-} from "./database";
-import { User } from "./User";
+} from "../database";
+import { User } from "../userManagement/User";
 
 // attractie toevoegen aan db
 async function addAttraction(req: any, res: any) {
