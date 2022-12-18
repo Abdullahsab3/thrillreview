@@ -40,9 +40,10 @@ function AddThemePark() {
                     streetNumber: themepark.streetNumber,
                     postalCode: themepark.postalCode,
                     country: themepark.country,
-                    type: "",
+                    type: themepark.type,
                     website: themepark.website,
                 }).then((response) => {
+                    alert("Theme park was succesfully added")
                     if (response.data.recognised) {
                         navigate("/home")
                     }

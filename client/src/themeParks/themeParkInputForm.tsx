@@ -31,6 +31,7 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
     const [outdoor, setOutdoor] = useState(false)
     const [themeParkurl, setUrl] = useState("")
 
+
     useEffect(() => {
         if (props.themepark) {
             setName(props.themepark.name)
@@ -43,6 +44,18 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
         }
     }, [])
 
+    function getTypesAsString() {
+        let res = ""
+        if (indoor && outdoor) {
+            res = "indoor,outdoor"
+        } else if (indoor) {
+            res = "indoor"
+        } else if (outdoor) {
+            res = "outdoor"
+        }
+        return res;
+    }
+
 
 
     // length, height, duration : zal nog gevalideerd worden dat echt cijfer is  : https://codesandbox.io/s/9zjo1lp86w?file=/src/Components/InputDecimal.jsx
@@ -54,12 +67,12 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
                     <Card.Body>
                         <Card.Title>{props.title}</Card.Title>
                         <Card.Text>{props.text}</Card.Text>
-                        <Form className="align-items-center" noValidate validated={props.validated} onSubmit={props.onFormSubmit(new ThemePark(name, opening, street, parseInt(streetNr), postalCode, country, "", themeParkurl, 0))}>
+                        <Form className="align-items-center" noValidate validated={props.validated} onSubmit={props.onFormSubmit(new ThemePark(name, opening, street, parseInt(streetNr), postalCode, country, getTypesAsString(), themeParkurl, 0))}>
                             <Row lg={2} sm={1}>
                                 <Col>
                                     <Form.Group>
                                         <Form.Label> Name* </Form.Label>
-                                        <Form.Control required type="text" onChange={(e) => setName(e.target.value)} value={name}/>
+                                        <Form.Control required type="text" onChange={(e) => setName(e.target.value)} value={name} />
                                         <Form.Control.Feedback type="invalid">
                                             Name is required
                                         </Form.Control.Feedback>
@@ -68,7 +81,7 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
                                 <Col>
                                     <Form.Group>
                                         <Form.Label>Opening</Form.Label>
-                                        <Form.Control type="date" onChange={(e) => setOpening(e.target.value)}  value={opening}/>
+                                        <Form.Control type="date" onChange={(e) => setOpening(e.target.value)} value={opening} />
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -86,21 +99,21 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
 
                                         <div id="streetNr">
                                             Street Number*
-                                            <Form.Control required type="text" placeholder="Street number" pattern="[0-9]*" onChange={(e) => setStreetNr(e.target.value)} value={streetNr}/>
+                                            <Form.Control required type="text" placeholder="Street number" pattern="[0-9]*" onChange={(e) => setStreetNr(e.target.value)} value={streetNr} />
                                             <Form.Control.Feedback type="invalid">
                                                 Street number is required and should be a number.
                                             </Form.Control.Feedback>
                                         </div>
                                         <div id="postalCode">
                                             Postal Code*
-                                            <Form.Control required type="text" placeholder="Postal code" pattern="[0-9]*" onChange={(e) => setPostalCode(e.target.value)} value={postalCode}/>
+                                            <Form.Control required type="text" placeholder="Postal code" pattern="[0-9]*" onChange={(e) => setPostalCode(e.target.value)} value={postalCode} />
                                             <Form.Control.Feedback type="invalid">
                                                 Postal code is required and should be a number.
                                             </Form.Control.Feedback>
                                         </div>
                                         <div id="country">
                                             Country*
-                                            <Form.Control required type="text" placeholder="Country" onChange={(e) => setCountry(e.target.value)} value={country}/>
+                                            <Form.Control required type="text" placeholder="Country" onChange={(e) => setCountry(e.target.value)} value={country} />
                                             <Form.Control.Feedback type="invalid">
                                                 Country is required.
                                             </Form.Control.Feedback>
@@ -113,13 +126,13 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
                                     <Form.Group>
                                         <Form.Label >Type</Form.Label>
                                         <InputGroup><Form.Check label="Indoor park" onChange={(e) => indoor ? setIndoor(false) : setIndoor(true)} /> </InputGroup>
-                                        <InputGroup><Form.Check label="Outdoor park" onChange={(e) => outdoor ? setOutdoor(true) : setOutdoor(false)} /> </InputGroup>
+                                        <InputGroup><Form.Check label="Outdoor park" onChange={(e) => outdoor ? setOutdoor(false) : setOutdoor(true)} /> </InputGroup>
                                     </Form.Group>
                                 </Col>
                                 <Col>
                                     <Form.Group>
                                         <Form.Label> Link to themeparks website </Form.Label>
-                                        <Form.Control type="url" onChange={(e) => setUrl(e.target.value)} value={themeParkurl}/>
+                                        <Form.Control type="url" onChange={(e) => setUrl(e.target.value)} value={themeParkurl} />
                                         <Form.Control.Feedback type="invalid">
                                             A valid url should be given, starting with https:// or http://.
                                         </Form.Control.Feedback>
