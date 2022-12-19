@@ -17,7 +17,6 @@ import { loggedIn } from '../localStorageProcessing'
 import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 
 function AddEvent() {
-    const navigate = useNavigate();
     var user: Boolean = loggedIn();
 
     const [validated, setValidated] = useState(false);

@@ -6,6 +6,8 @@ import { ReviewPreview } from "./reviewPreview";
 import { ThemeparkPreview } from "./themeparkPreview";
 import "./styling/feeds.css"
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
+import { Card, Row, Col } from 'react-bootstrap'
+import HighlightedAttraction from "../attractions/HighlightedAttraction";
 
 const Home = () => {
     const { promiseInProgress } = usePromiseTracker()
@@ -32,18 +34,18 @@ const Home = () => {
                         attractionID={value.attractionID}
                         userID={value.userID}
                         rating={value.rating}
-                        date={value.date} 
+                        date={value.date}
                         key={i}
-                        />
+                    />
                 }
                 case "attraction": {
                     return <AttractionPreview
                         name={value.name}
                         attractionID={value.id}
                         userID={value.userID}
-                        themepark={value.themepark} 
+                        themepark={value.themepark}
                         key={i}
-                        />
+                    />
 
                 }
                 case "themepark": {
@@ -51,9 +53,9 @@ const Home = () => {
                         name={value.name}
                         themeParkID={value.id}
                         userID={value.userID}
-                        country={value.country} 
+                        country={value.country}
                         key={i}
-                        />
+                    />
                 }
             }
         })
@@ -62,14 +64,24 @@ const Home = () => {
     return (
         <div>
             <h1 className="title"> Welcome to Thrillreview! </h1>
-            <div className="d-flex flex-column justify-content-center  align-items-center">
-                <h3 className="feedsTitle">Recents</h3>
 
-            {promiseInProgress ? <i>Loading the feeds</i> :  publishFeeds()}
 
-            </div>
-
+            <Col>
+                <Row>
+                    <div className="d-flex flex-column justify-content-center  align-items-center">
+                        <HighlightedAttraction />
+                    </div>
+                </Row>
+                <Row>
+                    <div className="d-flex flex-column justify-content-center  align-items-center">
+                        <h3 className="feedsTitle">Recents</h3>
+                        {promiseInProgress ? <i>Loading the feeds</i> : publishFeeds()}
+                    </div>
+                </Row>
+            </Col>
         </div>
+
+
     );
 }
 

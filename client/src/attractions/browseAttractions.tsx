@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback, MutableRefObject } from 'react';
-import axios, { Canceler, CancelTokenSource } from 'axios';
-import { Attraction, getAttractionRating } from './Attraction';
-import { useParams, Link } from "react-router-dom";
+import axios from 'axios';
+import { getAttractionRating } from './Attraction';
+import { Link } from "react-router-dom";
 import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
 import StarRating from "./starRating";
 import { Search } from 'react-bootstrap-icons';
@@ -29,7 +29,6 @@ function AttractionPreviewCard(props: attractionPreviewInterface) {
     useEffect(() => {
         getAttractionRating(attractionProp.id, function (rating, total, error) {
             setRating(rating)
-    
         })
 
     }, [])    
