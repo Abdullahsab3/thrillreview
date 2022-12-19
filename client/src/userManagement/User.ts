@@ -1,4 +1,4 @@
-import Axios, { AxiosError } from "axios";
+import Axios from "axios";
 import { backendServer } from "../helpers";
 
 class User {
