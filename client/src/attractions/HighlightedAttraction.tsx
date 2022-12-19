@@ -18,6 +18,11 @@ function HighLightedAttraction() {
     useEffect(() => {
         // hier komt nog een axiosRequest
         setRandomId(5);
+        axios.get(backendServer('/attraction/count')).then((res) => {
+            const maxId = res.data.result;
+            // random between 1 and max : random[0;1] * (max + 1 - 1) + min = random[0;1] * max + min
+            setRandomId(Math.random() * maxId + 1)
+        });
 
     }, [])
 
