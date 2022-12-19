@@ -25,7 +25,7 @@ db.run(
 /* Attractions tables */
 db.run(
 "CREATE TABLE IF NOT EXISTS attractions \
-(id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, themepark STRING)",
+(id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, themepark STRING, themeparkID ITEGER)",
 );
 
 db.run(

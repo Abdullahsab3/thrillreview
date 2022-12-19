@@ -8,6 +8,7 @@ import {
   getAttractionRating,
   getAttractionReviews,
   getReview,
+  getThemePark,
 } from "../database";
 import { User } from "../userManagement/User";
 
@@ -27,87 +28,97 @@ async function addAttraction(req: any, res: any) {
   const userid = req.user.id;
   //eerst nog form validation doen
   //verplichte fields invullen
-  db.get(
-    "INSERT INTO attractions (userID, name, themepark) VALUES(?, ?, ?) RETURNING id",
-    [
-      userid,
-      name,
-      themepark,
-    ],
-    (error: Error, result: any) => {
-      console.log(error)
+  getThemePark(themepark,
+    function (error: any, result: any)  {
       if (error) {
-        return res.status(400).json({ error: error.message });
+        return res.status(400).json({ themepark: "ID does not exist"});
+      } else if (result) {
+        db.get(
+          "INSERT INTO attractions (userID, name, themepark, themeparkID) VALUES(?, ?, ?, ?) RETURNING id",
+          [
+            userid,
+            name,
+            result.name,
+            themepark,
+          ],
+          (error: Error, result: any) => {
+            console.log(error)
+            if (error) {
+              return res.status(400).json({ error: error.message });
+            } else {
+              const lastid = result.id; //id terug geven zodat we optionele informatie kunnen binden aan een attractie
+              //telkens testen of de informattie gegeven wordt en dan toevoegen
+              if (openingdate) {
+                db.run(
+                  "INSERT INTO attractionsopening (id, opening) VALUES(?, ?)",
+                  [
+                    lastid,
+                    openingdate,
+                  ],
+                );
+              }
+              if (builder) {
+                db.run(
+                  "INSERT INTO attractionsbuilder (id, builder) VALUES(?, ?)",
+                  [
+                    lastid,
+                    builder,
+                  ],
+                );
+              }
+              if (type) {
+                db.run(
+                  "INSERT INTO attractionstype (id, type) VALUES(?, ?)",
+                  [
+                    lastid,
+                    type,
+                  ],
+                );
+              }
+              if (length) {
+                db.run(
+                  "INSERT INTO attractionslength (id, length) VALUES(?, ?)",
+                  [
+                    lastid,
+                    length,
+                  ],
+                );
+              }
+              if (height) {
+                db.run(
+                  "INSERT INTO attractionsheight (id, height) VALUES(?, ?)",
+                  [
+                    lastid,
+                    height,
+                  ],
+                );
+              }
+              if (inversions) {
+                db.run(
+                  "INSERT INTO attractionsinversions (id, inversions) VALUES(?, ?)",
+                  [
+                    lastid,
+                    inversions,
+                  ],
+                );
+              }
+              if (duration) {
+                db.run(
+                  "INSERT INTO attractionsduration (id, duration) VALUES(?, ?)",
+                  [
+                    lastid,
+                    duration,
+                  ],
+                );
+              }
+              return res.json({ added: true, id: lastid });
+            }
+          },
+        );
       } else {
-        const lastid = result.id; //id terug geven zodat we optionele informatie kunnen binden aan een attractie
-        //telkens testen of de informattie gegeven wordt en dan toevoegen
-        if (openingdate) {
-          db.run(
-            "INSERT INTO attractionsopening (id, opening) VALUES(?, ?)",
-            [
-              lastid,
-              openingdate,
-            ],
-          );
-        }
-        if (builder) {
-          db.run(
-            "INSERT INTO attractionsbuilder (id, builder) VALUES(?, ?)",
-            [
-              lastid,
-              builder,
-            ],
-          );
-        }
-        if (type) {
-          db.run(
-            "INSERT INTO attractionstype (id, type) VALUES(?, ?)",
-            [
-              lastid,
-              type,
-            ],
-          );
-        }
-        if (length) {
-          db.run(
-            "INSERT INTO attractionslength (id, length) VALUES(?, ?)",
-            [
-              lastid,
-              length,
-            ],
-          );
-        }
-        if (height) {
-          db.run(
-            "INSERT INTO attractionsheight (id, height) VALUES(?, ?)",
-            [
-              lastid,
-              height,
-            ],
-          );
-        }
-        if (inversions) {
-          db.run(
-            "INSERT INTO attractionsinversions (id, inversions) VALUES(?, ?)",
-            [
-              lastid,
-              inversions,
-            ],
-          );
-        }
-        if (duration) {
-          db.run(
-            "INSERT INTO attractionsduration (id, duration) VALUES(?, ?)",
-            [
-              lastid,
-              duration,
-            ],
-          );
-        }
-        return res.json({ added: true, id: lastid });
+        return res.status(400).json({ themepark: "ID does not exist"});
       }
-    },
-  );
+    });
 }
 
 // een foto toevoegen aan een attractie
@@ -354,85 +365,94 @@ function updateAttraction(req: any, res: any) {
     inversions,
     duration,
   } = req.body;
-
-  db.run(
-    "UPDATE attractions SET userID = ?, name = ?, themepark = ? WHERE id = ?",
-    [userid, name, themepark, lastid],
-    function (error) {
+  getThemePark(themepark,
+    function (error: any, result: any)  {
       if (error) {
-        return res.status(400).json({
-          error:
-            "Something went wrong while updating the attractions information",
-        });
-      }
-      if (opening) {
+        return res.status(400).json({ themepark: "ID does not exist"});
+      } else if (result) {
         db.run(
-          "REPLACE INTO attractionsopening (id, opening) VALUES(?, ?)",
-          [
-            lastid,
-            opening,
-          ],
+          "UPDATE attractions SET userID = ?, name = ?, themepark = ?, themeparkID = ? WHERE id = ?",
+          [userid, name, result.name, themepark, lastid],
+          function (error) {
+            if (error) {
+              return res.status(400).json({
+                error:
+                  "Something went wrong while updating the attractions information",
+              });
+            }
+            if (opening) {
+              db.run(
+                "REPLACE INTO attractionsopening (id, opening) VALUES(?, ?)",
+                [
+                  lastid,
+                  opening,
+                ],
+              );
+            }
+            if (builder) {
+              db.run(
+                "REPLACE INTO attractionsbuilder (id, builder) VALUES(?, ?)",
+                [
+                  lastid,
+                  builder,
+                ], function (error) {
+                  console.log(error)
+                }
+              );
+            }
+            if (type) {
+              db.run(
+                "REPLACE INTO attractionstype (id, type) VALUES(?, ?)",
+                [
+                  lastid,
+                  type,
+                ],
+              );
+            }
+            if (length) {
+              db.run(
+                "REPLACE INTO attractionslength (id, length) VALUES(?, ?)",
+                [
+                  lastid,
+                  length,
+                ],
+              );
+            }
+            if (height) {
+              db.run(
+                "REPLACE INTO attractionsheight (id, height) VALUES(?, ?)",
+                [
+                  lastid,
+                  height,
+                ],
+              );
+            }
+            if (inversions) {
+              db.run(
+                "REPLACE INTO attractionsinversions (id, inversions) VALUES(?, ?)",
+                [
+                  lastid,
+                  inversions,
+                ],
+              );
+            }
+            if (duration) {
+              db.run(
+                "REPLACE INTO attractionsduration (id, duration) VALUES(?, ?)",
+                [
+                  lastid,
+                  duration,
+                ],
+              );
+            }
+            return res.status(200).json({ updated: true });
+          },
         );
+      } else {
+        return res.status(400).json({ themepark: "ID does not exist"})
       }
-      if (builder) {
-        db.run(
-          "REPLACE INTO attractionsbuilder (id, builder) VALUES(?, ?)",
-          [
-            lastid,
-            builder,
-          ], function (error) {
-            console.log(error)
-          }
-        );
-      }
-      if (type) {
-        db.run(
-          "REPLACE INTO attractionstype (id, type) VALUES(?, ?)",
-          [
-            lastid,
-            type,
-          ],
-        );
-      }
-      if (length) {
-        db.run(
-          "REPLACE INTO attractionslength (id, length) VALUES(?, ?)",
-          [
-            lastid,
-            length,
-          ],
-        );
-      }
-      if (height) {
-        db.run(
-          "REPLACE INTO attractionsheight (id, height) VALUES(?, ?)",
-          [
-            lastid,
-            height,
-          ],
-        );
-      }
-      if (inversions) {
-        db.run(
-          "REPLACE INTO attractionsinversions (id, inversions) VALUES(?, ?)",
-          [
-            lastid,
-            inversions,
-          ],
-        );
-      }
-      if (duration) {
-        db.run(
-          "REPLACE INTO attractionsduration (id, duration) VALUES(?, ?)",
-          [
-            lastid,
-            duration,
-          ],
-        );
-      }
-      return res.status(200).json({ updated: true });
-    },
-  );
+    });
+
 }
 
 function getAttractionName(req: any, res: any) {
