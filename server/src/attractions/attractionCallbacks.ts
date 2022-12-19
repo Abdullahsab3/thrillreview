@@ -506,6 +506,19 @@ function getAttractionPhotosCount(req: any, res: any) {
   })
 }
 
+// geeft het aantal attracties
+function AttractionCount(req: any, res: any){
+  db.get(
+      "SELECT COUNT(*) from attractions",
+      function (error, countResult) {
+          if (error) {
+              return res.status(400).json({ error: "something whent wrong while getting the attractions" });
+          } else {
+              return res.status(200).json({ result: countResult["COUNT(*)"] });
+          }
+      });
+}
+
 
 export {
   addAttraction,
@@ -519,5 +532,6 @@ export {
   updateAttraction,
   addAttractionPhotos,
   getAttractionPhoto,
-  getAttractionPhotosCount 
+  getAttractionPhotosCount,
+  AttractionCount 
 };
