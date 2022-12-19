@@ -6,8 +6,8 @@ import CardWithImageUpload from '../higherOrderComponents/cardWithImageUpload';
 import { Link, useNavigate } from 'react-router-dom';
 import { backendServer } from '../helpers'
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
-import './styling/userMangement.css'
-
+import './styling/userMangement.css';
+import { LoginFirstCard }  from '../higherOrderComponents/cardWithLinkTo';
 
 export default function ChangeAvatar() {
     const navigate = useNavigate()
@@ -77,9 +77,7 @@ export default function ChangeAvatar() {
         );
     } else {
         return (
-            <div className='changeAvatar'>
-                In order to change your avatar, you have to <Link to="/Login">Log in first</Link>
-            </div>
+           <LoginFirstCard />
         )
     }
 }

@@ -9,7 +9,8 @@ import { backendServer } from '../helpers';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import ButtonWithLoading from '../higherOrderComponents/buttonWithLoading';
-import './styling/userMangement.css'
+import './styling/userMangement.css';
+import { LoginFirstCard }  from '../higherOrderComponents/cardWithLinkTo';
 
 export default function ChangePassword() {
 
@@ -120,9 +121,7 @@ export default function ChangePassword() {
         );
     } else {
         return (
-            <div className='changePassword'>
-                In order to change your password, you have to <Link to="/Login">Log in first</Link>
-            </div>
+            <LoginFirstCard />
         )
     }
 }

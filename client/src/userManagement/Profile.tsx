@@ -8,7 +8,7 @@ import Table from 'react-bootstrap/Table'
 import { fetchUserFromLocalStorage, removeUserInLocalstorage } from '../localStorageProcessing'
 import { backendServer } from '../helpers'
 import './styling/profile.css'
-
+import { LoginFirstCard }  from '../higherOrderComponents/cardWithLinkTo';
 import { Buffer } from "buffer";
 import axios from 'axios';
 
@@ -118,9 +118,7 @@ function Profile() {
     }
 
     return (
-        <div className='Profile'>
-            In order to view your profile, you have to <Link to="/Login">Log in first</Link>
-        </div>
+        <LoginFirstCard />
     )
 
 
