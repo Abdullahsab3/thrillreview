@@ -23,9 +23,10 @@ db.run(
 );
 
 /* Attractions tables */
+
 db.run(
 "CREATE TABLE IF NOT EXISTS attractions \
-(id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, themepark STRING, themeparkID ITEGER)",
+(id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, themepark STRING, themeparkID INTEGER)",
 );
 
 db.run(
@@ -337,6 +338,7 @@ function getAttraction(
                                       new Attraction(
                                         result.name,
                                         result.themepark,
+                                        result.themeparkID, 
                                         opening,
                                         builder,
                                         type,

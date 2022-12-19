@@ -14,9 +14,10 @@ import { User } from "../userManagement/User";
 
 // attractie toevoegen aan db
 async function addAttraction(req: any, res: any) {
+  console.log(req)
   const {
     name,
-    themepark,
+    themeparkID,
     openingdate,
     builder,
     type,
@@ -28,7 +29,7 @@ async function addAttraction(req: any, res: any) {
   const userid = req.user.id;
   //eerst nog form validation doen
   //verplichte fields invullen
-  getThemePark(themepark,
+  getThemePark(themeparkID,
     function (error: any, result: any)  {
       if (error) {
         return res.status(400).json({ themepark: "ID does not exist"});
@@ -39,7 +40,7 @@ async function addAttraction(req: any, res: any) {
             userid,
             name,
             result.name,
-            themepark,
+            themeparkID,
           ],
           (error: Error, result: any) => {
             console.log(error)
@@ -357,6 +358,7 @@ function updateAttraction(req: any, res: any) {
   const {
     name,
     themepark,
+    themeparkID,
     opening,
     builder,
     type,
@@ -365,14 +367,14 @@ function updateAttraction(req: any, res: any) {
     inversions,
     duration,
   } = req.body;
-  getThemePark(themepark,
+  getThemePark(themeparkID,
     function (error: any, result: any)  {
       if (error) {
         return res.status(400).json({ themepark: "ID does not exist"});
       } else if (result) {
         db.run(
           "UPDATE attractions SET userID = ?, name = ?, themepark = ?, themeparkID = ? WHERE id = ?",
-          [userid, name, result.name, themepark, lastid],
+          [userid, name, result.name, themeparkID, lastid],
           function (error) {
             if (error) {
               return res.status(400).json({
