@@ -1,8 +1,8 @@
-import { daysToMilliseconds, minutsToMilliseconds } from "./helpers";
+import { daysToMilliseconds, minutsToMilliseconds } from "../helpers";
 import { Secret, sign, verify } from "jsonwebtoken";
 import { Request, Response } from "express";
-import { User } from "./userManagement/User";
-import { addToken, removeToken, checkForTokenExistence } from "./database"
+import { User } from "./User";
+import { addToken, removeToken, checkForTokenExistence } from "../database"
 
 // geen idee wat ik hiervan moet maken voorlopig
 const accesSecret: Secret = "RGosJBIo2arhXnHZRdC3r5fDeL7Rrf+dxBm+53LzKMv4viRVXL92XCdZa1hDHpszakyetIuDMIeEBShKAW1tpQ==";

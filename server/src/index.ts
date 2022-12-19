@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { validateTokens } from "./JWT";
+import { validateTokens } from "./userManagement/JWT";
 import {
   ChangePassword,
   loginUser,

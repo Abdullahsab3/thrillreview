@@ -10,7 +10,7 @@ import {
   validateUserPassword,
 } from "../database";
 import bcrypt from "bcrypt";
-import { createRefreshToken, removeRefreshToken, createAccesToken } from "../JWT";
+import { createRefreshToken, removeRefreshToken, createAccesToken } from "./JWT";
 
 /* 
   Register a new user given its name, email and password
