@@ -28,8 +28,8 @@ function removeRefreshToken(req: Request, res: Response) {
   });
 }
 
-// maakt nieuwe accestoken
-function createAccesToken(user: User) {
+// make a new access token
+function createAccessToken(user: User) {
   return sign({ username: user.username, id: user.id }, accesSecret , { expiresIn: '15m'} );
 }
 
@@ -52,7 +52,7 @@ function validateTokens(req: Request, res: Response, next: Function) {
   
             const user: User = new User(info.username, info.id);
             const newRefreshToken = createRefreshToken(user); // maak nieuwe refreschtoken
-            const accessToken = createAccesToken(user); // maak nieuwe accestoken
+            const accessToken = createAccessToken(user); // maak nieuwe accestoken
   
             res.cookie("refresh-token", newRefreshToken, {
               expires: new Date(Date.now() + daysToMilliseconds(1)), // 1 dag
@@ -86,4 +86,4 @@ function validateTokens(req: Request, res: Response, next: Function) {
 })
 }
 }
-export { createRefreshToken, removeRefreshToken, createAccesToken, validateTokens, };
+export { createRefreshToken, removeRefreshToken, createAccessToken, validateTokens, };

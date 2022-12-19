@@ -10,7 +10,7 @@ import {
   validateUserPassword,
 } from "../database";
 import bcrypt from "bcrypt";
-import { createRefreshToken, removeRefreshToken, createAccesToken } from "./JWT";
+import { createRefreshToken, removeRefreshToken, createAccessToken } from "./JWT";
 
 /* 
   Register a new user given its name, email and password
@@ -152,7 +152,7 @@ function loginUser(req: any, res: any) {
               return res.status(500).json({ password: error });
             } else if (validated) {
               const refreshToken = createRefreshToken(user as User); // maak refresh en acces tokens aan
-              const accessToken = createAccesToken(user as User);
+              const accessToken = createAccessToken(user as User);
 
               res.cookie("refresh-token", refreshToken, {
                 expires: new Date(Date.now() + daysToMilliseconds(1)), // 1 dag
@@ -246,7 +246,7 @@ function updateUsername(req: any, res: any) {
             removeToken(refreshToken);
 
             const newRefreshToken = createRefreshToken(user);
-            const accessToken = createAccesToken(user);
+            const accessToken = createAccessToken(user);
   
             res.cookie("refresh-token", newRefreshToken, {
               expires: new Date(Date.now() + daysToMilliseconds(1)), // 1 dag

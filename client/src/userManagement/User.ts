@@ -32,40 +32,11 @@ async function getuserEmail(getRes: (email: string) => void) {
 
 function userAvatarExists(id: number, getRes: (exists: boolean) => void) {
   Axios.get(backendServer(`/user/${id}/avatar/exists`)).then((res) => {
-    getRes(res.data.exists)
+    getRes(res.data.avatar)
   }).catch((error)  => {
     getRes(false)
   })
 
 }
 
-function getuserAvatar(
-  id: number,
-  getRes: (error: string | null, avatar: string | null) => void,
-) {
-
-  Axios.get(backendServer(`/user/${id}/avatar`), {
-    responseType: "blob",
-    validateStatus: function (status) {
-      return status < 500;
-    },
-  }).then(
-    (res) => {
-      if (res.status === 404) {
-        getRes("No user avatar available", null);
-      } else if (res.data) {
-        let reader = new window.FileReader();
-        reader.readAsDataURL(res.data);
-        reader.onload = function () {
-          let imageDataUrl = reader.result;
-          getRes(null, imageDataUrl as string);
-        };
-      }
-    },
-  ).catch((error: AxiosError) => {
-    console.log(error.response?.status);
-    getRes("An error occured when trying to retrieve the avatar", null);
-  });
-}
-
-export { getuserAvatar, getuserEmail, getUsername, User, userAvatarExists };
+export { getuserEmail, getUsername, User, userAvatarExists };
