@@ -1,10 +1,12 @@
-import { Col, Card, Table  } from 'react-bootstrap';
+import { Container, Col, Card, Table, Button } from 'react-bootstrap';
 import AttractionImages from "./attractionImages";
 import StarRating from "./starRating";
 import { Attraction, getAttractionRating } from "./Attraction";
 import { backendServer } from "../helpers";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from "react-router-dom";
+import './styling/HighlightedAttraction.css';
 
 
 function HighLightedAttraction() {
@@ -16,6 +18,11 @@ function HighLightedAttraction() {
     useEffect(() => {
         // hier komt nog een axiosRequest
         setRandomId(5);
+        axios.get(backendServer('/attraction/count')).then((res) => {
+            const maxId = res.data.result;
+            // random between 1 and max : random[0;1] * (max + 1 - 1) + min = random[0;1] * max + min
+            setRandomId(Math.random() * maxId + 1)
+        });
 
     }, [])
 
@@ -53,14 +60,19 @@ function HighLightedAttraction() {
     }
 
     return (
-        <Card>
+        <Card className="highlightCard">
             <Card.Body className="d-flex flex-column justify-content-center  align-items-center">
                 <Card.Title> Highlight </Card.Title>
                 <Card.Text> A new attraction for you... at every refresh!</Card.Text>
+                <StarRating rating={rating} />
                 <Table>
-                    {createDataRows()}
+                    <tbody>
+                        {createDataRows()}
+                    </tbody>
                 </Table>
-                <AttractionImages attractionID={randomId} />
+                <Link to={`/attractions/${randomId}`}>
+                    <Button> Go to attraction! </Button>
+                </Link>
             </Card.Body>
         </Card>
     );
