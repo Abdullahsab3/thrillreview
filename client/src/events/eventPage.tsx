@@ -10,6 +10,7 @@ import { backendServer } from "../helpers";
 function EventPage() {
     const [event, setEvent] = useState<Event>();
     const [error, setError] = useState("");
+    const [joined, setJoined] = useState(false);
     const { eventId } = useParams();
     var user: Boolean = loggedIn();
     const [numberOfUsers, setNumberOfUsers] = useState(0);
@@ -17,11 +18,18 @@ function EventPage() {
 
     useEffect(() => {
         getEventInfo()
-        getNumberOfUsers()
+        axios.get(backendServer(`/event/${eventId}/userjoined`)).then((res) => {
+            setJoined(res.data.result);
+        });
     }, [])
 
+    useEffect(() => {
+        console.log("get number")
+        getNumberOfUsers();
+    }, [joined]);
+
     function getEventInfo() {
-        axios.get(`/event/${eventId}`).then((res) => {
+        axios.get(backendServer(`/event/${eventId}`)).then((res) => {
             console.log("event:", res)
             const { date, description, hour, id, name, themepark } = res.data
             setEvent(new Event(id, name, date, hour, themepark, description));
@@ -33,6 +41,7 @@ function EventPage() {
     function getNumberOfUsers() {
         axios.get(backendServer(`/event/${eventId}/attendees/count`)).then((res) => {
             setNumberOfUsers(res.data.result)
+            alert(`nr ${numberOfUsers}`)
         });
     }
 
@@ -53,7 +62,10 @@ function EventPage() {
 
     function joinEventHandler() {
         setNumberOfUsers(numberOfUsers + 1);
-        axios.post(backendServer(`/event/${eventId}/join`))
+        axios.post(backendServer(`/event/${eventId}/join`)).then((res) => {
+            if (res.data.added) setJoined(res.data.added);
+            else alert("Something went wrong and you were not added.")
+        }).catch((error) => { alert("Something went wrong and you were not added.") })
     }
 
     if (event) {
@@ -65,11 +77,12 @@ function EventPage() {
                         {createDataRows()}
                     </tbody>
                 </Table>
-                {(numberOfUsers === 1) ? 
-                <p> {numberOfUsers} person is interested </p> :
-                 <p> {numberOfUsers} people are interested </p>}
+                {(numberOfUsers === 1) ?
+                    <p> {numberOfUsers} person is interested </p> :
+                    <p> {numberOfUsers} people are interested </p>}
 
-                {user ? <Button onClick={joinEventHandler}> Join event </Button> : ""}
+                {user ? <Button disabled={joined} onClick={joinEventHandler}> Join event </Button> : ""}
+                {joined ? <p>you joined already</p> : ""}
 
             </div>
         );

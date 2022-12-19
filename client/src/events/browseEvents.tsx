@@ -80,7 +80,7 @@ function GetEvents(query: string, pageNr: number) {
             console.log("res:", res);
             let prevEvents = events;
             if (pageNr <= 1) {
-                prevEvents = []
+                prevEvents = [];
             }
             res.data.result.map((e: any) => {
                 const { name, date, hour, themepark, description, id } = e   
@@ -89,22 +89,12 @@ function GetEvents(query: string, pageNr: number) {
                     prevEvents.push(new Event(id, name, date, hour, themepark, description));
             });
             setEvents(prevEvents);
-       /*     setEvents(prevEvents => {
-                return [...prevEvents, ...res.data.events.map((a: any) => { // Event evt andere naam (afh v response) + DIE ANY MOET IETS ANDERS ZIJN, WSS JSON, Q AAN SERVER
-                    const { name, date, hour, themepark, description, id } = a
-                    new Event(name, date, hour, themepark, description, id)
-                })]
-            })*/
             setHasMore(res.data.result.length === LIMIT_RETURNS);
-            setLoading(false)
-            console.log(res.data);
+            setLoading(false);
         }).catch(e => {
-          //  if (axios.isCancel(e)) return // if cancelled, it was meant to
             setLoading(false)
             setError(true);
-        })
-     //   return () => cancel();
-    }, [query, pageNr]);
+        })}, [query, pageNr]);
 
     return (
         { events, hasMore, loading, error }

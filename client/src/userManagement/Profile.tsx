@@ -12,6 +12,7 @@ import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 import { Buffer } from "buffer";
 import axios from 'axios';
 import { Card, Col, Row } from 'react-bootstrap';
+import EventOverviewCard from './eventOverview';
 
 
 function Profile() {
@@ -46,6 +47,7 @@ function Profile() {
 
         }
     }, [])
+
 
     function AvatarInfo() {
         return (
@@ -118,9 +120,7 @@ function Profile() {
                     </div>
                 </Col>
                 <Col>
-                <Card>
-                    <Card.Title> An Overview of all your events</Card.Title>
-                </Card>
+               <EventOverviewCard userId={user.id}/>
                 </Col>
                 </Row>
             </div>
