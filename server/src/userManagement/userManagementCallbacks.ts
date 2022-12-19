@@ -1,4 +1,4 @@
-import { daysToMilliseconds, minutsToMilliseconds } from "./helpers";
+import { daysToMilliseconds, minutsToMilliseconds } from "../helpers";
 import { User } from "./User";
 import {
   checkForEmailExistence,
@@ -8,9 +8,9 @@ import {
   removeToken,
   db,
   validateUserPassword,
-} from "./database";
+} from "../database";
 import bcrypt from "bcrypt";
-import { createRefreshToken, removeRefreshToken, createAccesToken } from "./JWT";
+import { createRefreshToken, removeRefreshToken, createAccessToken } from "./JWT";
 
 /* 
   Register a new user given its name, email and password
@@ -152,7 +152,7 @@ function loginUser(req: any, res: any) {
               return res.status(500).json({ password: error });
             } else if (validated) {
               const refreshToken = createRefreshToken(user as User); // maak refresh en acces tokens aan
-              const accessToken = createAccesToken(user as User);
+              const accessToken = createAccessToken(user as User);
 
               res.cookie("refresh-token", refreshToken, {
                 expires: new Date(Date.now() + daysToMilliseconds(1)), // 1 dag
@@ -246,7 +246,7 @@ function updateUsername(req: any, res: any) {
             removeToken(refreshToken);
 
             const newRefreshToken = createRefreshToken(user);
-            const accessToken = createAccesToken(user);
+            const accessToken = createAccessToken(user);
   
             res.cookie("refresh-token", newRefreshToken, {
               expires: new Date(Date.now() + daysToMilliseconds(1)), // 1 dag
@@ -324,13 +324,12 @@ function getAvatar(req: any, res: any) {
     [userid],
     (err: Error, result: any) => {
       if (err) {
-        return res.status(400).json({
+        return res.status(500).json({
           error: "Something went wrong while getting the user avatar.",
         });
       }
       if (result) {
         res.set("Content-Type", result.type);
-        // hier kan je informatie over de profiel sturen naar de client
         res.status(200).send(result.content);
       } else {
         res.status(404).json({
@@ -342,25 +341,32 @@ function getAvatar(req: any, res: any) {
   );
 }
 
+
 function getUserName(req: any, res: any) {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
+  if(isNaN(id) || id < 0) {
+    return res.status(400).json({error: "id required to be a number higher than 0"})
+  }
   db.get(
     "SELECT * FROM users WHERE id = ?",
     id,
     function (error, result) {
       if (error) {
-        res.status(400).json({
+        res.status(500).json({
           username: "Something went wrong when trying to get the username.",
         });
       } else if (result) {
         res.status(200).json({ username: result.username });
       } else {
-        res.status(400).json({ username: "username is not found." });
+        res.status(404).json({ username: "username is not found." });
       }
     },
   );
 }
 
+/* change the avatar of the user
+ *
+*/
 function updateAvatar(req: any, res: any) {
   const user: User = req.user;
   const userid: number = user.id;
@@ -380,6 +386,7 @@ function updateAvatar(req: any, res: any) {
   );
 }
 
+/* Check first if there is an avatar. If there is, update the old one. */
 function setAvatar(req: any, res: any) {
   const user: User = req.user;
   const userid: number = user.id;
@@ -394,6 +401,18 @@ function setAvatar(req: any, res: any) {
   });
 }
 
+function checkIfAvatarExists(req: any, res: any) {
+  const id : number = parseInt(req.params.id)
+  checkForUserAvatar(id, function (error, result) {
+    if(error) {
+      return res.status(500).json({error: error})
+    }else {
+      return res.status(200).json({avatar: result})
+    }
+  })
+}
+
+/* Delete the user from the database */
 function deleteUser(req: any, res: any) {
   const userid: number = req.user.id;
   db.run("DELETE FROM users WHERE id = ?", [userid], function (error) {
@@ -426,4 +445,5 @@ export {
   updateAvatar,
   updateEmail,
   updateUsername,
+  checkIfAvatarExists
 };

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import { Button, Card } from "react-bootstrap"
+import { getAttractionName } from "../attractions/Attraction"
 import Review from "../attractions/Review"
-import { getAttractionName, getUsername } from "../userManagement/User"
+import { getUsername } from "../userManagement/User"
 
 interface reviewPreviewProps {
     review: string,

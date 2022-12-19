@@ -10,6 +10,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import ButtonWithLoading from '../higherOrderComponents/buttonWithLoading';
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import './styling/userMangement.css';
+import { LoginFirstCard }  from '../higherOrderComponents/cardWithLinkTo';
 
 
 export default function ChangeEmail() {
@@ -107,9 +108,7 @@ export default function ChangeEmail() {
         );
     } else {
         return (
-            <div className='changeEmail'>
-                In order to change your email, you have to <Link to="/Login">Log in first</Link>
-            </div>
+            <LoginFirstCard />
         )
     }
 }

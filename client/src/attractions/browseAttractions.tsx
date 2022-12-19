@@ -1,13 +1,13 @@
 import { useEffect, useState, useRef, useCallback, MutableRefObject } from 'react';
-import axios, { Canceler, CancelTokenSource } from 'axios';
-import { Attraction } from './Attraction';
-import { useParams, Link } from "react-router-dom";
+import axios from 'axios';
+import { getAttractionRating } from './Attraction';
+import { Link } from "react-router-dom";
 import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
 import StarRating from "./starRating";
 import { Search } from 'react-bootstrap-icons';
 import "../styling/browsingPage.css";
 import { ErrorCard, LoadingCard, NoMatchesCard } from '../higherOrderComponents/generalCardsForBrowsing';
-
+import { backendServer } from '../helpers';
 
 interface attractionPreviewInterface {
     attractionInfo: AttractionPreviewInfoInterface,
@@ -25,6 +25,14 @@ interface AttractionPreviewInfoInterface {
 
 function AttractionPreviewCard(props: attractionPreviewInterface) {
     const attractionProp = props.attractionInfo
+    const [rating, setRating] = useState(0) 
+    useEffect(() => {
+        getAttractionRating(attractionProp.id, function (rating, total, error) {
+            setRating(rating)
+        })
+
+    }, [])    
+
     if (props.refs) {
         return (
             <Card className="browsingCard" ref={props.refs}>
@@ -32,7 +40,7 @@ function AttractionPreviewCard(props: attractionPreviewInterface) {
                 {attractionProp.img ? <Card.Img variant="bottom" src={attractionProp.img} alt={`picture of attraction with name ${attractionProp.name}`} /> : ""}
                 <ListGroup className="list-group-flush">
                     <ListGroup.Item>Theme park: {attractionProp.themepark}</ListGroup.Item>
-                    <ListGroup.Item>Rating: <StarRating rating={2} /></ListGroup.Item>{attractionProp.starrating}
+                    <ListGroup.Item>Rating: <StarRating rating={rating} /></ListGroup.Item>{rating}
                 </ListGroup>
                 <Card.Body>
                     <Link to={`/Attractions/${attractionProp.id}`}>
@@ -50,7 +58,7 @@ function AttractionPreviewCard(props: attractionPreviewInterface) {
                 {attractionProp.img ? <Card.Img variant="bottom" src={attractionProp.img} alt={`picture of attraction with name ${attractionProp.name}`} /> : ""}
                 <ListGroup className="list-group-flush">
                     <ListGroup.Item>Theme park: {attractionProp.themepark}</ListGroup.Item>
-                    <ListGroup.Item>Rating: <StarRating rating={2} /></ListGroup.Item>{attractionProp.starrating}
+                    <ListGroup.Item>Rating: <StarRating rating={rating} /></ListGroup.Item>{attractionProp.starrating}
                 </ListGroup>
                 <Card.Body>
                     <Link to={`/Attractions/${attractionProp.id}`}>
@@ -90,8 +98,8 @@ function GetAttractions(query: string, pageNr: number) {
     useEffect(() => {
         setLoading(true)
         setError(false)
-        axios.get(`/attractions/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`).then(res => {
-            console.log("res:", res);
+        axios.get(backendServer(`/attractions/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`)).then(res => {
+            console.log("res:", res.data);
             let prevAttractions = attractions;
             if ((pageNr <= 1)) {
                 prevAttractions = []
@@ -99,15 +107,6 @@ function GetAttractions(query: string, pageNr: number) {
             res.data.result.map((attr: any, i: number) => {
                 const { name, themepark, id } = attr
 
-                //   axios.get(`/attraction/${id}/rating`).then(starRes => {
-
-
-                // console.log("id not in array,", id, prevAttractions)
-                //    const stars = starRes.data.rating
-                //   console.log("starres", stars);
-                // axios.get(`/attractions/${id}/photos`).then(imgRes => {
-                //     console.log("imgres:", imgRes);
-                // const image = "blabla"
                 if (!isIdInArray(prevAttractions, id)) {
                     const attrInfo = {
                         id: id,

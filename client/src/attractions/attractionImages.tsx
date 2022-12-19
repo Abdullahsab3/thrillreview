@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, Card, Carousel, CarouselItem, Col, Form, InputGroup, Modal, Row } from "react-bootstrap";
-import { backendServer, imageExists } from "../helpers";
+import { backendServer } from "../helpers";
 import Gallery from "react-photo-gallery";
 import Axios from "axios";
 
@@ -27,21 +26,8 @@ export default function AttractionImages(props: imageProps) {
         }
     }
 
-    useEffect(() => {
-
-        Axios.get(backendServer(`/attractions/${props.attractionID}/photos/count`)).then((res) => {
-            setImagesCount(res.data.count)
-        })
-
-    }, [])
-
-    useEffect(() =>  {
-        console.log(imagesCount)
-        if(dataFetchedRef.current) {
-            return;
-        }
-        dataFetchedRef.current = true;
-        for (let i = 0; i < imagesCount; i++) {
+    function constructImagesInfo(max: number) {
+        for (let i = 0; i < max; i++) {
             let url = backendServer(`/attractions/${props.attractionID}/photos?id=${i}`)
             getImageDimension(url, function (height, width) {
                 if(!images.map((val) => {return(val.src)} ).includes(url)) {
@@ -49,6 +35,25 @@ export default function AttractionImages(props: imageProps) {
                 }
             })
         }
+    }
+
+    useEffect(() => {
+        Axios.get(backendServer(`/attractions/${props.attractionID}/photos/count`)).then((res) => {
+            setImagesCount(res.data.count)
+        })
+
+    }, [props.attractionID])
+
+    useEffect(() =>  {
+        if(imagesCount > 0) {
+            if(dataFetchedRef.current) {
+                return;
+            }
+            constructImagesInfo(imagesCount);
+            dataFetchedRef.current = true;
+
+        }
+
     }, [imagesCount])
 
     return (

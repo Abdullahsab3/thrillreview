@@ -9,7 +9,7 @@ import { backendServer } from '../helpers'
 import InputGroup from 'react-bootstrap/InputGroup';
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import ButtonWithLoading from '../higherOrderComponents/buttonWithLoading';
-
+import { LoginFirstCard }  from '../higherOrderComponents/cardWithLinkTo';
 import './styling/userMangement.css'
 
 export default function ChangeUsername() {
@@ -101,9 +101,7 @@ export default function ChangeUsername() {
         );
     } else {
         return (
-            <div className='changeUsername'>
-                In order to change your username, you have to <Link to="/Login">Log in first</Link>
-            </div>
+            <LoginFirstCard />
         )
     }
 }

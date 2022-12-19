@@ -1,4 +1,3 @@
-import Axios from "axios"
 import { useEffect, useState } from "react"
 import { Button, Card } from "react-bootstrap"
 import { backendServer } from "../helpers"
@@ -53,7 +52,7 @@ export default function Review(props: ReviewProps) {
             <Card className={props.className ? `comment ${props.className}` : "comment"}>
                 <Card.Title>
                     <div>
-                        {avatar && <img src={backendServer(`/user/${props.userID}/avatar`)} className="commentAvatar" />}
+                        {avatar && <img alt={"user avatar"} src={backendServer(`/user/${props.userID}/avatar`)} className="commentAvatar" />}
                         {username}
                         {(postedByUser && !editedClicked) &&
                             <Button variant="Link" className="edit" onClick={() => {

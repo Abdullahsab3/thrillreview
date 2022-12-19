@@ -1,4 +1,4 @@
-import CardWithLinkTo from '../higherOrderComponents/HigherOrderComponents';
+import { CardWithLinkTo }  from '../higherOrderComponents/cardWithLinkTo';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -35,7 +35,7 @@ function ThemePark() {
     return (
         <div className="ContentOfPage">
             <h1> themeparks</h1>
-            <SearchThemeParks />
+            <CardWithLinkTo to="/browse-themeparks/" title="Browse all Theme parks"/>
             <CardWithLinkTo to="/addThemePark" title="Add a ThemePark" />
 
         </div>

@@ -8,7 +8,9 @@ import ButtonWithLoading from "../higherOrderComponents/buttonWithLoading";
 import { fetchUserFromLocalStorage } from "../localStorageProcessing";
 import { User } from "../userManagement/User";
 import StarRatingForm from "./starRatingForm";
-import "./styling/reviewForm.css"
+import "./styling/reviewForm.css";
+import { LoginFirstCard }  from '../higherOrderComponents/cardWithLinkTo';
+
 
 interface writReviewProps {
     attractionID: number
@@ -50,7 +52,6 @@ export default function WriteReview(props: writReviewProps) {
             }
             
             }).catch((error) => {
-                console.log(error)
                 if(error.status === 404) {
                     setValidated(false)
                 } else {
@@ -76,7 +77,6 @@ export default function WriteReview(props: writReviewProps) {
 
                     }
                 }).catch(function (error) {
-                    console.log(error)
                     if (checkForErrors(error.response.data)) {
                         setValidated(false)
                     }
@@ -132,9 +132,7 @@ export default function WriteReview(props: writReviewProps) {
         </div>)
 
     } else {
-        return (<div>
-            In order to write a review, you have to <Link  to="/Login">log in first.</Link>
-        </div>)
+        return (<LoginFirstCard />)
     }
    
 }

@@ -25,5 +25,4 @@
     http.send();
     
     return http.status < 400;
-  
   }
