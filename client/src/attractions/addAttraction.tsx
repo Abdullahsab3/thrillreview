@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { backendServer } from '../helpers';
 import AttractionInputForm from './attractionInputForm';
 import { Attraction } from './Attraction';
-import { loggedIn } from '../localStorageProcessing'
+import { loggedIn } from '../localStorageProcessing';
 import  { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 
 function AddAttraction() {

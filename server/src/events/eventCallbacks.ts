@@ -171,9 +171,9 @@ function eventAttendeesCount(req: any, res: any){
         [ eventID ],
         function (error, countResult) {
             if (error) {
-                return res.result(400).json({ error: "somting whent wrong while getting the attendees" });
+                return res.status(400).json({ error: "something whent wrong while getting the attendees" });
             } else {
-                return res.result(200).json({ result: countResult["COUNT(*)"] });
+                return res.status(200).json({ result: countResult["COUNT(*)"] });
             }
         });
 }

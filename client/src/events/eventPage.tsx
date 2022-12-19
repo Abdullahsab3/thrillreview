@@ -1,16 +1,23 @@
-import { useParams } from "react-router-dom";
+import { Form, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Event } from "./Event";
-import { Table } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
+import { loggedIn } from '../localStorageProcessing';
+import { setConstantValue } from "typescript";
+import { backendServer } from "../helpers";
 
 function EventPage() {
     const [event, setEvent] = useState<Event>();
     const [error, setError] = useState("");
     const { eventId } = useParams();
+    var user: Boolean = loggedIn();
+    const [numberOfUsers, setNumberOfUsers] = useState(0);
+
 
     useEffect(() => {
         getEventInfo()
+        getNumberOfUsers()
     }, [])
 
     function getEventInfo() {
@@ -22,6 +29,12 @@ function EventPage() {
             setError(error.response.data);
         })
     };
+
+    function getNumberOfUsers() {
+        axios.get(backendServer(`/event/${eventId}/attendees/count`)).then((res) => {
+            setNumberOfUsers(res.data.result)
+        });
+    }
 
     function createDataRows() {
         const rows = [];
@@ -38,15 +51,26 @@ function EventPage() {
         return rows;
     }
 
+    function joinEventHandler() {
+        setNumberOfUsers(numberOfUsers + 1);
+        axios.post(backendServer(`/event/${eventId}/join`))
+    }
+
     if (event) {
         return (
-            <div>
+            <div className="ContentOfPage">
                 <h1 className="title">{event?.name}</h1>
                 <Table className="table" id="infoCard">
                     <tbody>
                         {createDataRows()}
                     </tbody>
                 </Table>
+                {(numberOfUsers === 1) ? 
+                <p> {numberOfUsers} person is interested </p> :
+                 <p> {numberOfUsers} people are interested </p>}
+
+                {user ? <Button onClick={joinEventHandler}> Join event </Button> : ""}
+
             </div>
         );
     } else {
