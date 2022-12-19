@@ -61,7 +61,7 @@ async function addAttraction(req: any, res: any) {
         }
         if (type) {
           db.run(
-            "INSERT INTO attractionstype (id, opening) VALUES(?, ?)",
+            "INSERT INTO attractionstype (id, type) VALUES(?, ?)",
             [
               lastid,
               type,
@@ -387,7 +387,7 @@ function updateAttraction(req: any, res: any) {
       }
       if (type) {
         db.run(
-          "REPLACE INTO attractionstype (id, opening) VALUES(?, ?)",
+          "REPLACE INTO attractionstype (id, type) VALUES(?, ?)",
           [
             lastid,
             type,

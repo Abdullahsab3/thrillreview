@@ -22,9 +22,6 @@ async function getUsername(
   });
 }
 
-
-
-
 async function getuserEmail(getRes: (email: string) => void) {
   const res = await Axios.get(backendServer("/user/email"));
   getRes(res.data.email);
