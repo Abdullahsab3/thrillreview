@@ -21,7 +21,7 @@ function EventPage() {
     }, [])
 
     function getEventInfo() {
-        axios.get(`/event/${eventId}`).then((res) => {
+        axios.get(backendServer(`/event/${eventId}`)).then((res) => {
             console.log("event:", res)
             const { date, description, hour, id, name, themepark } = res.data
             setEvent(new Event(id, name, date, hour, themepark, description));
