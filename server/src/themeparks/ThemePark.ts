@@ -29,6 +29,9 @@ class ThemePark {
         if(this.website) {
             jsonObj.website = this.website
         }
+        if(this.type) {
+            jsonObj.type = this.type
+        }
         return jsonObj
     }
 }

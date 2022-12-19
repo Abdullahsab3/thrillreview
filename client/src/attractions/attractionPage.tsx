@@ -3,12 +3,13 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Attraction, getAttractionRating } from "./Attraction"
 import { backendServer } from "../helpers"
-import { Button, Card, Form, Modal, Table } from "react-bootstrap"
+import { Button, Modal, Table } from "react-bootstrap"
 import "./styling/attractionPage.css"
 import Reviews from "./Reviews"
 import AttractionInputForm from "./attractionInputForm"
 import StarRating from "./starRating"
 import AttractionImages from "./attractionImages"
+import { trackPromise, usePromiseTracker } from "react-promise-tracker"
 
 export default function AttractionPage() {
     const [attraction, setAttraction] = useState<Attraction>()
@@ -18,17 +19,20 @@ export default function AttractionPage() {
     const [validated, setValidated] = useState(false)
     const [edit, setEdit] = useState(false)
 
+    const {promiseInProgress} = usePromiseTracker()
+
 
     const { attractionID } = useParams()
 
     function getAttractioninfo() {
-
-        Axios.get(backendServer(`/attraction/${attractionID}`)).then((res) => {
-            const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = res.data
-            setAttraction(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, id))
-        }).catch(function (error: any) {
-            setError(error.response.data)
-        })
+        trackPromise(
+            Axios.get(backendServer(`/attraction/${attractionID}`)).then((res) => {
+                const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = res.data
+                setAttraction(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, id))
+            }).catch(function (error: any) {
+                setError(error.response.data)
+            })
+        )
         getAttractionRating(parseInt(attractionID as string), function (rating, total ,error) {
             if(error) {
                 setError(error)
@@ -41,14 +45,13 @@ export default function AttractionPage() {
 
     useEffect(() => {
         getAttractioninfo()
-    }, [validated])
+    }, [])
 
     function submitEdits(attraction: Attraction, images: File[]) {
         const updateAttractionInfo: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault()
                 Axios.put(backendServer(`/attraction/${attractionID}`), attraction.toJSON()).then((res) => {
-                    console.log(res)
                     if (res.data.updated) {
                         images.forEach((image) => {
                             const formData = new FormData();
@@ -58,8 +61,8 @@ export default function AttractionPage() {
                                     'Content-Type': 'multipart/form-data'
                                 }
                             }).then((res) => {
-                                console.log(res)
-                                if (res.data.added) {
+                                if (res.data.updated) {
+                                    getAttractioninfo()
                                     setValidated(true)
                                     setEdit(false)
                                 }
@@ -215,7 +218,12 @@ export default function AttractionPage() {
     }
     return (
         <div className="AttractionPage">
-            {attraction ? <AttractionPageBody /> : <h1 className="title">{`No attraction found with ID ${attractionID}`}</h1>}
+            {promiseInProgress ? 
+            <i>Loading the attraction</i> : 
+                <div>
+                    {attraction ? <AttractionPageBody /> : <h1 className="title">{`No attraction found with ID ${attractionID}`}</h1>}
+                </div>}
+            
         </div>)
 
 }

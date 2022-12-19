@@ -64,7 +64,6 @@ export default function Reviews(props: ReviewsProps) {
     }
 
     useEffect(() => {
-        console.log("opgeroepen")
         getReviews()
     }, [page, order, sort])
 
@@ -108,12 +107,19 @@ export default function Reviews(props: ReviewsProps) {
             
             <OrderMenu/>
             {reviews.map(review => {
-                return (<Review attractionID={props.attractionID} userID={(review as any).userID} reviewText={(review as any).review} rating={(review as any).stars} date={(review as any).date} />)
+                return (
+                <Review 
+                    key={(review as any).userID} 
+                    attractionID={props.attractionID} 
+                    userID={(review as any).userID} 
+                    reviewText={(review as any).review} 
+                    rating={(review as any).stars} 
+                    date={(review as any).date} />)
             })}
             <Pagination className="pagination paginationReview" size="lg">
-                <Pagination.Prev disabled={prevPage == disabledPage} onClick={handlePrev}>Previous</Pagination.Prev>
+                <Pagination.Prev disabled={prevPage === disabledPage} onClick={handlePrev}>Previous</Pagination.Prev>
                 
-                <Pagination.Next disabled={nextPage == disabledPage} onClick={handleNext}>Next</Pagination.Next>
+                <Pagination.Next disabled={nextPage === disabledPage} onClick={handleNext}>Next</Pagination.Next>
             </Pagination>
         </div>
     )

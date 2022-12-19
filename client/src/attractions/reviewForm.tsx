@@ -50,7 +50,6 @@ export default function WriteReview(props: writReviewProps) {
             }
             
             }).catch((error) => {
-                console.log(error)
                 if(error.status === 404) {
                     setValidated(false)
                 } else {
@@ -76,7 +75,6 @@ export default function WriteReview(props: writReviewProps) {
 
                     }
                 }).catch(function (error) {
-                    console.log(error)
                     if (checkForErrors(error.response.data)) {
                         setValidated(false)
                     }

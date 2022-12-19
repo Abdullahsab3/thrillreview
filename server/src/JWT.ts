@@ -1,7 +1,7 @@
 import { daysToMilliseconds, minutsToMilliseconds } from "./helpers";
 import { Secret, sign, verify } from "jsonwebtoken";
 import { Request, Response } from "express";
-import { User } from "./User";
+import { User } from "./userManagement/User";
 import { addToken, removeToken, checkForTokenExistence } from "./database"
 
 // geen idee wat ik hiervan moet maken voorlopig

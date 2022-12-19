@@ -24,7 +24,7 @@ const Home = () => {
     }, [])
 
     function publishFeeds() {
-        return feeds.map((value) => {
+        return feeds.map((value, i) => {
             switch (value.type) {
                 case "review": {
                     return <ReviewPreview
@@ -32,14 +32,18 @@ const Home = () => {
                         attractionID={value.attractionID}
                         userID={value.userID}
                         rating={value.rating}
-                        date={value.date} />
+                        date={value.date} 
+                        key={i}
+                        />
                 }
                 case "attraction": {
                     return <AttractionPreview
                         name={value.name}
                         attractionID={value.id}
                         userID={value.userID}
-                        themepark={value.themepark} />
+                        themepark={value.themepark} 
+                        key={i}
+                        />
 
                 }
                 case "themepark": {
@@ -47,7 +51,9 @@ const Home = () => {
                         name={value.name}
                         themeParkID={value.id}
                         userID={value.userID}
-                        country={value.country} />
+                        country={value.country} 
+                        key={i}
+                        />
                 }
             }
         })

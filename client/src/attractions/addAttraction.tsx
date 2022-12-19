@@ -6,7 +6,7 @@ import { backendServer } from '../helpers';
 import AttractionInputForm from './attractionInputForm';
 import { Attraction } from './Attraction';
 import { loggedIn } from '../localStorageProcessing'
-import CardWithLinkTo from '../higherOrderComponents/HigherOrderComponents';
+import  { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 
 function AddAttraction() {
     const navigate = useNavigate()
@@ -18,12 +18,13 @@ function AddAttraction() {
         const handleSubmit: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
                 const form = event.currentTarget
-                if (form.checkValidity() === false) {
+                if (form.checkValidity() === false || !attraction.themepark) {
                     event.preventDefault();
                     event.stopPropagation();
                 } else {
                     Axios.post(backendServer("/attraction"), attraction.toJSON()
                     ).then((response) => {
+                        alert("The attraction was successfully added!")
                         if (response.data.registered) {
                         }
                         if (images) {
@@ -71,7 +72,7 @@ function AddAttraction() {
         );
     } else {
         return(
-            <CardWithLinkTo to='/Login' title='Please log in first.' />
+            <LoginFirstCard />
         );
     }
 }

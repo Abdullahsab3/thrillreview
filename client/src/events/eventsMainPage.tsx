@@ -1,4 +1,4 @@
-import CardWithLinkTo from '../higherOrderComponents/HigherOrderComponents';
+import { CardWithLinkTo }  from '../higherOrderComponents/cardWithLinkTo';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -31,11 +31,12 @@ function EventsMainPage() {
         );
     }
 
-
+// <SearchEvents />
     return (
         <div className="ContentOfPage">
             <h1> Events</h1>
-            <SearchEvents />
+            
+            <CardWithLinkTo to="/browse-events/" title="Browse all Events"/>
             <CardWithLinkTo to="/addEvent" title="Add an Event" />
 
         </div>

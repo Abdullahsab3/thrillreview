@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import { Search } from 'react-bootstrap-icons';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useEffect, useState } from 'react';
-import CardWithLinkTo from '../higherOrderComponents/HigherOrderComponents';
+import { CardWithLinkTo } from '../higherOrderComponents/cardWithLinkTo';
 import { Link } from 'react-router-dom';
 import { Attraction } from './Attraction';
 import axios from 'axios';
@@ -24,7 +24,6 @@ function isIdInArray(a: AttractionPreviewInfoInterface[], i: number): Boolean {
     a.forEach(t => {
         if (t.id === i) res = true;
     });
-    console.log("id:", i, "a:", a, "res", res)
     return res;
 }
 
@@ -33,7 +32,6 @@ function Attractions() {
 
     useEffect(() => {
         axios.get(backendServer(`/attractions/find?query=&page=0&limit=10`)).then((res) => {
-            console.log(res)
             let prevtopAttractions: AttractionPreviewInfoInterface[] = [];
             res.data.result.map((attr: any) => {
                 const { name, themepark, id } = attr
@@ -59,8 +57,8 @@ function Attractions() {
                     <ListGroup numbered>
                         {topAttractions.map((a: AttractionPreviewInfoInterface, i: number) => {
                             return (
-                                <Link to={`/Attractions/${a.id}`} >
-                                <ListGroup.Item> {a.name} in {a.themepark} </ListGroup.Item>
+                                <Link key={a.id} to={`/Attractions/${a.id}`} >
+                                <ListGroup.Item > {a.name} in {a.themepark} </ListGroup.Item>
                                 </Link>
                             );
                         })}
@@ -104,13 +102,23 @@ function Attractions() {
             </Card>
         );
     }
-
+//  <SearchAttractions />
+/*<Row lg={3} sm={1}>
+                <Col className="AttractionCol">
+                   
+                </Col>
+         </Row> */
     return (
         <div className='ContentOfPage'>
             <h1>attractions</h1>
             <Row lg={3} sm={1}>
                 <Col className="AttractionCol">
-                    <SearchAttractions />
+                   <Row>
+                    <CardWithLinkTo to="/browse-attractions/" title="Browse all Attractions"/>
+                    </Row>
+                    <Row>
+                         <CardWithLinkTo to="/add-attraction" title="Add an attraction" />
+                    </Row>
                 </Col>
                 <Col className="AttractionCol">
                     <TopTenAttractions />
@@ -119,11 +127,7 @@ function Attractions() {
                     <NewestAttractions />
                 </Col>
             </Row>
-            <Row lg={3} sm={1}>
-                <Col className="AttractionCol">
-                    <CardWithLinkTo to="/add-attraction" title="Add an attraction" />
-                </Col>
-            </Row>
+            
         </div>
 
     );

@@ -1,6 +1,7 @@
 import { FormEventHandler, useState } from "react";
 import { Button, Card, Carousel, CarouselItem, Col, Form, InputGroup, Modal, Row } from "react-bootstrap";
 import { Event } from './Event';
+import ConnectThemePark from "../themeParks/connectThemeParks";
 
 
 interface EventInputFormProps {
@@ -12,11 +13,23 @@ interface EventInputFormProps {
 }
 
 function EventInputForm(props: EventInputFormProps) {
-    const [name, setName] = useState("")
-    const [themepark, setThemePark] = useState("")
-    const [date, setDate] = useState("")
-    const [hour, setHour] = useState("")
-    const [description, setDescription] = useState("")
+    const [name, setName] = useState("");
+    const [themepark, setThemePark] = useState("");
+    const [themeparkName, setThemeparkName] = useState("Not yet chosen");
+    const [themeParkSelected, setThemeParkSelected] = useState(false);
+    const [date, setDate] = useState("");
+    const [hour, setHour] = useState("");
+    const [description, setDescription] = useState("");
+
+    function connectedThemepark(id: number, thmprk: string) {
+        const mouseEventHandler: React.MouseEventHandler<HTMLElement> = (ev: React.MouseEvent) => {
+            setThemePark(id.toString());
+            setThemeparkName(thmprk);
+            setThemeParkSelected(true);
+        }
+        return mouseEventHandler;
+    }
+    
 
     function getId() {
         if(props.event){
@@ -40,12 +53,15 @@ function EventInputForm(props: EventInputFormProps) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Theme Park*</Form.Label>
-                            <Form.Control required type="text" onChange={(e) => setThemePark(e.target.value)} value={themepark} />
-                            <Form.Control.Feedback type="invalid">
-                                Theme park is required
-                            </Form.Control.Feedback>
-                        </Form.Group>
+                                    <Form.Label>Theme park*</Form.Label>
+                                    <InputGroup>
+                                    <ConnectThemePark onClick={connectedThemepark} />
+                                    <Form.Control  isValid={themeParkSelected} isInvalid={!themeParkSelected} required readOnly value={themeparkName}  />
+                                    <Form.Control.Feedback type="invalid" >
+                                        Theme park is required
+                                    </Form.Control.Feedback>
+                                    </InputGroup>
+                                </Form.Group>
                         <Form.Group>
                             <Form.Label>Date*</Form.Label>
                             <Form.Control required type="date" onChange={(e) => setDate(e.target.value)} value={date} />

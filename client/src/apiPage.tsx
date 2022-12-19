@@ -1,5 +1,9 @@
+import { backendServer } from "./helpers";
+
+
 function APIPage(){
-    return(<h1>HIER KOMT DE API</h1>);
+
+    return(<iframe height={"100%"} title="ThrillreviewAPIDocs" src={backendServer("/API")}></iframe>)
 }
 
 export default APIPage;

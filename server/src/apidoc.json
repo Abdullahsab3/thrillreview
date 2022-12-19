@@ -1,0 +1,22 @@
+{
+    "name": "Thrillreview API",
+    "version": "0.0.0",
+    "description": "Documentation for the Thrillreview API",
+    "title": "Thrillreview API",
+    "url" : "https://api.thrillreview.com",
+    "output": "../client/APIDocumentation",
+    "input": [
+      "index"
+    ],
+    "order": [
+        "Attraction",
+        "Themepark",
+        "User"
+    ],
+    "template": {
+      "showRequiredLabels": false,
+      "withCompare": false,
+      "withGenerator": true,
+      "aloneDisplay": false
+    }
+  }

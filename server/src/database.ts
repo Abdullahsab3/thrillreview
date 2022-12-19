@@ -1,13 +1,13 @@
 import { Database } from "sqlite3";
-import { User } from "./User";
+import { User } from "./userManagement/User";
 import bcrypt from "bcrypt";
-import { Attraction } from "./Attraction";
+import { Attraction } from "./attractions/Attraction";
 import { AnyARecord } from "dns";
-import Review from "./Review";
+import Review from "./attractions/Review";
 import { count } from "console";
 import { start } from "repl";
-import { ThemePark } from "./ThemePark";
-import { Event } from "./Event";
+import { ThemePark } from "./themeparks/ThemePark";
+import { Event } from "./events/Event";
 import { resolve } from "path";
 
 const db = new Database("thrillreview.db");
@@ -40,7 +40,7 @@ db.run(
 
 db.run(
 "CREATE TABLE IF NOT EXISTS attractionstype \
-(id      INTEGER UNIQUE REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, opening STRING)",
+(id      INTEGER UNIQUE REFERENCES attractions (id) ON DELETE CASCADE ON UPDATE RESTRICT DEFERRABLE, type STRING)",
 );
 
 db.run(
@@ -238,9 +238,19 @@ function checkForTokenExistence(token: String, getResult: (existence: Boolean) =
     });
 }
 
+/**
+ * 
+ * Get an attraction from the database given its id
+ * This function will check all the tables which have information about the attractions
+ * 
+ * @param attractionID the id of the attraction
+ * @param getResult  The callback in which the results will be found
+ * If there is an error, the string describing the error will be returned,
+ * otherwise, the attraction will be returned.
+ */
 function getAttraction(
   attractionID: number,
-  getResult: (error: any, attraction: Attraction | null) => void,
+  getResult: (error: string, attraction: Attraction | null) => void,
 ) {
   let opening = "";
   let builder = "";
@@ -323,7 +333,7 @@ function getAttraction(
                                   }
                                   if (result) {
                                     getResult(
-                                      null,
+                                      "",
                                       new Attraction(
                                         result.name,
                                         result.themepark,
@@ -338,7 +348,7 @@ function getAttraction(
                                       ),
                                     );
                                   } else {
-                                    getResult(null, null);
+                                    getResult("", null);
                                   }
                                 },
                               );
@@ -639,19 +649,32 @@ interface pagination {
   totalPages?: number;
   result: any;
 }
+/**
+ * The reviews pagination interface
+ * Every reviews page knows the previous and the next page
+ * if there is one of them
+ */
 interface reviewsPagination {
   next?: page;
   previous?: page;
-  totalPages?: number;
   reviews: any;
 }
+/**
+ * 
+ * @param attractionID The id of the attraction
+ * @param page  Which reviews page to return
+ * @param limit How many reviews in a page
+ * @param order What is the order of the reviews (order by date or stars)
+ * @param isDescending Ascending or descending
+ * @param getResult The callback containing the results
+ */
 function getAttractionReviews(
   attractionID: number,
   page: number,
   limit: number,
   order: string,
   isDescending: boolean,
-  getResult: (error: any | null, result: reviewsPagination | null) => void,
+  getResult: (error: string, result: reviewsPagination | null) => void,
 ) {
   db.all("PRAGMA table_info(attractionreview);", function (error, result) {
     if(error) {
@@ -669,11 +692,14 @@ function getAttractionReviews(
           if (error) {
             getResult("Something went wrong while fetching the reviews", null);
           } else {
+            /**
+             * If  there is no limit (e.g., it's 0), return all the reviews
+             */
             if (limit === 0) {
               limit = countResult["COUNT(*)"];
             }
             /* String formatting had to be applied here, but the parameters are thoroughly
-            * tested by the server */
+            * tested by the server to make sure no injecting attacks can happen */
             db.all(
               `SELECT * FROM attractionreview WHERE attractionID = ?  ORDER BY ${order.concat(isDescending ? " DESC" :" ASC")} LIMIT ?,?`,
               [
@@ -683,7 +709,6 @@ function getAttractionReviews(
               ],
               function (error, ReviewsResult) {
                 if (error) {
-                  console.log(error);
                   getResult(
                     "Something went wrong while trying to get the reviews.",
                     null,
@@ -705,9 +730,9 @@ function getAttractionReviews(
                       limit: limit,
                     };
                   }
-                  getResult(null, results);
+                  getResult("", results);
                 } else {
-                  getResult(null, null);
+                  getResult("", null);
                 }
               },
             );
@@ -719,10 +744,14 @@ function getAttractionReviews(
   })
   
 }
-
+/**
+ * Check if a user has an avatar
+ * @param id The id of the user
+ * @param getErr 
+ */
 function checkForUserAvatar(
   id: number,
-  getErr: (error: string | null, res: number | null) => void,
+  getErr: (error: string, res: boolean |null) => void,
 ) {
   db.get(
     "SELECT id FROM avatars WHERE id = ?",
@@ -735,9 +764,9 @@ function checkForUserAvatar(
         );
       }
       if (result) {
-        getErr(null, result.id);
+        getErr("", true);
       } else {
-        getErr(null, null);
+        getErr("", false);
       }
     },
   );
@@ -960,15 +989,18 @@ export {
   checkForUserAvatar,
   checkForUserExistence,
   checkForUsernameExistence,
+
   addToken,
   removeToken,
   checkForTokenExistence,
   db,
+
   findAttractionName,
   getAttraction,
   getAttractionsByName,
   getAttractionRating,
   getAttractionReviews,
+  
   getLastId,
   getReview,
   getThemeParksByName,
