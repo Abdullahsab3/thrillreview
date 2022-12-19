@@ -18,6 +18,7 @@ export default function ThemeParkPage() {
     function getThemeparkInfo() {
 
         Axios.get(backendServer(`/themePark/${themeParkID}`)).then((res) => {
+            console.log(res)
             const { name, openingdate, street, streetNumber, postalCode, country, type, website, id } = res.data
             setThemePark(new ThemePark(name, openingdate, street, streetNumber, postalCode, country, type, website, id))
         }).catch(function (error: any) {

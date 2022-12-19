@@ -60,7 +60,6 @@ function ConnectThemePark(props: connectThemeParkInterface) {
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
         if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
         observer.current = new IntersectionObserver(entries => {
-            console.log("CURRENT OBSERVER")
             if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more   
                 setPageNr(prevPageNr => prevPageNr + 1);
             }

@@ -12,7 +12,7 @@ import { setSyntheticTrailingComments } from 'typescript';
 import axios from 'axios';
 import { allowedNodeEnvironmentFlags } from 'process';
 import { loggedIn } from '../localStorageProcessing'
-import CardWithLinkTo from '../higherOrderComponents/HigherOrderComponents';
+import { LoginFirstCard }  from '../higherOrderComponents/cardWithLinkTo';
 import ThemeParkInputForm from './themeParkInputForm';
 import { ThemePark } from './themePark';
 
@@ -40,9 +40,10 @@ function AddThemePark() {
                     streetNumber: themepark.streetNumber,
                     postalCode: themepark.postalCode,
                     country: themepark.country,
-                    type: "",
+                    type: themepark.type,
                     website: themepark.website,
                 }).then((response) => {
+                    alert("Theme park was succesfully added")
                     if (response.data.recognised) {
                         navigate("/home")
                     }
@@ -76,7 +77,7 @@ function AddThemePark() {
             </div >);
     } else {
         return (
-            <CardWithLinkTo to='/Login' title='Please log in first.' />
+            <LoginFirstCard />
         );
     }
 
