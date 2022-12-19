@@ -6,7 +6,7 @@ import { ReviewPreview } from "./reviewPreview";
 import { ThemeparkPreview } from "./themeparkPreview";
 import "./styling/feeds.css"
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
-import { Card, Row, Col } from 'react-bootstrap'
+import { Card, Row, Col, Container } from 'react-bootstrap'
 import HighlightedAttraction from "../attractions/HighlightedAttraction";
 
 const Home = () => {
@@ -66,9 +66,9 @@ const Home = () => {
             <h1 className="title"> Welcome to Thrillreview! </h1>
 
 
-            <Col>
-                <Row>
-                    <div className="d-flex flex-column justify-content-center  align-items-center">
+            <Container>
+                <Row >
+                    <div className="d-flex flex-column justify-content-center align-items-center" >
                         <HighlightedAttraction />
                     </div>
                 </Row>
@@ -78,7 +78,7 @@ const Home = () => {
                         {promiseInProgress ? <i>Loading the feeds</i> : publishFeeds()}
                     </div>
                 </Row>
-            </Col>
+            </Container>
         </div>
 
 
