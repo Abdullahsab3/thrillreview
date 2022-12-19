@@ -104,7 +104,7 @@ app.delete("/user", validateTokens, deleteUser)
 
 //attrations requests
 app.post("/attraction", validateTokens, addAttraction); // basic add van een attractie
-app.get("attraction/count", AttractionCount);
+app.get("/attraction/count", AttractionCount);
 app.post("/attraction/:attractionID/photos", [validateTokens, upload.single("image")], addAttractionPhotos); // upload een afbeelding van een attracttie en sla op in db
 app.put("/attraction/:attractionID", validateTokens, updateAttraction);
 /**
