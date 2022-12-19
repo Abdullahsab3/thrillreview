@@ -6,6 +6,7 @@ import { Search } from 'react-bootstrap-icons';
 import "../styling/browsingPage.css";
 import { ThemePark } from './themePark';
 import { ErrorCard, LoadingCard, NoMatchesCard } from '../higherOrderComponents/generalCardsForBrowsing';
+import { backendServer } from '../helpers';
 
 interface themeParkPreviewInterface {
     id: number,
@@ -75,7 +76,7 @@ function GetThemeParks(query: string, pageNr: number) {
     useEffect(() => {
         setLoading(true)
         setError(false)
-        axios.get(`/themeparks/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`).then(res => {
+        axios.get(backendServer(`/themeparks/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`)).then(res => {
             console.log("res:", res);
             let prevThemeparks = themeparks;
             if (pageNr <= 1) {

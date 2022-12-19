@@ -7,7 +7,7 @@ import StarRating from "./starRating";
 import { Search } from 'react-bootstrap-icons';
 import "../styling/browsingPage.css";
 import { ErrorCard, LoadingCard, NoMatchesCard } from '../higherOrderComponents/generalCardsForBrowsing';
-
+import { backendServer } from '../helpers';
 
 interface attractionPreviewInterface {
     attractionInfo: AttractionPreviewInfoInterface,
@@ -99,8 +99,8 @@ function GetAttractions(query: string, pageNr: number) {
     useEffect(() => {
         setLoading(true)
         setError(false)
-        axios.get(`/attractions/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`).then(res => {
-            console.log("res:", res);
+        axios.get(backendServer(`/attractions/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`)).then(res => {
+            console.log("res:", res.data);
             let prevAttractions = attractions;
             if ((pageNr <= 1)) {
                 prevAttractions = []
