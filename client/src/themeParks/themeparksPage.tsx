@@ -5,6 +5,7 @@ import { backendServer } from "../helpers"
 import { Button, Modal, Table } from "react-bootstrap"
 import { ThemePark } from "./themePark"
 import ThemeParkInputForm from "./themeParkInputForm"
+import { propTypes } from "react-bootstrap/esm/Image"
 
 export default function ThemeParkPage() {
     const [themePark, setThemePark] = useState<ThemePark>()
@@ -74,6 +75,9 @@ export default function ThemeParkPage() {
         <th className="info">Type: </th>,
         <th className="info">Website: </th>
     ]
+
+    const url = themePark?.website
+
     const data = [
 
         <td>{themePark?.name}</td>,
@@ -83,7 +87,8 @@ export default function ThemeParkPage() {
         <TableData data={themePark?.postalCode} />,
         <TableData data={themePark?.country} />,
         <TableData data={themePark?.type} />,
-        <TableData data={themePark?.website} />
+        <td>{url ? <a href={url}>{url}</a>: "No information found"}</td>,
+       
     ]
 
 

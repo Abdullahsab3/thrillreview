@@ -29,6 +29,7 @@ function HighLightedAttraction() {
     useEffect(() => {
         if (randomId) {
             axios.get(backendServer(`/attraction/${randomId}`)).then((res) => {
+                console.log("res", res)
                 const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = res.data
                 setAttraction(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, id))
             }).catch((error: any) => {
