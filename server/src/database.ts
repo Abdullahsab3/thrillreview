@@ -538,8 +538,8 @@ function getThemeParksByName(
 ) {
   const startIndex: number = (page - 1) * limit;
   db.get(
-    "SELECT COUNT(*) from themeparks where name LIKE ?",
-    [ "%"+name+"%" ],
+    "SELECT COUNT(*) from themeparks where name LIKE ? OR country LIKE ?",
+    [ "%"+name+"%", "%"+name+"%" ],
     function (error, countResult) {
       if (error) {
         getResult("Something went wrong while fetching the themeparks  ", null);
@@ -548,8 +548,9 @@ function getThemeParksByName(
           limit = countResult["COUNT(*)"];
         }
         db.all(
-          "SELECT * FROM themeparks where name LIKE ? LIMIT ?,?",
+          "SELECT * FROM themeparks where name LIKE ? OR country LIKE ? LIMIT ?,?",
           [
+            "%"+name+"%",
             "%"+name+"%",
             startIndex,
             limit,
