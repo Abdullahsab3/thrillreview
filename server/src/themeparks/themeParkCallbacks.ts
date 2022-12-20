@@ -1,6 +1,5 @@
 import { ThemePark } from "./ThemePark";
-import { db, getLastId, getThemePark, getThemeParks, getThemeParksByName } from "../database";
-import { User } from "../userManagement/User";
+import { db, getThemePark, getThemeParksByName } from "../database";
 import axios from "axios";
 
 // geeft de coordinaten terug gegeven een adres
@@ -28,32 +27,55 @@ function getLocationCoordinates(
     }
   });
 }
-// voegt een themepark toe
-function addThemePark(req: any, res: any) {
+
+/**
+ * Validate all the input when adding or modifying a theme park
+ * @param input the input fields
+ * @param getResult the callback to retrieve the results.
+ */
+function checkThemeParkInformation(input: any): string {
   const {
     name,
-    openingsdate,
-    street,
-    streetNumber,
-    postalCode,
-    country,
+    openingdate,
     type,
     website,
-  } = req.body;
-  const userid = req.user.id;
+  } = input;
+
   if(!name || typeof name != 'string'){
-    return res.status(400).json( {added: false, error: "name must be provided"} );
+    return("name must be provided")
   }
-  if(openingsdate && typeof openingsdate != 'string'){
-    return res.status(400).json( {added: false, error: "opening not valid"} );
+  if(openingdate && typeof openingdate != 'string'){
+    return("opening not valid")
   }
   if(type &&  typeof type != 'string'){
-    return res.status(400).json( {added: false, error: "type not valid"} );
+    return("type not valid")
   }
   if(website &&  typeof website != 'string'){
-    return res.status(400).json( {added: false, error: "lenght not valid"} );
+    return("website not valid")
   }
-  getLocationCoordinates( // coordinaten opvragen
+  return("")
+
+}
+// voegt een themepark toe
+function addThemePark(req: any, res: any) {
+
+  const userid = req.user.id;
+  const validationError = checkThemeParkInformation(req.body)
+  if(validationError) {
+    return res.status(400).json({error: validationError})
+  }
+    const {
+      name,
+      openingdate,
+      street,
+      streetNumber,
+      postalCode,
+      country,
+      type,
+      website,
+    } = req.body;
+
+    getLocationCoordinates( // coordinaten opvragen
     street,
     streetNumber,
     postalCode,
@@ -82,12 +104,12 @@ function addThemePark(req: any, res: any) {
               if (result) {
                 const lastid = result.id; // id nodig voor linken aan themepark (normalisatie van db)
                 // indien info bestaat, toevoegen aan db
-                if (openingsdate) {
+                if (openingdate) {
                   db.run(
                     "INSERT INTO themeparksopening (id, opening) VALUES(?, ?)",
                     [
                       lastid,
-                      openingsdate,
+                      openingdate,
                     ],
                   );
                 }
@@ -117,85 +139,101 @@ function addThemePark(req: any, res: any) {
       }
     },
   );
-}
+  }
 
 function editThemePark(req: any, res: any) {
+  
   const themeparkID = parseInt(req.params.themeparkID);
-  const {
-    name,
-    openingsdate,
-    street,
-    streetNumber,
-    postalCode,
-    country,
-    type,
-    website,
-  } = req.body;
-  const userid = req.user.id;
-  getLocationCoordinates(
-    street,
-    streetNumber,
-    postalCode,
-    function (error, lat, long) {
-      if (error) {
-        return res.status(418).json({ error: error });
-      } else {
-        db.run(
-          // name, street, streetnumber, postalcode, country, lat, long
-          "UPDATE themeparks SET userID = ?, name = ?, street = ?, streetnumber = ?, postalcode = ?, country = ?, lat = ?, long = ? WHERE id = ?",
-          [
-            userid,
-            name,
-            street,
-            streetNumber,
-            postalCode,
-            country,
-            lat,
-            long,
-            themeparkID,
-          ],
-          function (error) {
-            if (error) {
-              res.status(400).json({
-                error:
-                  "Something went wrong while trying to update the themepark information",
-              });
-            } else {
-              if (openingsdate) {
-                db.run(
-                  "UPDATE themeparksopening SET  opening = ? WHERE id = ?",
-                  [
-                    openingsdate,
-                    themeparkID,
-                  ],
-                );
-              }
-              if (type) {
-                db.run(
-                  "UPDATE themeparkstype SET type = ? WHERE id = ?",
-                  [
-                    type,
-                    themeparkID,
-                  ],
-                );
-              }
-              if (website) {
-                db.run(
-                  "UPDATE themeparkswebsite SET website = ? WHERE id = ?",
-                  [
-                    website,
-                    themeparkID,
-                  ],
-                );
-              }
-              return(res.status(200).json({updated: true}))
-            }
-          },
-        );
+  if(isNaN(themeparkID)) {
+    return res.status(400).json({error: "Theme park ID required"})
+  }
+  const validationError = checkThemeParkInformation(req.body)
+  if(validationError) {
+    return res.status(400).json({error: validationError})
+  }
+    getThemePark(themeparkID, function (error, result) {
+      if(error) {
+        return res.status(400).json({error: error})
       }
-    },
-  );
-}
+
+      const {
+        name,
+        openingdate,
+        street,
+        streetNumber,
+        postalCode,
+        country,
+        type,
+        website,
+      } = req.body;
+      const userid = req.user.id;
+      getLocationCoordinates(
+        street,
+        streetNumber,
+        postalCode,
+        function (error, lat, long) {
+          if (error) {
+            return res.status(418).json({ error: error });
+          } else {
+            db.run(
+              // name, street, streetnumber, postalcode, country, lat, long
+              "UPDATE themeparks SET userID = ?, name = ?, street = ?, streetnumber = ?, postalcode = ?, country = ?, lat = ?, long = ? WHERE id = ?",
+              [
+                userid,
+                name,
+                street,
+                streetNumber,
+                postalCode,
+                country,
+                lat,
+                long,
+                themeparkID,
+              ],
+              function (error) {
+                if (error) {
+                  res.status(400).json({
+                    error:
+                      "Something went wrong while trying to update the themepark information",
+                  });
+                } else {
+                  if (openingdate) {
+                    db.run(
+                      "REPLACE INTO themeparksopening (id, opening) VALUES(?, ?)",
+                      [
+                        themeparkID,
+                        openingdate,
+                      ],
+                    );
+                  }
+                  if (type) {
+                    db.run(
+                      "REPLACE INTO themeparkstype (id, type) VALUES(?, ?)",
+                      [
+                        themeparkID,
+                        type,
+                        
+                      ],
+                    );
+                  }
+                  if (website) {
+                    db.run(
+                      "REPLACE INTO themeparkswebsite (id, website) VALUES(?, ?)",
+                      [
+                        themeparkID,
+                        website,
+                        
+                      ],
+                    );
+                  }
+                  return(res.status(200).json({updated: true}))
+                }
+              },
+            );
+          }
+        },
+      );
+    })
+  }
 
 function findThemeParkByID(req: any, res: any) {
   const id = parseInt(req.params.themeparkID);

@@ -50,28 +50,36 @@ export default function AttractionPage() {
     function submitEdits(attraction: Attraction, images: File[]) {
         const updateAttractionInfo: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
-                event.preventDefault()
-                Axios.put(backendServer(`/attraction/${attractionID}`), attraction.toJSON()).then((res) => {
-                    if (res.data.updated) {
-                        images.forEach((image) => {
-                            const formData = new FormData();
-                            formData.append(`image`, image);
-                            Axios.post(backendServer(`/attraction/${attractionID}/photos`), formData, {
-                                headers: {
-                                    'Content-Type': 'multipart/form-data'
-                                }
-                            }).catch(function (error) {
-                                setError(error.response.data)
-                            })
+                const form = event.currentTarget
+                if(!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                else {
+                    for(const image of images) {
+                        const formData = new FormData();
+                        formData.append(`image`, image);
+                        Axios.post(backendServer(`/attraction/${attractionID}/photos`), formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }).catch(function (error) {
+                            setError(error.response.data)
                         })
-                        getAttractioninfo()
-                        setValidated(true)
-                        setEdit(false)
-
                     }
-                }).catch((error) => {
-                    setError(error.response.data)
-                })
+                    
+                    Axios.put(backendServer(`/attraction/${attractionID}`), attraction.toJSON()).then((res) => {
+                        if (res.data.updated) {
+                            getAttractioninfo()
+                            setValidated(true)
+                            setEdit(false)
+    
+                        }
+                    }).catch((error) => {
+                        setError(error.response.data)
+                    })
+                }
+
             }
         return (updateAttractionInfo)
 

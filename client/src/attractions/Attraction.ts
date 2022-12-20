@@ -41,13 +41,13 @@ class Attraction {
             jsonObj.type = this.type
         }
         if(this.height) {
-            jsonObj.height = this.height
+            jsonObj.height = this.height.toString()
         }
         if(this.length) {
-            jsonObj.length = this.length
+            jsonObj.length = this.length.toString()
         }
         if(this.inversions) {
-            jsonObj.inversions = this.inversions
+            jsonObj.inversions = this.inversions.toString()
         }
         if(this.duration) {
             jsonObj.duration = this.duration
