@@ -813,8 +813,8 @@ function getEvents(
 ) {
   const startIndex: number = (page - 1) * limit;
   db.get(
-    "SELECT COUNT(*) from events where name LIKE ?",
-    [ "%"+name+"%" ],
+    "SELECT COUNT(*) from events INNER JOIN themeparks ON events.themepark=themeparks.ID where events.name LIKE ? OR themeparks.name LIKE ?",
+    [ "%"+name+"%", "%"+name+"%" ],
     function (error, countResult) {
       if (error) {
         getResult("Something went wrong while fetching the events  ", null);
@@ -823,8 +823,9 @@ function getEvents(
           limit = countResult["COUNT(*)"];
         }
         db.all(
-          "SELECT * FROM events where name LIKE ? LIMIT ?,?",
+          "SELECT events.id, events.userID, events.name, events.themepark, events.date, events.description, events.hour, themeparks.name AS themeparkname  FROM events INNER JOIN themeparks ON events.themepark=themeparks.ID where events.name LIKE ? OR themeparks.name LIKE ? LIMIT ?,?",
           [
+            "%"+name+"%",
             "%"+name+"%",
             startIndex,
             limit,
