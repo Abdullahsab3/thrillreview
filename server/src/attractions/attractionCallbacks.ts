@@ -14,7 +14,6 @@ import { User } from "../userManagement/User";
 
 // attractie toevoegen aan db
 async function addAttraction(req: any, res: any) {
-  console.log(req)
   const {
     name,
     themeparkID,
