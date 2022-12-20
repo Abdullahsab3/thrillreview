@@ -19,12 +19,6 @@ function addEvent(req: any, res: any){
         hour,
         description,
     } = req.body;
-    if(!(name && themepark && date && hour && description)){
-      return res.status(400).json({ added: false, error: "not all the required fields are givven" });
-    }
-    if(typeof name != 'string' || typeof themepark != 'string' || typeof date != 'string' || typeof hour != 'string' || typeof description != 'string'){
-      return res.status(400).json({ added: false, error: "not all the required fields have right type" });
-    }
     const userID = req.user.id;
     //eerst checken of alle info klopt/bestaat
     db.run(
@@ -41,7 +35,7 @@ function addEvent(req: any, res: any){
             if (error) {
                 return res.status(400).json({ error: error.message });
             } else {
-                return res.status(200).json({ added: true });
+                return res.json({ added: true });
             }
         }
     );
