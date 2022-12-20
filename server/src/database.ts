@@ -538,8 +538,8 @@ function getThemeParksByName(
 ) {
   const startIndex: number = (page - 1) * limit;
   db.get(
-    "SELECT COUNT(*) from themeparks where name LIKE ?",
-    [ "%"+name+"%" ],
+    "SELECT COUNT(*) from themeparks where name LIKE ? OR country LIKE ?",
+    [ "%"+name+"%", "%"+name+"%" ],
     function (error, countResult) {
       if (error) {
         getResult("Something went wrong while fetching the themeparks  ", null);
@@ -548,8 +548,9 @@ function getThemeParksByName(
           limit = countResult["COUNT(*)"];
         }
         db.all(
-          "SELECT * FROM themeparks where name LIKE ? LIMIT ?,?",
+          "SELECT * FROM themeparks where name LIKE ? OR country LIKE ? LIMIT ?,?",
           [
+            "%"+name+"%",
             "%"+name+"%",
             startIndex,
             limit,
@@ -780,7 +781,7 @@ function getEvent(
   getResult: (error: any, event: Event | null) => void,
 ) {
   db.get(
-    "SELECT * FROM events WHERE id = ?",
+    "SELECT events.id, events.userID, events.name, events.themepark, events.date, events.description, events.hour, themeparks.name AS themeparkname  FROM events INNER JOIN themeparks ON events.themepark=themeparks.ID WHERE events.id = ?",
     [eventID],
     function (err: Error, result: any) {
       if (err){
@@ -789,6 +790,7 @@ function getEvent(
         getResult(null, 
           new Event(
             result.name,
+            result.themeparkname,
             result.themepark,
             result.date,
             result.hour,
@@ -812,8 +814,8 @@ function getEvents(
 ) {
   const startIndex: number = (page - 1) * limit;
   db.get(
-    "SELECT COUNT(*) from events where name LIKE ?",
-    [ "%"+name+"%" ],
+    "SELECT COUNT(*) from events INNER JOIN themeparks ON events.themepark=themeparks.ID where events.name LIKE ? OR themeparks.name LIKE ?",
+    [ "%"+name+"%", "%"+name+"%" ],
     function (error, countResult) {
       if (error) {
         getResult("Something went wrong while fetching the events  ", null);
@@ -822,8 +824,9 @@ function getEvents(
           limit = countResult["COUNT(*)"];
         }
         db.all(
-          "SELECT * FROM events where name LIKE ? LIMIT ?,?",
+          "SELECT events.id, events.userID, events.name, events.themepark, events.date, events.description, events.hour, themeparks.name AS themeparkname  FROM events INNER JOIN themeparks ON events.themepark=themeparks.ID where events.name LIKE ? OR themeparks.name LIKE ? LIMIT ?,?",
           [
+            "%"+name+"%",
             "%"+name+"%",
             startIndex,
             limit,
