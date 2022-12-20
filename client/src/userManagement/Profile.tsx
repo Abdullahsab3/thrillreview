@@ -41,6 +41,7 @@ function Profile() {
                     if (exists) {
                         setAvatar(true)
                     } else {
+                        setAvatar(false)
                         setAvatarError("No avatar available")
                     }
                 });
@@ -53,7 +54,7 @@ function Profile() {
         return (
             <Table striped bordered className="table" id="profilepictureTable">
                 <tbody>
-                    <tr><th>{avatarError ? <p>{avatarError}</p> : <img src={backendServer(`/user/${user?.id}/avatar`)} id="profileAvatar" />}</th></tr>
+                    <tr><th>{avatar ?  <img src={backendServer(`/user/${user?.id}/avatar`)} id="profileAvatar" /> : <p>{avatarError}</p>}</th></tr>
                     <tr><th>Your profile avatar</th></tr>
                     <tr><th><Button onClick={() => navigate("/profile/upload-avatar")}>Change your avatar</Button></th></tr>
                 </tbody>
