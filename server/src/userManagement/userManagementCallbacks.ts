@@ -183,7 +183,6 @@ function loginUser(req: any, res: any) {
 
 // als de user uitlogt, tokens verwijderen
 function logoutUser(req: any, res: any) {
-  console.log("logout");
 removeRefreshToken(req, res);
 res.status(200).json({ success: true, message: 'User logged out successfully' });
 }
