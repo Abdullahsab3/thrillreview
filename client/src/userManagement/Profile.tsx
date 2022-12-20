@@ -11,7 +11,7 @@ import './styling/profile.css'
 import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 import { Buffer } from "buffer";
 import axios from 'axios';
-import { Card, Col, Row } from 'react-bootstrap';
+import { Card, Col, Container, Row } from 'react-bootstrap';
 import EventOverviewCard from './eventOverview';
 
 
@@ -95,34 +95,35 @@ function Profile() {
         return (
             <div id="profile">
                 <h1 className="text-center">Your account information</h1>
-                <Row>
-                <Col>
-                    <AvatarInfo />
-
-                    <div className='table-responsive'>
-                        <UserInfo />
-                        <Table>
-                            <tbody>
-                                <tr>
-                                    <th>
-                                        <Button onClick={() => navigate("/profile/change-password")}>Change Password</Button>
-                                    </th>
-                                </tr>
-                            </tbody>
-                            <tbody>
-                                <tr>
-                                    <th>
-                                        <Button onClick={() => handleLogout()}>Logout</Button>
-                                    </th>
-                                </tr>
-                            </tbody>
-                        </Table>
-                    </div>
-                </Col>
-                <Col>
-               <EventOverviewCard userId={user.id}/>
-                </Col>
-                </Row>
+                <Container fluid>
+                    <Row>
+                        <Col xl={true} id="InfoCol">
+                            <AvatarInfo />
+                            <div className='table-responsive'>
+                                <UserInfo />
+                                <Table>
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                <Button onClick={() => navigate("/profile/change-password")}>Change Password</Button>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                <Button onClick={() => handleLogout()}>Logout</Button>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </Table>
+                            </div>
+                        </Col>
+                        <Col xl={true}>
+                            <EventOverviewCard userId={user.id} />
+                        </Col>
+                    </Row>
+                </Container>
             </div>
         )
     }
