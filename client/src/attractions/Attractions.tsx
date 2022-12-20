@@ -54,11 +54,11 @@ function Attractions() {
             <Card>
                 <Card.Body>
                     <Card.Title>Top Ten Attractions Rated by our users</Card.Title>
-                    <ListGroup numbered>
+                    <ListGroup>
                         {topAttractions.map((a: AttractionPreviewInfoInterface, i: number) => {
                             return (
                                 <Link key={a.id} to={`/Attractions/${a.id}`} >
-                                <ListGroup.Item > {a.name} in {a.themepark} </ListGroup.Item>
+                                <ListGroup.Item > {i + 1}. {a.name} in {a.themepark} </ListGroup.Item>
                                 </Link>
                             );
                         })}
@@ -69,45 +69,7 @@ function Attractions() {
         );
     }
 
-    function NewestAttractions() {
-        return (
-            <Card>
-                <Card.Body>
-                    <Card.Title>Newest Attractions</Card.Title>
-                    <Card.Text> Once we added attractions, we will show you the newest! </Card.Text>
-                </Card.Body>
-            </Card>
-        );
-    }
 
-    function SearchAttractions() {
-        const [query, setquery] = useState("")
-        return (
-            <Card>
-                <Card.Body>
-                    <Card.Title>Search Attractions</Card.Title>
-                    <Card.Text> Find the attraction you are looking for! </Card.Text>
-                    <Form>
-                        <InputGroup>
-                            <Form.Control type="search" onChange={(e) => setquery(e.target.value)} placeholder="Search" />
-                            <Link to={`/browse-attractions/${query}`}>
-                                <Button type="submit">
-                                    <Search />
-                                </Button>
-                            </Link>
-                        </InputGroup>
-                    </Form>
-
-                </Card.Body>
-            </Card>
-        );
-    }
-//  <SearchAttractions />
-/*<Row lg={3} sm={1}>
-                <Col className="AttractionCol">
-                   
-                </Col>
-         </Row> */
     return (
         <div className='ContentOfPage'>
             <h1>attractions</h1>
@@ -122,9 +84,6 @@ function Attractions() {
                 </Col>
                 <Col className="AttractionCol">
                     <TopTenAttractions />
-                </Col>
-                <Col className="AttractionCol">
-                    <NewestAttractions />
                 </Col>
             </Row>
             

@@ -77,7 +77,6 @@ function isIdInArray(a: AttractionPreviewInfoInterface[], i: number): Boolean {
     a.forEach(t => {
         if (t.id === i) res = true;
     });
-    console.log("id:", i, "a:", a, "res", res)
     return res;
 }
 
@@ -94,7 +93,6 @@ function GetAttractions(query: string, pageNr: number) {
         setAttractions([]);
     }, [query]);
     // to load new attractions
-    // /attractions/find
     useEffect(() => {
         setLoading(true)
         setError(false)
@@ -118,36 +116,8 @@ function GetAttractions(query: string, pageNr: number) {
                     prevAttractions.push(attrInfo);
                 }
                 setAttractions(prevAttractions);
-                /*  }).catch(function (error) {
-                      console.log("ERROR GECACHED", error)
-                      if (error.response.status === 404) {
-                          console.log("show meeee")
-                          const attrInfo = {
-                              id: id,
-                              name: name,
-                              themepark: themepark,
-                              starrating: stars,
-                          }
-                          prevAttractions.push(attrInfo);
-                      } else console.log("err msg", error.message);
-                  });*/
-
-
-                //    });
-
-
             });
 
-            /*  let prevThemeparks = themeparks;
-              if (pageNr <= 1) {
-                  prevThemeparks = []
-              }
-              res.data.result.map((park: any) => {
-                  const { name, openingdate, country, street, postalcode, streetnumber, type, website, id } = park
-                  if (!isIdInArray(prevThemeparks, id))
-                  prevThemeparks.push(new ThemePark(name, openingdate, street, streetnumber, postalcode, country, type, website, id));
-              });
-              setThemeParks(prevThemeparks); */
             setHasMore(res.data.result.length === LIMIT_RETURNS);
             setLoading(false);
         }).catch(e => {
@@ -162,12 +132,9 @@ function GetAttractions(query: string, pageNr: number) {
 }
 
 function BrowseAttractions() {
-    //const { initialQuery } = useParams()
-    //console.log(initialQuery)
     const [query, setQuery] = useState("")
     const [intermediateQuery, setIntermediateQuery] = useState("")
     const [pageNr, setPageNr] = useState(1);
-    // if (initialQuery) setQuery(initialQuery)
     let { attractions, hasMore, loading, error } = GetAttractions(query, pageNr);
     const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
     const lastAttractionRef = useCallback((node: HTMLDivElement) => {
@@ -211,7 +178,6 @@ function BrowseAttractions() {
 
             {attractions.length ?  
             attractions.map((attraction: AttractionPreviewInfoInterface, i: number) => {
-                console.log("IN MAP", attraction);
                 if (attractions.length === i + 1) {
                     return (
                         <AttractionPreviewCard refs={lastAttractionRef} key={attraction.id} attractionInfo={attraction} />
