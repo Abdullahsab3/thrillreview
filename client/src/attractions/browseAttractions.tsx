@@ -213,7 +213,6 @@ function BrowseAttractions() {
             attractions.map((attraction: AttractionPreviewInfoInterface, i: number) => {
                 console.log("IN MAP", attraction);
                 if (attractions.length === i + 1) {
-                    // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
                     return (
                         <AttractionPreviewCard refs={lastAttractionRef} key={attraction.id} attractionInfo={attraction} />
                     );

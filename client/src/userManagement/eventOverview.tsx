@@ -2,9 +2,12 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap'
 import { backendServer } from '../helpers';
+import './styling/eventOverview.css';
+
 interface eventOverviewInterface {
     userId: number;
 }
+
 
 interface eventInfoInterface {
     id: number,
@@ -52,7 +55,7 @@ function EventOverviewCard(props: eventOverviewInterface) {
 
 
     return (
-        <Card>
+        <Card className="eventOverview">
             <Card.Title> An Overview of all your events</Card.Title>
             <Card.Text>user: {props.userId}</Card.Text>
         </Card>
