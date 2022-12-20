@@ -1,31 +1,30 @@
 import 'leaflet/dist/leaflet.css';
 import { Popup, MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import './styling/map.css';
-import L, { map } from 'leaflet'
-import { LatLngBounds } from 'leaflet';
+import L from 'leaflet'
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png"
-import { Icon } from 'leaflet'
 import { backendServer, getThrillreviewWebsiteLink } from "./helpers"
 import axios from 'axios';
-import { Card } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 
+// weather interface
 interface weatherInterface {
   imgSrc: string;
   description: string;
   feelsTemp: string;
 }
 
+// interface for pop up
 interface popUpInfoInterface {
   markerLat: string;
   markerLong: string;
   themeParkName: string;
-  // themeParkUrl: string;
   themeParkId: string;
   weather: weatherInterface;
 }
 
+// ask the weather
 async function AskWeather(lat: string, lon: string) {
   const WeatherAPIKey = "dca52658168de46d84c7d32b706c5bc5";
   const request = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${WeatherAPIKey}`;
@@ -35,7 +34,6 @@ async function AskWeather(lat: string, lon: string) {
   const weatherDescription = weather.description;
   const mainInfo = res.data.main;
   const feelsLike = (mainInfo.feels_like / 10).toFixed(1);
-  //console.log(res);
   const weatherInfo: weatherInterface = {
     imgSrc: `http://openweathermap.org/img/wn/${icon}@2x.png`,
     description: weatherDescription,
@@ -47,7 +45,6 @@ async function AskWeather(lat: string, lon: string) {
 
 const Map = () => {
   const [allPopupInfo, setAllPopupInfo] = useState<popUpInfoInterface[]>([]);
-  const [triggerState, setTriggerState] = useState(false);
 
 
   var themeParkIcon = L.icon({
@@ -55,12 +52,13 @@ const Map = () => {
     shadowUrl: markerShadowPng,
   })
 
+  // set to user location
   function SetToUserLocation() {
     var map = useMap();
     map.locate({ setView: true, maxZoom: 15 });
     return null;
   }
-
+  // look if id is in array
   function isIdInArray(a: popUpInfoInterface[], i: number): Boolean {
     let res = false;
     a.forEach(t => {
@@ -69,17 +67,14 @@ const Map = () => {
     return res;
   }
 
+  // ask all theme parks
   useEffect(() => {
- //   console.log("EFFECT TRIGGERED")
     axios.get(backendServer(`/themeparks/find?page=0&limit=0`)).then((res) => {
-      //pagination kan toegepast worden door de limit en page aan te passen
-    //  console.log("axios request")
       const { result } = res.data
-      //let prevPopUpInfo = allPopupInfo;
       let prevPopUpInfo: popUpInfoInterface[] = []
       result.map((info: any) => {
         const { lat, long, name, id } = info;
-        //console.log("name:", name, "lat:", lat, "long:", long);
+        // ask weather for the coordinate
         AskWeather(lat, long).then((weatherInfo: weatherInterface) => {
           const popUpInfo: popUpInfoInterface = {
             markerLat: lat,
@@ -88,22 +83,18 @@ const Map = () => {
             themeParkId: id,
             weather: weatherInfo,
           }
+          // store as pop up if no duplicate
           if (!isIdInArray(prevPopUpInfo, id)) {
-          //  console.log("not in array", id, prevPopUpInfo)
             prevPopUpInfo.push(popUpInfo);
-          //  console.log("before", allPopupInfo)
             setAllPopupInfo(prevPopUpInfo);
-          //  console.log("after", allPopupInfo)
           }
         });
 
       });
-   /*   console.log("before", allPopupInfo)
-      setAllPopupInfo(prevPopUpInfo);
-      console.log("after", allPopupInfo) */
     });
   }, []);
 
+  // make map, put all markers with pop up on map, set to user location
   const LeafletMap = () => {
     return (
       <MapContainer id="map" center={[50.823010, 4.392620]} zoom={15} scrollWheelZoom={false}>
@@ -114,7 +105,6 @@ const Map = () => {
         <SetToUserLocation />
 
         {allPopupInfo.map((p: popUpInfoInterface, i: number) => {
-        //  console.log("HERE")
           return (
             <Marker key={p.themeParkId} icon={themeParkIcon} position={[parseFloat(p.markerLat), parseFloat(p.markerLong)]}>
               <Popup>
