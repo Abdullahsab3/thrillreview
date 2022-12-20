@@ -60,16 +60,13 @@ export default function AttractionPage() {
                                 headers: {
                                     'Content-Type': 'multipart/form-data'
                                 }
-                            }).then((res) => {
-                                if (res.data.updated) {
-                                    getAttractioninfo()
-                                    setValidated(true)
-                                    setEdit(false)
-                                }
                             }).catch(function (error) {
                                 setError(error.response.data)
                             })
                         })
+                        getAttractioninfo()
+                        setValidated(true)
+                        setEdit(false)
 
                     }
                 }).catch((error) => {
