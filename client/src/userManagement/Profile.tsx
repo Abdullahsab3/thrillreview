@@ -12,7 +12,7 @@ import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 import { Buffer } from "buffer";
 import axios from 'axios';
 import { Card, Col, Container, Row } from 'react-bootstrap';
-import EventOverviewCard from './eventOverview';
+import EventOverviewCard from '../events/eventOverview';
 
 
 function Profile() {

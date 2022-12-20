@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Card, ListGroup } from 'react-bootstrap'
 import { backendServer, getThrillreviewWebsiteLink } from '../helpers';
 import './styling/eventOverview.css';
@@ -55,17 +55,33 @@ function EventOverviewCard(props: eventOverviewInterface) {
         })
     }, [pageNr]);
 
+    const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
+    const lastEventRef = useCallback((node: HTMLAnchorElement) => {
+        if (loading) return // otherwise will keep sending callbacks while loading
+        // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
+        if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
+        observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more   
+                setPageNr(prevPageNr => prevPageNr + 1);
+            }
+        })
+        if (node) observer.current.observe(node)
+    }, [loading, hasMore])
 
     return (
         <Card className="eventOverview">
             <Card.Title> An Overview of all your events</Card.Title>
             <Card.Text>user: {props.userId}</Card.Text>
-            <ListGroup variant="flush">
-                {events.map((ev: eventInfoInterface) => {
-                    return  <ListGroup.Item key={ev.id}>an event called <a href={getThrillreviewWebsiteLink('Events/' + ev.id)}>{ev.eventName}</a>, on the {ev.date} in {ev.themepark}</ListGroup.Item>;
+            <Card id="eventLisScrollCard">
+            <ListGroup variant="flush" id="eventList">
+                {events.map((ev: eventInfoInterface, i: number) => {
+                    if (events.length === i + 1)
+                    return <ListGroup.Item  key={ev.id} ref={lastEventRef}>an event called <a href={getThrillreviewWebsiteLink('Events/' + ev.id)}>{ev.eventName}</a>, on the {ev.date} in {ev.themepark}</ListGroup.Item>;
+                    else return  <ListGroup.Item key={ev.id}>an event called <a href={getThrillreviewWebsiteLink('Events/' + ev.id)}>{ev.eventName}</a>, on the {ev.date} in {ev.themepark}</ListGroup.Item>;
                 })}
           
             </ListGroup>
+            </Card>
         </Card>
     );
 }
