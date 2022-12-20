@@ -378,18 +378,19 @@ function getAttractionsByName(
 ) {
   const startIndex: number = (page - 1) * limit;
   db.get(
-    "SELECT COUNT(*) from attractions where name LIKE ?",
-    [ "%"+name+"%" ],
+    "SELECT COUNT(*) from attractions where name LIKE ? OR themepark LIKE ?",
+    [ "%"+name+"%", "%"+name+"%" ],
     function (error, countResult) {
       if (error) {
-        getResult("Something went wrong while fetching the attractions  ", null);
+        getResult("Something went wrong while fetching the attractions ", null);
       } else {
         if (limit === 0) {
           limit = countResult["COUNT(*)"];
         }
         db.all(
-          "SELECT * FROM attractions where name LIKE ? LIMIT ?,?",
+          "SELECT * FROM attractions where name LIKE ? OR themepark LIKE ? LIMIT ?,?",
           [
+            "%"+name+"%",
             "%"+name+"%",
             startIndex,
             limit,

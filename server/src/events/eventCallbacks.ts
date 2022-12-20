@@ -105,8 +105,8 @@ function userJoinEvent(req: any, res: any){
 
 // gegeven een event in params geeft terug of user meedoet aan event of niet
 function userJoinedEvent(req: any, res: any){
-    const eventID = res.req.params.eventID
-    const userID = res.req.user.id;
+    const eventID = req.params.eventID
+    const userID = req.user.id;
     db.get(
         "SELECT * FROM eventjoin where eventID = ? AND userID = ?",
         [
