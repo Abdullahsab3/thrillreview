@@ -11,7 +11,6 @@ import {
   getThemePark,
 } from "../database";
 import { User } from "../userManagement/User";
-import { StringDecoder } from "string_decoder";
 
 // attractie toevoegen aan db
 async function addAttraction(req: any, res: any) {
@@ -27,34 +26,7 @@ async function addAttraction(req: any, res: any) {
     duration,
   } = req.body;
   const userid = req.user.id;
-
-  if(!name || typeof name != 'string'){
-    return res.status(400).json( {added: false, error: "a vallid name must be provided"} );
-  }
-  if(!themeparkID){
-    return res.status(400).json( {added: false, error: "themeparkID must be provided"} );
-  }
-  if(openingdate && typeof openingdate != 'string'){
-    return res.status(400).json( {added: false, error: "opening not valid"} );
-  }
-  if(builder &&  typeof builder != 'string'){
-    return res.status(400).json( {added: false, error: "builder not valid"} );
-  }
-  if(type &&  typeof type != 'string'){
-    return res.status(400).json( {added: false, error: "type not valid"} );
-  }
-  if(length &&  typeof length != 'string'){
-    return res.status(400).json( {added: false, error: "lenght not valid"} );
-  }
-  if(height &&  typeof height != 'string'){
-    return res.status(400).json( {added: false, error: "height not valid"} );
-  }
-  if(inversions &&  typeof inversions != 'string'){
-    return res.status(400).json( {added: false, error: "inversions not valid"} );
-  }
-  if(duration &&  typeof duration != 'string'){
-    return res.status(400).json( {added: false, error: "durattion not valid"} );
-  }
+  //eerst nog form validation doen
   //verplichte fields invullen
   getThemePark(themeparkID,
     function (error: any, result: any)  {

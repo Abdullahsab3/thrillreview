@@ -41,18 +41,7 @@ function addThemePark(req: any, res: any) {
     website,
   } = req.body;
   const userid = req.user.id;
-  if(!name || typeof name != 'string'){
-    return res.status(400).json( {added: false, error: "name must be provided"} );
-  }
-  if(openingsdate && typeof openingsdate != 'string'){
-    return res.status(400).json( {added: false, error: "opening not valid"} );
-  }
-  if(type &&  typeof type != 'string'){
-    return res.status(400).json( {added: false, error: "type not valid"} );
-  }
-  if(website &&  typeof website != 'string'){
-    return res.status(400).json( {added: false, error: "lenght not valid"} );
-  }
+  // eerst cheken op user input
   getLocationCoordinates( // coordinaten opvragen
     street,
     streetNumber,
