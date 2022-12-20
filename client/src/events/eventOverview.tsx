@@ -72,7 +72,7 @@ function EventOverviewCard(props: eventOverviewInterface) {
         <Card className="eventOverview">
             <Card.Title> An Overview of all your events</Card.Title>
             <Card.Text>user: {props.userId}</Card.Text>
-            <Card id="eventListScrollCard">
+            <Card id="eventLisScrollCard">
             <ListGroup variant="flush" id="eventList">
                 {events.map((ev: eventInfoInterface, i: number) => {
                     if (events.length === i + 1)

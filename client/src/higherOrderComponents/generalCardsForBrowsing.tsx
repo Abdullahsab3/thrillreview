@@ -8,7 +8,7 @@ interface browsingInfoCardInterface{
 
 export function LoadingCard(props: browsingInfoCardInterface) {
     return (
-        <Card className="browsingCard mb-2">
+        <Card>
             <Card.Title> We are loading the {props.topic}, please wait</Card.Title>
             <Card.Body> In the mean time, grab some tea! </Card.Body>
         </Card>
