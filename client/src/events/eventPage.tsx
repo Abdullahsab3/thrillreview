@@ -40,8 +40,7 @@ function EventPage() {
 
     function getNumberOfUsers() {
         axios.get(backendServer(`/event/${eventId}/attendees/count`)).then((res) => {
-            setNumberOfUsers(res.data.result)
-            alert(`nr ${numberOfUsers}`)
+            setNumberOfUsers(res.data.result);
         });
     }
 

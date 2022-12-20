@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Card } from 'react-bootstrap'
-import { backendServer } from '../helpers';
+import { Card, ListGroup } from 'react-bootstrap'
+import { backendServer, getThrillreviewWebsiteLink } from '../helpers';
 import './styling/eventOverview.css';
 
 interface eventOverviewInterface {
@@ -11,7 +11,9 @@ interface eventOverviewInterface {
 
 interface eventInfoInterface {
     id: number,
-    //  event: string,
+    eventName: string,
+    themepark: string,
+    date: string,
 }
 
 function EventOverviewCard(props: eventOverviewInterface) {
@@ -40,9 +42,9 @@ function EventOverviewCard(props: eventOverviewInterface) {
                 prevEvents = [];
             }
             res.data.result.map((info: any) => {
-                const { eventID } = info;
+                const { eventID, name, themepark, date } = info;
                 if (!isIdInArray(prevEvents, eventID))
-                    prevEvents.push({ id: eventID });
+                    prevEvents.push({ id: eventID, eventName: name, themepark: themepark, date: date});
             })
             setEvents(prevEvents);
             setHasMore(res.data.result.length === LIMIT_RETURNS);
@@ -58,6 +60,12 @@ function EventOverviewCard(props: eventOverviewInterface) {
         <Card className="eventOverview">
             <Card.Title> An Overview of all your events</Card.Title>
             <Card.Text>user: {props.userId}</Card.Text>
+            <ListGroup variant="flush">
+                {events.map((ev: eventInfoInterface) => {
+                    return  <ListGroup.Item key={ev.id}>an event called <a href={getThrillreviewWebsiteLink('Events/' + ev.id)}>{ev.eventName}</a>, on the {ev.date} in {ev.themepark}</ListGroup.Item>;
+                })}
+          
+            </ListGroup>
         </Card>
     );
 }
