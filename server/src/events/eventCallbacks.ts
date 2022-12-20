@@ -165,7 +165,7 @@ function findEventUsers(req: any, res: any){
 
 // geeft het aantal deelnemers van een event terug
 function eventAttendeesCount(req: any, res: any){
-    const eventID = req.body.eventID;
+    const eventID = req.params.eventID;
     db.get(
         "SELECT COUNT(*) from eventjoin where eventID = ?",
         [ eventID ],
