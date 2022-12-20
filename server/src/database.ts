@@ -780,7 +780,7 @@ function getEvent(
   getResult: (error: any, event: Event | null) => void,
 ) {
   db.get(
-    "SELECT * FROM events WHERE id = ?",
+    "SELECT events.id, events.userID, events.name, events.themepark, events.date, events.description, events.hour, themeparks.name AS themeparkname  FROM events INNER JOIN themeparks ON events.themepark=themeparks.ID WHERE events.id = ?",
     [eventID],
     function (err: Error, result: any) {
       if (err){
@@ -789,6 +789,7 @@ function getEvent(
         getResult(null, 
           new Event(
             result.name,
+            result.themeparkname,
             result.themepark,
             result.date,
             result.hour,
