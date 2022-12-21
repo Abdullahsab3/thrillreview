@@ -20,7 +20,7 @@ export default function AttractionInputForm(props: AttractionInputProps) {
     const maxImageUploads = 5;
 
     const [name, setName] = useState("");
-    const [themepark, setThemepark] = useState("");
+    const [themepark, setThemepark] = useState(-1);
     const [themeparkName, setThemeparkName] = useState("Not yet chosen");
     const [themeParkSelected, setThemeParkSelected] = useState(false);
     const [openingdate, setOpeningdate] = useState("");
@@ -38,7 +38,7 @@ export default function AttractionInputForm(props: AttractionInputProps) {
     useEffect(() => {
         if (props.attraction) {
             setName(props.attraction.name);
-            setThemepark(props.attraction.themepark);
+            setThemepark(props.attraction.themeparkID);
             setThemeparkName(props.attraction.themepark);
             setThemeParkSelected(true);
            const opdate = props.attraction.openingdate;
@@ -107,7 +107,7 @@ export default function AttractionInputForm(props: AttractionInputProps) {
 
     function connectedThemepark(id: number, thmprk: string) {
         const mouseEventHandler: React.MouseEventHandler<HTMLElement> = (ev: React.MouseEvent) => {
-            setThemepark(id.toString());
+            setThemepark(id);
             setThemeparkName(thmprk);
             setThemeParkSelected(true);
         }
@@ -139,7 +139,7 @@ export default function AttractionInputForm(props: AttractionInputProps) {
                     <Card.Text>{props.text}</Card.Text>
                     <Form className="align-items-center"
                         validated={props.validated}
-                        onSubmit={props.onFormSubmit(new Attraction(name, themepark, openingdate, builder, getTypesAsString(), height, length, inversions, duration, getId()), allImages)}>
+                        onSubmit={props.onFormSubmit(new Attraction(name, themeparkName, themepark, openingdate, builder, getTypesAsString(), height, length, inversions, duration, getId()), allImages)}>
                         <Row>
                             <Col>
                                 <Form.Group>

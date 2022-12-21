@@ -38,7 +38,6 @@ function AddEvent() {
                         console.log(error)
                     })
                 }
-                event.preventDefault();
                 setValidated(true);
             }
         return handleSubmit;

@@ -1,4 +1,3 @@
-import { buffer } from "stream/consumers";
 import { Attraction } from "./Attraction";
 import {
   db,
@@ -12,11 +11,16 @@ import {
 } from "../database";
 import { User } from "../userManagement/User";
 
-// attractie toevoegen aan db
-async function addAttraction(req: any, res: any) {
+
+/**
+ * 
+ * Validate all the input when adding or modifying an attraction
+ * @param input the input fields
+ * @param getResult the potential error message.
+ */
+function checkAttractionInformation(input: any,): string {
   const {
     name,
-    themepark,
     openingdate,
     builder,
     type,
@@ -24,101 +28,154 @@ async function addAttraction(req: any, res: any) {
     height,
     inversions,
     duration,
-  } = req.body;
-  const userid = req.user.id;
-  //eerst nog form validation doen
-  //verplichte fields invullen
-  getThemePark(themepark,
-    function (error: any, result: any)  {
-      if (error) {
-        return res.status(400).json({ themepark: "ID does not exist"});
-      } else if (result) {
-        db.get(
-          "INSERT INTO attractions (userID, name, themepark, themeparkID) VALUES(?, ?, ?, ?) RETURNING id",
-          [
-            userid,
-            name,
-            result.name,
-            themepark,
-          ],
-          (error: Error, result: any) => {
-            console.log(error)
-            if (error) {
-              return res.status(400).json({ error: error.message });
-            } else {
-              const lastid = result.id; //id terug geven zodat we optionele informatie kunnen binden aan een attractie
-              //telkens testen of de informattie gegeven wordt en dan toevoegen
-              if (openingdate) {
-                db.run(
-                  "INSERT INTO attractionsopening (id, opening) VALUES(?, ?)",
-                  [
-                    lastid,
-                    openingdate,
-                  ],
-                );
+  } = input;
+  
+  const themeparkID: number = parseInt(input.themeparkID)
+
+  if(!name || typeof name != 'string'){
+    return("A valid attraction name must be provided");
+  }
+  if(isNaN(themeparkID)) {
+    return("Theme park ID must be a valid integer")
+  }
+  if(openingdate && typeof openingdate != 'string'){
+    return("opening not valid")
+  }
+  if(builder &&  typeof builder != 'string'){
+    return("builder not valid")
+  }
+  if(type &&  typeof type != 'string'){
+    return("type not valid")
+  }
+  if(length &&  typeof length != 'string'){
+    return("Length not valid")
+  }
+  if(height &&  typeof height != 'string'){
+    return("height not valid")
+  }
+  if(inversions &&  typeof inversions != 'string'){
+    return("inverseions not valid")
+  }
+  if(duration &&  typeof duration != 'string'){
+    return("duration not valid")
+  }
+  return("")
+  
+}
+// attractie toevoegen aan db
+async function addAttraction(req: any, res: any) {
+  const validationError = checkAttractionInformation(req.body)
+  console.log(validationError)
+  if(validationError) {
+    return res.status(400).json({error: validationError})
+  }
+
+    const {
+      name,
+      themeparkID,
+      openingdate,
+      builder,
+      type,
+      length,
+      height,
+      inversions,
+      duration,
+    } = req.body;
+    const userid = req.user.id;
+  
+  
+    //verplichte fields invullen
+    getThemePark(themeparkID,
+      function (error: any, result: any)  {
+        if (error) {
+          return res.status(400).json({ themepark: "ID does not exist"});
+        } else if (result) {
+          db.get(
+            "INSERT INTO attractions (userID, name, themepark, themeparkID) VALUES(?, ?, ?, ?) RETURNING id",
+            [
+              userid,
+              name,
+              result.name,
+              themeparkID,
+            ],
+            (error: Error, result: any) => {
+              console.log(error)
+              if (error) {
+                return res.status(400).json({ error: error.message });
+              } else {
+                const lastid = result.id; //id terug geven zodat we optionele informatie kunnen binden aan een attractie
+                //telkens testen of de informattie gegeven wordt en dan toevoegen
+                if (openingdate) {
+                  db.run(
+                    "INSERT INTO attractionsopening (id, opening) VALUES(?, ?)",
+                    [
+                      lastid,
+                      openingdate,
+                    ],
+                  );
+                }
+                if (builder) {
+                  db.run(
+                    "INSERT INTO attractionsbuilder (id, builder) VALUES(?, ?)",
+                    [
+                      lastid,
+                      builder,
+                    ],
+                  );
+                }
+                if (type) {
+                  db.run(
+                    "INSERT INTO attractionstype (id, type) VALUES(?, ?)",
+                    [
+                      lastid,
+                      type,
+                    ],
+                  );
+                }
+                if (length) {
+                  db.run(
+                    "INSERT INTO attractionslength (id, length) VALUES(?, ?)",
+                    [
+                      lastid,
+                      length,
+                    ],
+                  );
+                }
+                if (height) {
+                  db.run(
+                    "INSERT INTO attractionsheight (id, height) VALUES(?, ?)",
+                    [
+                      lastid,
+                      height,
+                    ],
+                  );
+                }
+                if (inversions) {
+                  db.run(
+                    "INSERT INTO attractionsinversions (id, inversions) VALUES(?, ?)",
+                    [
+                      lastid,
+                      inversions,
+                    ],
+                  );
+                }
+                if (duration) {
+                  db.run(
+                    "INSERT INTO attractionsduration (id, duration) VALUES(?, ?)",
+                    [
+                      lastid,
+                      duration,
+                    ],
+                  );
+                }
+                return res.json({ added: true, id: lastid });
               }
-              if (builder) {
-                db.run(
-                  "INSERT INTO attractionsbuilder (id, builder) VALUES(?, ?)",
-                  [
-                    lastid,
-                    builder,
-                  ],
-                );
-              }
-              if (type) {
-                db.run(
-                  "INSERT INTO attractionstype (id, type) VALUES(?, ?)",
-                  [
-                    lastid,
-                    type,
-                  ],
-                );
-              }
-              if (length) {
-                db.run(
-                  "INSERT INTO attractionslength (id, length) VALUES(?, ?)",
-                  [
-                    lastid,
-                    length,
-                  ],
-                );
-              }
-              if (height) {
-                db.run(
-                  "INSERT INTO attractionsheight (id, height) VALUES(?, ?)",
-                  [
-                    lastid,
-                    height,
-                  ],
-                );
-              }
-              if (inversions) {
-                db.run(
-                  "INSERT INTO attractionsinversions (id, inversions) VALUES(?, ?)",
-                  [
-                    lastid,
-                    inversions,
-                  ],
-                );
-              }
-              if (duration) {
-                db.run(
-                  "INSERT INTO attractionsduration (id, duration) VALUES(?, ?)",
-                  [
-                    lastid,
-                    duration,
-                  ],
-                );
-              }
-              return res.json({ added: true, id: lastid });
-            }
-          },
-        );
-      } else {
-        return res.status(400).json({ themepark: "ID does not exist"});
-      }
-    });
+            },
+          );
+        } else {
+          return res.status(400).json({ themepark: "ID does not exist"});
+        }
+      });
 }
 
 // een foto toevoegen aan een attractie
@@ -169,6 +226,7 @@ function findAttractionByName(req: any, res: any) {
   var attractionName = req.query.query;
   var page = parseInt(req.query.page);
   var limit = parseInt(req.query.limit);
+  console.log("query", attractionName, "p", page)
   if (!attractionName) { //indien niet gegeven, lege string dus wildcard
     attractionName = "";
   }
@@ -194,16 +252,16 @@ function addAttractionReview(
   userID: number,
   review: string,
   stars: number,
-  getErr: (error: any | null) => void,
+  getErr: (error: string) => void,
 ) {
   db.run(
     "INSERT INTO attractionreview (attractionID, userID, review, stars, date) VALUES(?, ?, ?, ?, datetime('now'))",
     [attractionID, userID, review, stars],
     (error: Error) => {
       if (error) {
-        getErr({ error: true, review: error.message });
+        getErr("Something went wrong while adding a review");
       } else {
-        getErr(null);
+        getErr("");
       }
     },
   );
@@ -214,27 +272,37 @@ function updateAttractionReview(
   userID: number,
   review: string,
   stars: number,
-  getErr: (error: any) => void,
+  getErr: (error: string) => void,
 ) {
   db.run(
     "UPDATE  attractionreview SET review = ?, stars = ?, date = datetime('now') WHERE attractionID = ? AND userID = ?",
     [review, stars, attractionID, userID],
     (error: Error) => {
       if (error) {
-        getErr({ error: true, review: error.message });
+        getErr("Something went wrong while updating a review");
       } else {
-        getErr(null);
+        getErr("");
       }
     },
   );
 }
 
 function setAttractionReview(req: any, res: any) {
-  const attractionID = req.params.attractionID;
+  const attractionID = parseInt(req.params.attractionID);
   const review = req.body.review;
-  const stars = req.body.stars;
+  const stars = parseInt(req.body.stars);
   const user: User = req.user;
   const userID: number = user.id;
+  if(isNaN(attractionID)) {
+    return res.status(400).json({error: "Attraction ID required"})
+  }
+  if(!review || typeof review != 'string') {
+    return res.status(400).json({error: "A review is required"})
+
+  }
+  if(isNaN(stars)) {
+    return res.status(400).json({error: "Stars should be a number"})
+  }
   getAttraction(attractionID, function (error, result) {
     if (error) {
       return res.status(400).json(error);
@@ -250,7 +318,7 @@ function setAttractionReview(req: any, res: any) {
             stars,
             function (error) {
               if (error) {
-                return res.status(400).json(error);
+                return res.status(400).json({error: error});
               } else {
                 return res.status(200).json({ updated: true });
               }
@@ -264,7 +332,7 @@ function setAttractionReview(req: any, res: any) {
             stars,
             function (error) {
               if (error) {
-                return res.status(400).json(error);
+                return res.status(400).json({error: error});
               } else {
                 return res.status(200).json({ added: true });
               }
@@ -274,7 +342,6 @@ function setAttractionReview(req: any, res: any) {
       });
     } else {
       return res.status(400).json({
-        error: true,
         attractionID: "No attraction found for this ID",
       });
     }
@@ -282,8 +349,14 @@ function setAttractionReview(req: any, res: any) {
 }
 
 function findReview(req: any, res: any) {
-  const attractionID = req.params.attractionID;
-  const userID = req.query.userid;
+  const attractionID = parseInt(req.params.attractionID);
+  const userID = parseInt(req.query.userid);
+  if(isNaN(attractionID)) {
+    return res.status(400).json({error: "The ID of the attraction is required"})
+  }
+  if(isNaN(userID)) {
+    return res.status(400).json({error: "a valid user ID required"})
+  }
   getReview(attractionID, userID, function (error, result) {
     if (error) {
       res.status(500).json({error: error});
@@ -306,9 +379,11 @@ function getAverageRating(req: any, res: any) {
   }
   getAttractionRating(attractionID, function (error, average, total) {
     if (error) {
-      res.status(500).json({ error: error });
+      return res.status(500).json({ error: error });
     } else if (average) {
-      res.status(200).json({ rating: average , ratingCount: total});
+      return res.status(200).json({ rating: average , ratingCount: total});
+    }else {
+      return res.status(200).json({ rating: 0, ratingCount: 0 });
     }
   });
 }
@@ -354,106 +429,109 @@ function findAttractionReviews(req: any, res: any) {
 function updateAttraction(req: any, res: any) {
   const lastid = parseInt(req.params.attractionID);
   const userid = req.user.id;
-  const {
-    name,
-    themepark,
-    opening,
-    builder,
-    type,
-    length,
-    height,
-    inversions,
-    duration,
-  } = req.body;
-  getThemePark(themepark,
-    function (error: any, result: any)  {
-      if (error) {
-        return res.status(400).json({ themepark: "ID does not exist"});
-      } else if (result) {
-        db.run(
-          "UPDATE attractions SET userID = ?, name = ?, themepark = ?, themeparkID = ? WHERE id = ?",
-          [userid, name, result.name, themepark, lastid],
-          function (error) {
-            if (error) {
-              return res.status(400).json({
-                error:
-                  "Something went wrong while updating the attractions information",
-              });
-            }
-            if (opening) {
-              db.run(
-                "REPLACE INTO attractionsopening (id, opening) VALUES(?, ?)",
-                [
-                  lastid,
-                  opening,
-                ],
-              );
-            }
-            if (builder) {
-              db.run(
-                "REPLACE INTO attractionsbuilder (id, builder) VALUES(?, ?)",
-                [
-                  lastid,
-                  builder,
-                ], function (error) {
-                  console.log(error)
-                }
-              );
-            }
-            if (type) {
-              db.run(
-                "REPLACE INTO attractionstype (id, type) VALUES(?, ?)",
-                [
-                  lastid,
-                  type,
-                ],
-              );
-            }
-            if (length) {
-              db.run(
-                "REPLACE INTO attractionslength (id, length) VALUES(?, ?)",
-                [
-                  lastid,
-                  length,
-                ],
-              );
-            }
-            if (height) {
-              db.run(
-                "REPLACE INTO attractionsheight (id, height) VALUES(?, ?)",
-                [
-                  lastid,
-                  height,
-                ],
-              );
-            }
-            if (inversions) {
-              db.run(
-                "REPLACE INTO attractionsinversions (id, inversions) VALUES(?, ?)",
-                [
-                  lastid,
-                  inversions,
-                ],
-              );
-            }
-            if (duration) {
-              db.run(
-                "REPLACE INTO attractionsduration (id, duration) VALUES(?, ?)",
-                [
-                  lastid,
-                  duration,
-                ],
-              );
-            }
-            return res.status(200).json({ updated: true });
-          },
-        );
-      } else {
-        return res.status(400).json({ themepark: "ID does not exist"})
-      }
-    });
-
-}
+  const validationError = checkAttractionInformation(req.body)
+  if(validationError) {
+    return res.status(400).json({error: validationError})
+  }
+    const {
+      name,
+      themepark,
+      opening,
+      builder,
+      type,
+      length,
+      height,
+      inversions,
+      duration,
+    } = req.body;
+    const themeparkID: number = parseInt(req.body.themeparkID)
+     
+    getThemePark(themeparkID,
+      function (error: any, result: any)  {
+        if (error) {
+          return res.status(400).json({ themepark: "ID does not exist"});
+        } else if (result) {
+          db.run(
+            "UPDATE attractions SET userID = ?, name = ?, themepark = ?, themeparkID = ? WHERE id = ?",
+            [userid, name, result.name, themeparkID, lastid],
+            function (error) {
+              if (error) {
+                return res.status(400).json({
+                  error:
+                    "Something went wrong while updating the attractions information",
+                });
+              }
+              if (opening) {
+                db.run(
+                  "REPLACE INTO attractionsopening (id, opening) VALUES(?, ?)",
+                  [
+                    lastid,
+                    opening,
+                  ],
+                );
+              }
+              if (builder) {
+                db.run(
+                  "REPLACE INTO attractionsbuilder (id, builder) VALUES(?, ?)",
+                  [
+                    lastid,
+                    builder,
+                  ]
+                );
+              }
+              if (type) {
+                db.run(
+                  "REPLACE INTO attractionstype (id, type) VALUES(?, ?)",
+                  [
+                    lastid,
+                    type,
+                  ],
+                );
+              }
+              if (length) {
+                db.run(
+                  "REPLACE INTO attractionslength (id, length) VALUES(?, ?)",
+                  [
+                    lastid,
+                    length,
+                  ],
+                );
+              }
+              if (height) {
+                db.run(
+                  "REPLACE INTO attractionsheight (id, height) VALUES(?, ?)",
+                  [
+                    lastid,
+                    height,
+                  ],
+                );
+              }
+              if (inversions) {
+                db.run(
+                  "REPLACE INTO attractionsinversions (id, inversions) VALUES(?, ?)",
+                  [
+                    lastid,
+                    inversions,
+                  ],
+                );
+              }
+              if (duration) {
+                db.run(
+                  "REPLACE INTO attractionsduration (id, duration) VALUES(?, ?)",
+                  [
+                    lastid,
+                    duration,
+                  ],
+                );
+              }
+              return res.status(200).json({ updated: true });
+            },
+          );
+        } else {
+          return res.status(400).json({ themepark: "theme park ID does not exist"})
+        }
+      });
+  }
 
 function getAttractionName(req: any, res: any) {
   const id = parseInt(req.params.attractionID);
@@ -471,8 +549,14 @@ function getAttractionName(req: any, res: any) {
 }
 
 function getAttractionPhoto(req: any, res: any) {
-  const attractionID = req.params.attractionID
+  const attractionID = parseInt(req.params.attractionID)
   const imageID = parseInt(req.query.id)
+  if(isNaN(attractionID)) {
+    return res.status(400).json({error: "The id of the attraction should be provided"})
+  }
+  if(isNaN(imageID)) {
+    return res.status(400).json({error: "The id of the image should be provided"})
+  }
   db.all("SELECT * FROM attractionphotos WHERE attractionID = ?", [attractionID], (error, result) => {
     if(error) {
       return res.status(500).json({error: "Something when wrong while getting the attraction photo"})
@@ -493,7 +577,10 @@ function getAttractionPhoto(req: any, res: any) {
 }
 
 function getAttractionPhotosCount(req: any, res: any) {
-  const attractionID = req.params.attractionID
+  const attractionID = parseInt(req.params.attractionID);
+  if(isNaN(attractionID)) {
+    return res.status(400).json({error: "The id of the attraction should be provided"})
+  }
   db.get("SELECT COUNT(*) FROM attractionphotos WHERE attractionID = ?", [attractionID], (error, result) => {
     if(error) {
       res.status(500).json({error: "Something went wrong while getting the count of the attractions photos"})

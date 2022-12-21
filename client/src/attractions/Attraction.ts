@@ -3,7 +3,8 @@ import { backendServer } from "../helpers";
 
 class Attraction {
     name: string;
-    themepark: string; //change to object in future
+    themepark: string;
+    themeparkID: number;
     openingdate: string;
     builder: string;
     type: string;
@@ -13,10 +14,11 @@ class Attraction {
     duration: string;
     id: number;
     
-    constructor(name: string, themapark: string, opingdate: string, builder: string, type: string, 
+    constructor(name: string, themapark: string, themeparkID: number, opingdate: string, builder: string, type: string, 
                 height: string, lenght: string, inversions: string, duration: string, id: number) {
         this.name = name;
         this.themepark = themapark;
+        this.themeparkID = themeparkID;
         this.openingdate = opingdate;
         this.builder = builder;
         this.type = type;
@@ -28,7 +30,7 @@ class Attraction {
     }
 
     toJSON(): any {
-        const jsonObj: any = {"name": this.name, "themepark": this.themepark, "id": this.id}
+        const jsonObj: any = {"name": this.name, "themepark": this.themepark, "themeparkID" : this.themeparkID, "id": this.id}
         if(this.openingdate) {
             jsonObj.openingdate = this.openingdate
         }
@@ -39,13 +41,13 @@ class Attraction {
             jsonObj.type = this.type
         }
         if(this.height) {
-            jsonObj.height = this.height
+            jsonObj.height = this.height.toString()
         }
         if(this.length) {
-            jsonObj.length = this.length
+            jsonObj.length = this.length.toString()
         }
         if(this.inversions) {
-            jsonObj.inversions = this.inversions
+            jsonObj.inversions = this.inversions.toString()
         }
         if(this.duration) {
             jsonObj.duration = this.duration

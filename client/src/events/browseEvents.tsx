@@ -10,7 +10,7 @@ import { ErrorCard, LoadingCard, NoMatchesCard} from '../higherOrderComponents/g
 interface eventPreviewInterface {
     id: number,
     name: string,
-    event: string,
+    date: string,
     key:number,
     refs?: (e: HTMLDivElement) => void,
 }
@@ -21,7 +21,7 @@ function EventPreviewCard(props: eventPreviewInterface) {
             <Card ref={props.refs} className="browsingCard">
                 <Card.Title>{props.name}</Card.Title>
                 <ListGroup className="list-group-flush">
-                    <ListGroup.Item>Event: {props.event}</ListGroup.Item>
+                    <ListGroup.Item>Date: {props.date}</ListGroup.Item>
                 </ListGroup>
                 <Card.Body>
                     <Link to={`/Events/${props.id}`}>
@@ -37,7 +37,7 @@ function EventPreviewCard(props: eventPreviewInterface) {
             <Card className="browsingCard">
                 <Card.Title>{props.name}</Card.Title>
                 <ListGroup className="list-group-flush">
-                    <ListGroup.Item>Event: {props.event}</ListGroup.Item>
+                    <ListGroup.Item>Date: {props.date}</ListGroup.Item>
                 </ListGroup>
                 <Card.Body>
                     <Link to={`/Events/${props.id}`}>
@@ -80,7 +80,7 @@ function GetEvents(query: string, pageNr: number) {
             console.log("res:", res);
             let prevEvents = events;
             if (pageNr <= 1) {
-                prevEvents = []
+                prevEvents = [];
             }
             res.data.result.map((e: any) => {
                 const { name, date, hour, themepark, description, id } = e   
@@ -89,22 +89,12 @@ function GetEvents(query: string, pageNr: number) {
                     prevEvents.push(new Event(id, name, date, hour, themepark, description));
             });
             setEvents(prevEvents);
-       /*     setEvents(prevEvents => {
-                return [...prevEvents, ...res.data.events.map((a: any) => { // Event evt andere naam (afh v response) + DIE ANY MOET IETS ANDERS ZIJN, WSS JSON, Q AAN SERVER
-                    const { name, date, hour, themepark, description, id } = a
-                    new Event(name, date, hour, themepark, description, id)
-                })]
-            })*/
             setHasMore(res.data.result.length === LIMIT_RETURNS);
-            setLoading(false)
-            console.log(res.data);
+            setLoading(false);
         }).catch(e => {
-          //  if (axios.isCancel(e)) return // if cancelled, it was meant to
             setLoading(false)
             setError(true);
-        })
-     //   return () => cancel();
-    }, [query, pageNr]);
+        })}, [query, pageNr]);
 
     return (
         { events, hasMore, loading, error }
@@ -134,9 +124,7 @@ function BrowseEvents() {
           if (node) observer.current.observe(node) 
     }, [loading, hasMore])
 
-    //  OM TE TESTEN ZONDER BACKEND
-   // events = [new Event(0, "my amazing event", "29/01/2003", "09:00", "walibi", "this is an event wowhow what a description this needs to be long enough to actually test whaoopdfi kdsfjkldjkfsd ty gty kdjmfskdhkfdjhdqff")]
-    
+   
 
     function handleSubmit(Event: React.FormEvent<HTMLFormElement>) {
         setPageNr(1);
@@ -167,11 +155,11 @@ function BrowseEvents() {
                 if (events.length === i + 1) {
                     // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
                     return (
-                        <EventPreviewCard refs={lastEventRef} key={event.id} id={event.id} name={event.name} event={"test"} />
+                        <EventPreviewCard refs={lastEventRef} key={event.id} id={event.id} name={event.name} date={event.date} />
                     );
                 } else {
                     return(
-                        <EventPreviewCard key={event.id} id={event.id} name={event.name} event={"test"} />
+                        <EventPreviewCard key={event.id} id={event.id} name={event.name} date={event.date} />
                     );
                 }
             }) :

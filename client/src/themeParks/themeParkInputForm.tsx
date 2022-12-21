@@ -4,7 +4,6 @@ import { Card, Dropdown } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
-import { useNavigate } from 'react-router-dom';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { ThemePark } from './themePark';
@@ -19,7 +18,6 @@ interface ThemeParkInputFormProps {
 }
 
 function ThemeParkInputForm(props: ThemeParkInputFormProps) {
-    const navigate = useNavigate()
 
     const [name, setName] = useState("")
     const [opening, setOpening] = useState("")

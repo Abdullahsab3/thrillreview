@@ -27,8 +27,8 @@ export default function AttractionPage() {
     function getAttractioninfo() {
         trackPromise(
             Axios.get(backendServer(`/attraction/${attractionID}`)).then((res) => {
-                const { name, themepark, openingdate, builder, type, height, length, inversions, duration, id } = res.data
-                setAttraction(new Attraction(name, themepark, openingdate, builder, type, height, length, inversions, duration, id))
+                const { name, themepark, themeparkID, openingdate, builder, type, height, length, inversions, duration, id } = res.data
+                setAttraction(new Attraction(name, themepark, themeparkID, openingdate, builder, type, height, length, inversions, duration, id))
             }).catch(function (error: any) {
                 setError(error.response.data)
             })
@@ -50,31 +50,36 @@ export default function AttractionPage() {
     function submitEdits(attraction: Attraction, images: File[]) {
         const updateAttractionInfo: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
-                event.preventDefault()
-                Axios.put(backendServer(`/attraction/${attractionID}`), attraction.toJSON()).then((res) => {
-                    if (res.data.updated) {
-                        images.forEach((image) => {
-                            const formData = new FormData();
-                            formData.append(`image`, image);
-                            Axios.post(backendServer(`/attraction/${attractionID}/photos`), formData, {
-                                headers: {
-                                    'Content-Type': 'multipart/form-data'
-                                }
-                            }).then((res) => {
-                                if (res.data.updated) {
-                                    getAttractioninfo()
-                                    setValidated(true)
-                                    setEdit(false)
-                                }
-                            }).catch(function (error) {
-                                setError(error.response.data)
-                            })
+                const form = event.currentTarget
+                if(!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                else {
+                    for(const image of images) {
+                        const formData = new FormData();
+                        formData.append(`image`, image);
+                        Axios.post(backendServer(`/attraction/${attractionID}/photos`), formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }).catch(function (error) {
+                            setError(error.response.data)
                         })
-
                     }
-                }).catch((error) => {
-                    setError(error.response.data)
-                })
+                    
+                    Axios.put(backendServer(`/attraction/${attractionID}`), attraction.toJSON()).then((res) => {
+                        if (res.data.updated) {
+                            getAttractioninfo()
+                            setValidated(true)
+                            setEdit(false)
+    
+                        }
+                    }).catch((error) => {
+                        setError(error.response.data)
+                    })
+                }
+
             }
         return (updateAttractionInfo)
 

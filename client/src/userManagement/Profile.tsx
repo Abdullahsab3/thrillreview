@@ -11,7 +11,8 @@ import './styling/profile.css'
 import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 import { Buffer } from "buffer";
 import axios from 'axios';
-import { Card, Col, Row } from 'react-bootstrap';
+import { Card, Col, Container, Row } from 'react-bootstrap';
+import EventOverviewCard from '../events/eventOverview';
 
 
 function Profile() {
@@ -40,6 +41,7 @@ function Profile() {
                     if (exists) {
                         setAvatar(true)
                     } else {
+                        setAvatar(false)
                         setAvatarError("No avatar available")
                     }
                 });
@@ -47,11 +49,12 @@ function Profile() {
         }
     }, [])
 
+
     function AvatarInfo() {
         return (
             <Table striped bordered className="table" id="profilepictureTable">
                 <tbody>
-                    <tr><th>{avatarError ? <p>{avatarError}</p> : <img src={backendServer(`/user/${user?.id}/avatar`)} id="profileAvatar" />}</th></tr>
+                    <tr><th>{avatar ?  <img src={backendServer(`/user/${user?.id}/avatar`)} id="profileAvatar" /> : <p>{avatarError}</p>}</th></tr>
                     <tr><th>Your profile avatar</th></tr>
                     <tr><th><Button onClick={() => navigate("/profile/upload-avatar")}>Change your avatar</Button></th></tr>
                 </tbody>
@@ -93,36 +96,35 @@ function Profile() {
         return (
             <div id="profile">
                 <h1 className="text-center">Your account information</h1>
-                <Row>
-                <Col>
-                    <AvatarInfo />
-
-                    <div className='table-responsive'>
-                        <UserInfo />
-                        <Table>
-                            <tbody>
-                                <tr>
-                                    <th>
-                                        <Button onClick={() => navigate("/profile/change-password")}>Change Password</Button>
-                                    </th>
-                                </tr>
-                            </tbody>
-                            <tbody>
-                                <tr>
-                                    <th>
-                                        <Button onClick={() => handleLogout()}>Logout</Button>
-                                    </th>
-                                </tr>
-                            </tbody>
-                        </Table>
-                    </div>
-                </Col>
-                <Col>
-                <Card>
-                    <Card.Title> An Overview of all your events</Card.Title>
-                </Card>
-                </Col>
-                </Row>
+                <Container fluid>
+                    <Row>
+                        <Col xl={true} id="InfoCol">
+                            <AvatarInfo />
+                            <div className='table-responsive'>
+                                <UserInfo />
+                                <Table>
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                <Button onClick={() => navigate("/profile/change-password")}>Change Password</Button>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                <Button onClick={() => handleLogout()}>Logout</Button>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </Table>
+                            </div>
+                        </Col>
+                        <Col xl={true}>
+                            <EventOverviewCard userId={user.id} />
+                        </Col>
+                    </Row>
+                </Container>
             </div>
         )
     }

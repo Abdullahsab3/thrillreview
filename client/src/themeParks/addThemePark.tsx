@@ -33,16 +33,7 @@ function AddThemePark() {
                 event.preventDefault();
                 event.stopPropagation();
             } else {
-                axios.post(backendServer("/themepark"), {
-                    name: themepark.name,
-                    openingsdate: themepark.openingdate,
-                    street: themepark.street,
-                    streetNumber: themepark.streetNumber,
-                    postalCode: themepark.postalCode,
-                    country: themepark.country,
-                    type: themepark.type,
-                    website: themepark.website,
-                }).then((response) => {
+                axios.post(backendServer("/themepark"), themepark.toJSON()).then((response) => {
                     alert("Theme park was succesfully added")
                     if (response.data.recognised) {
                         navigate("/home")

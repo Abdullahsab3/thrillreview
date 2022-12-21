@@ -1,0 +1,11 @@
+.eventOverview {
+    width: 100%;
+    align-items: center;
+
+}
+
+#eventLisScrollCard {
+    border: 0;
+    max-height: 30rem;
+    overflow-y: auto;
+}

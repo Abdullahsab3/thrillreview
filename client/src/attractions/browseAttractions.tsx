@@ -26,12 +26,12 @@ interface AttractionPreviewInfoInterface {
 function AttractionPreviewCard(props: attractionPreviewInterface) {
     const attractionProp = props.attractionInfo
     const [rating, setRating] = useState(0) 
-    useEffect(() => {
+ /*   useEffect(() => {
         getAttractionRating(attractionProp.id, function (rating, total, error) {
             setRating(rating)
         })
 
-    }, [])    
+    }, []) */    
 
     if (props.refs) {
         return (
@@ -77,7 +77,6 @@ function isIdInArray(a: AttractionPreviewInfoInterface[], i: number): Boolean {
     a.forEach(t => {
         if (t.id === i) res = true;
     });
-    console.log("id:", i, "a:", a, "res", res)
     return res;
 }
 
@@ -94,15 +93,17 @@ function GetAttractions(query: string, pageNr: number) {
         setAttractions([]);
     }, [query]);
     // to load new attractions
-    // /attractions/find
     useEffect(() => {
         setLoading(true)
         setError(false)
+        console.log("hasmoreVOORBACKENDS", hasMore)
+        console.log("VOOR BACKEND - query", query, "pnr", pageNr);
+        console.log("url", backendServer(`/attractions/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`))
         axios.get(backendServer(`/attractions/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`)).then(res => {
             console.log("res:", res.data);
             let prevAttractions = attractions;
             if ((pageNr <= 1)) {
-                prevAttractions = []
+                prevAttractions = [];
             }
             res.data.result.map((attr: any, i: number) => {
                 const { name, themepark, id } = attr
@@ -112,42 +113,11 @@ function GetAttractions(query: string, pageNr: number) {
                         id: id,
                         name: name,
                         themepark: themepark,
-                        // img: image,
-                        //     starrating: stars,
                     }
                     prevAttractions.push(attrInfo);
                 }
                 setAttractions(prevAttractions);
-                /*  }).catch(function (error) {
-                      console.log("ERROR GECACHED", error)
-                      if (error.response.status === 404) {
-                          console.log("show meeee")
-                          const attrInfo = {
-                              id: id,
-                              name: name,
-                              themepark: themepark,
-                              starrating: stars,
-                          }
-                          prevAttractions.push(attrInfo);
-                      } else console.log("err msg", error.message);
-                  });*/
-
-
-                //    });
-
-
             });
-
-            /*  let prevThemeparks = themeparks;
-              if (pageNr <= 1) {
-                  prevThemeparks = []
-              }
-              res.data.result.map((park: any) => {
-                  const { name, openingdate, country, street, postalcode, streetnumber, type, website, id } = park
-                  if (!isIdInArray(prevThemeparks, id))
-                  prevThemeparks.push(new ThemePark(name, openingdate, street, streetnumber, postalcode, country, type, website, id));
-              });
-              setThemeParks(prevThemeparks); */
             setHasMore(res.data.result.length === LIMIT_RETURNS);
             setLoading(false);
         }).catch(e => {
@@ -162,12 +132,9 @@ function GetAttractions(query: string, pageNr: number) {
 }
 
 function BrowseAttractions() {
-    //const { initialQuery } = useParams()
-    //console.log(initialQuery)
     const [query, setQuery] = useState("")
     const [intermediateQuery, setIntermediateQuery] = useState("")
     const [pageNr, setPageNr] = useState(1);
-    // if (initialQuery) setQuery(initialQuery)
     let { attractions, hasMore, loading, error } = GetAttractions(query, pageNr);
     const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
     const lastAttractionRef = useCallback((node: HTMLDivElement) => {
@@ -175,18 +142,23 @@ function BrowseAttractions() {
         console.log("node", node)
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
         if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
+        console.log("disconn")
         observer.current = new IntersectionObserver(entries => {
             if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more
+                console.log("page nr aanpassen")
                 setPageNr(prevPageNr => prevPageNr + 1)
             }
         })
+
         if (node) observer.current.observe(node)
+        console.log("na")
     }, [loading, hasMore])
 
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        console.log("HIER")
         setPageNr(1);
-        setQuery(intermediateQuery)
+        setQuery(intermediateQuery);
         event.preventDefault()
     }
 
@@ -211,9 +183,7 @@ function BrowseAttractions() {
 
             {attractions.length ?  
             attractions.map((attraction: AttractionPreviewInfoInterface, i: number) => {
-                console.log("IN MAP", attraction);
                 if (attractions.length === i + 1) {
-                    // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
                     return (
                         <AttractionPreviewCard refs={lastAttractionRef} key={attraction.id} attractionInfo={attraction} />
                     );

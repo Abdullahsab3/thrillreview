@@ -23,9 +23,10 @@ db.run(
 );
 
 /* Attractions tables */
+
 db.run(
 "CREATE TABLE IF NOT EXISTS attractions \
-(id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, themepark STRING, themeparkID ITEGER)",
+(id INTEGER UNIQUE PRIMARY KEY, userID INTEGER, name STRING, themepark STRING, themeparkID INTEGER)",
 );
 
 db.run(
@@ -337,6 +338,7 @@ function getAttraction(
                                       new Attraction(
                                         result.name,
                                         result.themepark,
+                                        result.themeparkID, 
                                         opening,
                                         builder,
                                         type,
@@ -376,18 +378,19 @@ function getAttractionsByName(
 ) {
   const startIndex: number = (page - 1) * limit;
   db.get(
-    "SELECT COUNT(*) from attractions where name LIKE ?",
-    [ "%"+name+"%" ],
+    "SELECT COUNT(*) from attractions where name LIKE ? OR themepark LIKE ?",
+    [ "%"+name+"%", "%"+name+"%" ],
     function (error, countResult) {
       if (error) {
-        getResult("Something went wrong while fetching the attractions  ", null);
+        getResult("Something went wrong while fetching the attractions ", null);
       } else {
         if (limit === 0) {
           limit = countResult["COUNT(*)"];
         }
         db.all(
-          "SELECT * FROM attractions where name LIKE ? LIMIT ?,?",
+          "SELECT * FROM attractions where name LIKE ? OR themepark LIKE ? LIMIT ?,?",
           [
+            "%"+name+"%",
             "%"+name+"%",
             startIndex,
             limit,
@@ -595,7 +598,9 @@ function getAttractionRating(
   db.get("SELECT avg(stars), COUNT(stars) FROM attractionreview WHERE attractionID = ?", [
     attractionID,
   ], function (error: any, result: any) {
-    if (result) {
+    if(error){
+      getAverage(error, null, null);
+    }else if (result) {
       getAverage(null, result["avg(stars)"], result["COUNT(stars)"]);
     } else {
       console.log(error);
@@ -939,7 +944,7 @@ function getEventsJoinedByUser(
           limit = countResult["COUNT(*)"];
         }
         db.all(
-          "SELECT * FROM eventjoin where userID = ? LIMIT ?,?",
+          "Select * FROM eventjoin INNER JOIN events ON eventjoin.eventID=events.ID WHERE eventjoin.userID = ? ORDER BY events.date LIMIT ?,?;",
           [
             userID,
             startIndex,

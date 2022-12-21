@@ -86,7 +86,7 @@ function findEvents(req: any, res: any){
 // linkt een user aan een event (record toevoegen aan eventjoin table met link tussen userID en eventID)
 function userJoinEvent(req: any, res: any){
     const eventID = req.params.eventID;
-    const userID = req.body.user.id;
+    const userID = req.user.id;
     db.run(
         "INSERT INTO eventjoin (eventID, userID) VALUES(?,?)",
         [
@@ -104,8 +104,8 @@ function userJoinEvent(req: any, res: any){
 }
 
 // gegeven een event in params geeft terug of user meedoet aan event of niet
-function userJoinedEvent(res: any, req: any){
-    const eventID = req.params.eventID;
+function userJoinedEvent(req: any, res: any){
+    const eventID = req.params.eventID
     const userID = req.user.id;
     db.get(
         "SELECT * FROM eventjoin where eventID = ? AND userID = ?",
@@ -115,11 +115,11 @@ function userJoinedEvent(res: any, req: any){
         ],
         function (error, result) {
             if (error) {
-                return res.result(400).json({ error: "somting whent wrong while getting the attendees"});
+                return res.status(400).json({ error: "somting whent wrong while getting the attendees"});
             } else if (result) {
-                return res.result(200).json({ result: true });
+                return res.status(200).json({ result: true });
             } else {
-                return res.result(200).json({ result: false});
+                return res.status(200).json({ result: false});
             }
         }
     );
@@ -165,7 +165,7 @@ function findEventUsers(req: any, res: any){
 
 // geeft het aantal deelnemers van een event terug
 function eventAttendeesCount(req: any, res: any){
-    const eventID = req.body.eventID;
+    const eventID = req.params.eventID;
     db.get(
         "SELECT COUNT(*) from eventjoin where eventID = ?",
         [ eventID ],
