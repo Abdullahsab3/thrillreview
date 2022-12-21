@@ -226,7 +226,6 @@ function findAttractionByName(req: any, res: any) {
   var attractionName = req.query.query;
   var page = parseInt(req.query.page);
   var limit = parseInt(req.query.limit);
-  console.log("query", attractionName, "p", page)
   if (!attractionName) { //indien niet gegeven, lege string dus wildcard
     attractionName = "";
   }
