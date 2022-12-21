@@ -42,6 +42,7 @@ function EventOverviewCard(props: eventOverviewInterface) {
                 prevEvents = [];
             }
             res.data.result.map((info: any) => {
+                console.log(info)
                 const { eventID, name, themepark, date } = info;
                 if (!isIdInArray(prevEvents, eventID))
                     prevEvents.push({ id: eventID, eventName: name, themepark: themepark, date: date});

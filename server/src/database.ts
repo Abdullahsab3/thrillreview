@@ -469,52 +469,55 @@ function getThemePark(
       } else if (result) {
         openingsdate = result.opening;
       }
+      db.get(
+        "SELECT * FROM themeparkstype WHERE id = ?",
+        [themeParkID],
+        function (err: Error, result: any) {
+          if (err) {
+          } else if (result) {
+            type = result.type;
+          }
+          db.get(
+            "SELECT * FROM themeparkswebsite WHERE id = ?",
+            [themeParkID],
+            function (err: Error, result: any) {
+              if (err) {
+              } else if (result) {
+                website = result.website;
+              }
+              db.get(
+                "SELECT * FROM themeparks WHERE id = ?",
+                [themeParkID],
+                function (err: Error, result: any) {
+                  if (err) {
+                    getResult("Something went wrong while getting the themepark", null);
+                  } else if (result) {
+                    getResult(
+                      null,
+                      new ThemePark(
+                        result.name,
+                        openingsdate,
+                        result.street,
+                        result.streetnumber,
+                        result.postalcode,
+                        result.country,
+                        type,
+                        website,
+                        result.id,
+                      ),
+                    );
+                  }
+                },
+              );
+            },
+          );
+        },
+      );
     },
   );
-  db.get(
-    "SELECT * FROM themeparkstype WHERE id = ?",
-    [themeParkID],
-    function (err: Error, result: any) {
-      if (err) {
-      } else if (result) {
-        type = result.type;
-      }
-    },
-  );
-  db.get(
-    "SELECT * FROM themeparkswebsite WHERE id = ?",
-    [themeParkID],
-    function (err: Error, result: any) {
-      if (err) {
-      } else if (result) {
-        website = result.website;
-      }
-    },
-  );
-  db.get(
-    "SELECT * FROM themeparks WHERE id = ?",
-    [themeParkID],
-    function (err: Error, result: any) {
-      if (err) {
-        getResult("Something went wrong while getting the themepark", null);
-      } else if (result) {
-        getResult(
-          null,
-          new ThemePark(
-            result.name,
-            openingsdate,
-            result.street,
-            result.streetnumber,
-            result.postalcode,
-            result.country,
-            type,
-            website,
-            result.id,
-          ),
-        );
-      }
-    },
-  );
+
+
+
 }
 
 function getThemeParks(

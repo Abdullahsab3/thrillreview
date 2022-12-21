@@ -74,6 +74,7 @@ function addThemePark(req: any, res: any) {
       type,
       website,
     } = req.body;
+    console.log(req.body)
 
     getLocationCoordinates( // coordinaten opvragen
     street,
@@ -119,7 +120,9 @@ function addThemePark(req: any, res: any) {
                     [
                       lastid,
                       type,
-                    ],
+                    ], function (error) {
+                      console.log(error)
+                    }
                   );
                 }
                 if (website) {
