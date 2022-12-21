@@ -598,7 +598,9 @@ function getAttractionRating(
   db.get("SELECT avg(stars), COUNT(stars) FROM attractionreview WHERE attractionID = ?", [
     attractionID,
   ], function (error: any, result: any) {
-    if (result) {
+    if(error){
+      getAverage(error, null, null);
+    }else if (result) {
       getAverage(null, result["avg(stars)"], result["COUNT(stars)"]);
     } else {
       console.log(error);

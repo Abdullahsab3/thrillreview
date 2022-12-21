@@ -379,9 +379,11 @@ function getAverageRating(req: any, res: any) {
   }
   getAttractionRating(attractionID, function (error, average, total) {
     if (error) {
-      res.status(500).json({ error: error });
+      return res.status(500).json({ error: error });
     } else if (average) {
-      res.status(200).json({ rating: average , ratingCount: total});
+      return res.status(200).json({ rating: average , ratingCount: total});
+    }else {
+      return res.status(200).json({ rating: 0, ratingCount: 0 });
     }
   });
 }
