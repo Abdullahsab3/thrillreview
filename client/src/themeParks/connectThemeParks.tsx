@@ -2,6 +2,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { MouseEventHandler } from "react";
 import axios from 'axios';
 import { useState, useEffect, useCallback, useRef } from 'react';
+
 import './styling/connectThemeParks.css';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
