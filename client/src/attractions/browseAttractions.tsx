@@ -26,12 +26,12 @@ interface AttractionPreviewInfoInterface {
 function AttractionPreviewCard(props: attractionPreviewInterface) {
     const attractionProp = props.attractionInfo
     const [rating, setRating] = useState(0) 
-    useEffect(() => {
+ /*   useEffect(() => {
         getAttractionRating(attractionProp.id, function (rating, total, error) {
             setRating(rating)
         })
 
-    }, [])    
+    }, []) */    
 
     if (props.refs) {
         return (
@@ -96,11 +96,14 @@ function GetAttractions(query: string, pageNr: number) {
     useEffect(() => {
         setLoading(true)
         setError(false)
+        console.log("hasmoreVOORBACKENDS", hasMore)
+        console.log("VOOR BACKEND - query", query, "pnr", pageNr);
+        console.log("url", backendServer(`/attractions/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`))
         axios.get(backendServer(`/attractions/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`)).then(res => {
             console.log("res:", res.data);
             let prevAttractions = attractions;
             if ((pageNr <= 1)) {
-                prevAttractions = []
+                prevAttractions = [];
             }
             res.data.result.map((attr: any, i: number) => {
                 const { name, themepark, id } = attr
@@ -110,14 +113,11 @@ function GetAttractions(query: string, pageNr: number) {
                         id: id,
                         name: name,
                         themepark: themepark,
-                        // img: image,
-                        //     starrating: stars,
                     }
                     prevAttractions.push(attrInfo);
                 }
                 setAttractions(prevAttractions);
             });
-
             setHasMore(res.data.result.length === LIMIT_RETURNS);
             setLoading(false);
         }).catch(e => {
@@ -142,18 +142,23 @@ function BrowseAttractions() {
         console.log("node", node)
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
         if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
+        console.log("disconn")
         observer.current = new IntersectionObserver(entries => {
             if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more
+                console.log("page nr aanpassen")
                 setPageNr(prevPageNr => prevPageNr + 1)
             }
         })
+
         if (node) observer.current.observe(node)
+        console.log("na")
     }, [loading, hasMore])
 
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        console.log("HIER")
         setPageNr(1);
-        setQuery(intermediateQuery)
+        setQuery(intermediateQuery);
         event.preventDefault()
     }
 
