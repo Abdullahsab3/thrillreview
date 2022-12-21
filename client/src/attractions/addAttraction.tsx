@@ -25,7 +25,6 @@ function AddAttraction() {
                     Axios.post(backendServer("/attraction"), attraction.toJSON()
                     ).then((response) => {
                         alert("The attraction was successfully added!")
-                        
                         if (response.data.registered) {
                         }
                         if (images) {
@@ -39,16 +38,12 @@ function AddAttraction() {
 
                                 formData.append(`image`, images[i]);
 
-
                                 Axios.post(backendServer(`/attraction/${id}/photos`), formData, {
                                     headers: {
                                         'Content-Type': 'multipart/form-data'
                                     }
                                 }).then((res) => {
-                                }).catch(function (error) {
-                                    event.preventDefault();
-                                    alert("something went wrong");
-                
+                                }).catch(function (error) {               
                                 })
                                 i++;
                             }
