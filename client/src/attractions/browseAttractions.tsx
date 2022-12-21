@@ -156,7 +156,6 @@ function BrowseAttractions() {
 
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-        console.log("HIER")
         setPageNr(1);
         setQuery(intermediateQuery);
         event.preventDefault()
@@ -174,7 +173,6 @@ function BrowseAttractions() {
                             <Button type="submit">
                                 <Search />
                             </Button>
-
                         </InputGroup>
                     </Form>
 
