@@ -73,7 +73,7 @@ function Attractions() {
     return (
         <div className='ContentOfPage'>
             <h1>attractions</h1>
-            <Row lg={3} sm={1}>
+            <Row lg={2} sm={1}>
                 <Col className="AttractionCol">
                    <Row>
                     <CardWithLinkTo to="/browse-attractions/" title="Browse all Attractions"/>

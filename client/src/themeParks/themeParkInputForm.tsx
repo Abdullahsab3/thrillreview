@@ -112,9 +112,9 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
                                         </div>
                                         <div id="postalCode">
                                             Postal Code*
-                                            <Form.Control required type="text" placeholder="Postal code" pattern="[0-9]*" onChange={(e) => setPostalCode(e.target.value)} value={postalCode} />
+                                            <Form.Control required type="text" placeholder="Postal code" pattern="[0-9a-zA-Z]*" onChange={(e) => setPostalCode(e.target.value)} value={postalCode} />
                                             <Form.Control.Feedback type="invalid">
-                                                Postal code is required and should be a number.
+                                                Postal code is required and should be a valid postal code, containing only letters and numbers.
                                             </Form.Control.Feedback>
                                         </div>
                                         <div id="country">
