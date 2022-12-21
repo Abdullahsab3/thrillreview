@@ -119,9 +119,9 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
                                         </div>
                                         <div id="country">
                                             Country*
-                                            <Form.Control required type="text" placeholder="Country" onChange={(e) => setCountry(e.target.value)} value={country} />
+                                            <Form.Control required pattern ="[a-zA-Z_.-]*" type="text" placeholder="Country" onChange={(e) => setCountry(e.target.value)} value={country} />
                                             <Form.Control.Feedback type="invalid">
-                                                Country is required.
+                                                Country is required, and may consist of only letters and the following characters: _ . -
                                             </Form.Control.Feedback>
                                         </div>
                                     </div>
