@@ -18,7 +18,7 @@ import {
   deleteUser,
   checkIfAvatarExists
 } from "./userManagement/userManagementCallbacks";
-import { addAttraction, findAttractionById, findAttractionByName, findAttractionReviews, findReview, getAttractionName, getAverageRating, setAttractionReview, updateAttraction, addAttractionPhotos, getAttractionPhoto, getAttractionPhotosCount, AttractionCount } from "./attractions/attractionCallbacks";
+import { addAttraction, findAttractionById, findAttractionByName, findAttractionReviews, findReview, getAttractionName, getAverageRating, setAttractionReview, updateAttraction, addAttractionPhotos, getAttractionPhoto, getAttractionPhotosCount, AttractionCount, findTop10Attractions } from "./attractions/attractionCallbacks";
 import { addThemePark, editThemePark, findThemeParkByID, findThemeParkByName } from "./themeparks/themeParkCallbacks";
 import multer from "multer";
 import { sendFeeds } from "./feeds/feedsCallbacks";
@@ -104,6 +104,7 @@ app.delete("/user", validateTokens, deleteUser)
 
 //attrations requests
 app.post("/attraction", validateTokens, addAttraction); // basic add van een attractie
+app.get("/attraction/top", findTop10Attractions);
 app.get("/attraction/count", AttractionCount);
 app.post("/attraction/:attractionID/photos", [validateTokens, upload.single("image")], addAttractionPhotos); // upload een afbeelding van een attracttie en sla op in db
 app.put("/attraction/:attractionID", validateTokens, updateAttraction);

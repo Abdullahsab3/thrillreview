@@ -50,9 +50,10 @@ export default function AttractionPage() {
     function submitEdits(attraction: Attraction, images: File[]) {
         const updateAttractionInfo: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
+                
+                event.preventDefault();
                 const form = event.currentTarget
                 if(!form.checkValidity()) {
-                    event.preventDefault();
                     event.stopPropagation();
                 }
                 else {

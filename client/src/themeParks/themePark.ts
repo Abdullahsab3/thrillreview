@@ -22,7 +22,7 @@ class ThemePark {
     }
 
     toJSON(): any {
-        const jsonObj: any = {"name": this.name, "street": this.street, "streetNumber": this.streetNumber, "postalCode": this.postalCode, "country": this.country, "id": this.id}
+        const jsonObj: any = {"name": this.name, "street": this.street, "type" : this.type, "streetNumber": this.streetNumber, "postalCode": this.postalCode, "country": this.country, "id": this.id}
         if(this.openingdate) {
             jsonObj.openingdate = this.openingdate
         }

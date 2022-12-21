@@ -26,7 +26,7 @@ function EventPreviewCard(props: eventPreviewInterface) {
                 <Card.Body>
                     <Link to={`/Events/${props.id}`}>
                         <Button>
-                            Go to Event!
+                            View Event!
                         </Button>
                     </Link>
                 </Card.Body>
@@ -42,7 +42,7 @@ function EventPreviewCard(props: eventPreviewInterface) {
                 <Card.Body>
                     <Link to={`/Events/${props.id}`}>
                         <Button>
-                            Go to Event!
+                         View Event!
                         </Button>
                     </Link>
                 </Card.Body>

@@ -31,7 +31,7 @@ function Attractions() {
     const [topAttractions, setTopAttractions] = useState<AttractionPreviewInfoInterface[]>([]);
 
     useEffect(() => {
-        axios.get(backendServer(`/attractions/find?query=&page=0&limit=10`)).then((res) => {
+        axios.get(backendServer(`/attraction/top`)).then((res) => {
             let prevtopAttractions: AttractionPreviewInfoInterface[] = [];
             res.data.result.map((attr: any) => {
                 const { name, themepark, id } = attr
@@ -73,7 +73,7 @@ function Attractions() {
     return (
         <div className='ContentOfPage'>
             <h1>attractions</h1>
-            <Row lg={3} sm={1}>
+            <Row lg={2} sm={1}>
                 <Col className="AttractionCol">
                    <Row>
                     <CardWithLinkTo to="/browse-attractions/" title="Browse all Attractions"/>

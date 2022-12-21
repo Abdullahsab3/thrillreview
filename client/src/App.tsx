@@ -33,11 +33,6 @@ function App() {
 
 
   return (
-    /* Abdullah: navigationbar wordt een keer gerenderd. Op zich geen probleem 
-        maar bij het inloggen zou hij opnieuw gerenderd moeten worden zodat de opties
-        verandere. Nu is het tijdelijk opgelost door de pagina te refreshen, maar 
-        het is een lelijke tijdelijke oplossing
-        */
 
     //<HelmetProvider>
     /* react-router-dom v6 does not support optional parameters. https://stackoverflow.com/questions/70005601/alternate-way-for-optional-parameters-in-v6 */

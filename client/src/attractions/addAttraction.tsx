@@ -1,71 +1,77 @@
 import './styling/addAttraction.css'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import { backendServer } from '../helpers';
 import AttractionInputForm from './attractionInputForm';
 import { Attraction } from './Attraction';
 import { loggedIn } from '../localStorageProcessing';
-import  { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
+import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 
 function AddAttraction() {
     const navigate = useNavigate()
     const [validated, setValidated] = useState(false);
+    const [id, setId] = useState(-1)
+    const [images, setImages] = useState<File[]>([])
     var user: Boolean = loggedIn();
+
+
+    function checkErrors(data: any): boolean {
+        if (data) {
+            alert(data);
+            return true;
+        } else return false;
+    }
 
 
     function submit(attraction: Attraction, images: File[]) {
         const handleSubmit: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
+                event.preventDefault();
+                setImages(images)
                 const form = event.currentTarget
-                if (form.checkValidity() === false || !attraction.themepark) {
-                    event.preventDefault();
+                if (!form.checkValidity() || !attraction.themepark) {
                     event.stopPropagation();
                 } else {
                     Axios.post(backendServer("/attraction"), attraction.toJSON()
                     ).then((response) => {
-                        alert("The attraction was successfully added!")
-                        
-                        if (response.data.registered) {
-                        }
-                        if (images) {
-                            const id = response.data.id;
+                        setId(response.data.id)
 
-
-                            let i: number = 0;
-
-                            while (images[i]) {
-                                const formData = new FormData();
-
-                                formData.append(`image`, images[i]);
-
-
-                                Axios.post(backendServer(`/attraction/${id}/photos`), formData, {
-                                    headers: {
-                                        'Content-Type': 'multipart/form-data'
-                                    }
-                                }).then((res) => {
-                                }).catch(function (error) {
-                                    event.preventDefault();
-                                    alert("something went wrong");
-                
-                                })
-                                i++;
-                            }
-
-
-                        }
                     }).catch(function (error) {
-                        if (error.response) {
-                            //setError(error.response.data.error)
+                        if (checkErrors(error.error)) {
+                            setValidated(false)
                         }
                     })
+
                 }
-                setValidated(true);
             }
         return (handleSubmit)
-
     }
+
+    useEffect(() => {
+        if (id > -1) {
+            const sendImages = async () => {
+                Promise.all(images.map(async (image) => {
+                    const formData = new FormData();
+
+                    formData.append(`image`, image);
+
+                    Axios.post(backendServer(`/attraction/${id}/photos`), formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+
+                }))
+            }
+
+            sendImages()
+
+            alert("The attraction was successfully added!")
+            setValidated(true);
+            navigate(`/Attractions/${id}`)
+        }
+    }, [id])
     if (user) {
         return (
             <AttractionInputForm
@@ -75,7 +81,7 @@ function AddAttraction() {
                 validated={validated} />
         );
     } else {
-        return(
+        return (
             <LoginFirstCard />
         );
     }

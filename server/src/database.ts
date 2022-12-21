@@ -469,52 +469,55 @@ function getThemePark(
       } else if (result) {
         openingsdate = result.opening;
       }
+      db.get(
+        "SELECT * FROM themeparkstype WHERE id = ?",
+        [themeParkID],
+        function (err: Error, result: any) {
+          if (err) {
+          } else if (result) {
+            type = result.type;
+          }
+          db.get(
+            "SELECT * FROM themeparkswebsite WHERE id = ?",
+            [themeParkID],
+            function (err: Error, result: any) {
+              if (err) {
+              } else if (result) {
+                website = result.website;
+              }
+              db.get(
+                "SELECT * FROM themeparks WHERE id = ?",
+                [themeParkID],
+                function (err: Error, result: any) {
+                  if (err) {
+                    getResult("Something went wrong while getting the themepark", null);
+                  } else if (result) {
+                    getResult(
+                      null,
+                      new ThemePark(
+                        result.name,
+                        openingsdate,
+                        result.street,
+                        result.streetnumber,
+                        result.postalcode,
+                        result.country,
+                        type,
+                        website,
+                        result.id,
+                      ),
+                    );
+                  }
+                },
+              );
+            },
+          );
+        },
+      );
     },
   );
-  db.get(
-    "SELECT * FROM themeparkstype WHERE id = ?",
-    [themeParkID],
-    function (err: Error, result: any) {
-      if (err) {
-      } else if (result) {
-        type = result.type;
-      }
-    },
-  );
-  db.get(
-    "SELECT * FROM themeparkswebsite WHERE id = ?",
-    [themeParkID],
-    function (err: Error, result: any) {
-      if (err) {
-      } else if (result) {
-        website = result.website;
-      }
-    },
-  );
-  db.get(
-    "SELECT * FROM themeparks WHERE id = ?",
-    [themeParkID],
-    function (err: Error, result: any) {
-      if (err) {
-        getResult("Something went wrong while getting the themepark", null);
-      } else if (result) {
-        getResult(
-          null,
-          new ThemePark(
-            result.name,
-            openingsdate,
-            result.street,
-            result.streetnumber,
-            result.postalcode,
-            result.country,
-            type,
-            website,
-            result.id,
-          ),
-        );
-      }
-    },
-  );
+
+
+
 }
 
 function getThemeParks(
@@ -538,8 +541,8 @@ function getThemeParksByName(
 ) {
   const startIndex: number = (page - 1) * limit;
   db.get(
-    "SELECT COUNT(*) from themeparks where name LIKE ?",
-    [ "%"+name+"%" ],
+    "SELECT COUNT(*) from themeparks where name LIKE ? OR country LIKE ?",
+    [ "%"+name+"%",  "%"+name+"%" ],
     function (error, countResult) {
       if (error) {
         getResult("Something went wrong while fetching the themeparks  ", null);
@@ -548,8 +551,9 @@ function getThemeParksByName(
           limit = countResult["COUNT(*)"];
         }
         db.all(
-          "SELECT * FROM themeparks where name LIKE ? LIMIT ?,?",
+          "SELECT * FROM themeparks where name LIKE ? OR country LIKE ? LIMIT ?,?",
           [
+            "%"+name+"%",
             "%"+name+"%",
             startIndex,
             limit,
@@ -783,6 +787,7 @@ function getEvent(
 ) {
   db.get(
     "SELECT * FROM events WHERE id = ?",
+    "SELECT events.id, events.userID, events.name, events.themepark, events.date, events.description, events.hour, themeparks.name AS themeparkname  FROM events INNER JOIN themeparks ON events.themepark=themeparks.ID WHERE events.id = ?",
     [eventID],
     function (err: Error, result: any) {
       if (err){
@@ -791,6 +796,7 @@ function getEvent(
         getResult(null, 
           new Event(
             result.name,
+            result.themeparkname,
             result.themepark,
             result.date,
             result.hour,
@@ -814,8 +820,8 @@ function getEvents(
 ) {
   const startIndex: number = (page - 1) * limit;
   db.get(
-    "SELECT COUNT(*) from events where name LIKE ?",
-    [ "%"+name+"%" ],
+    "SELECT COUNT(*) from events INNER JOIN themeparks ON events.themepark=themeparks.ID where events.name LIKE ? OR themeparks.name LIKE ?",
+    [ "%"+name+"%", "%"+name+"%" ],
     function (error, countResult) {
       if (error) {
         getResult("Something went wrong while fetching the events  ", null);
@@ -824,8 +830,9 @@ function getEvents(
           limit = countResult["COUNT(*)"];
         }
         db.all(
-          "SELECT * FROM events where name LIKE ? LIMIT ?,?",
+          "SELECT events.id, events.userID, events.name, events.themepark, events.date, events.description, events.hour, themeparks.name AS themeparkname  FROM events INNER JOIN themeparks ON events.themepark=themeparks.ID where events.name LIKE ? OR themeparks.name LIKE ? LIMIT ?,?",
           [
+            "%"+name+"%",
             "%"+name+"%",
             startIndex,
             limit,

@@ -42,6 +42,7 @@ function EventOverviewCard(props: eventOverviewInterface) {
                 prevEvents = [];
             }
             res.data.result.map((info: any) => {
+                console.log(info)
                 const { eventID, name, themepark, date } = info;
                 if (!isIdInArray(prevEvents, eventID))
                     prevEvents.push({ id: eventID, eventName: name, themepark: themepark, date: date});
@@ -71,7 +72,6 @@ function EventOverviewCard(props: eventOverviewInterface) {
     return (
         <Card className="eventOverview">
             <Card.Title> An Overview of all your events</Card.Title>
-            <Card.Text>user: {props.userId}</Card.Text>
             <Card id="eventLisScrollCard">
             <ListGroup variant="flush" id="eventList">
                 {events.map((ev: eventInfoInterface, i: number) => {

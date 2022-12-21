@@ -51,6 +51,7 @@ export default function WriteReview(props: writReviewProps) {
                 setnotAllowed(true)
             }
             
+            
             }).catch((error) => {
                 if(error.status === 404) {
                     setValidated(false)
@@ -74,7 +75,8 @@ export default function WriteReview(props: writReviewProps) {
                         setValidated(false)
                     } else {
                         setValidated(true)
-
+                        
+                         window.location.reload();
                     }
                 }).catch(function (error) {
                     if (checkForErrors(error.response.data)) {
