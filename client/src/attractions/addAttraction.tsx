@@ -6,7 +6,7 @@ import { backendServer } from '../helpers';
 import AttractionInputForm from './attractionInputForm';
 import { Attraction } from './Attraction';
 import { loggedIn } from '../localStorageProcessing';
-import  { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
+import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 
 function AddAttraction() {
     const navigate = useNavigate()
@@ -14,6 +14,14 @@ function AddAttraction() {
     const [id, setId] = useState(-1)
     const [images, setImages] = useState<File[]>([])
     var user: Boolean = loggedIn();
+
+
+    function checkErrors(data: any): boolean {
+        if (data) {
+            alert(data);
+            return true;
+        } else return false;
+    }
 
 
     function submit(attraction: Attraction, images: File[]) {
@@ -26,13 +34,12 @@ function AddAttraction() {
                     event.stopPropagation();
                 } else {
                     Axios.post(backendServer("/attraction"), attraction.toJSON()
-                    ).then((response) => {     
-                        setId(response.data.id)                   
-                       // const id = response.data.id;
+                    ).then((response) => {
+                        setId(response.data.id)
 
                     }).catch(function (error) {
-                        if (error.response) {
-                            //setError(error.response.data.error)
+                        if (checkErrors(error.error)) {
+                            setValidated(false)
                         }
                     })
 
@@ -42,13 +49,13 @@ function AddAttraction() {
     }
 
     useEffect(() => {
-        if(id > -1) {
-            const sendImages = async() => {
+        if (id > -1) {
+            const sendImages = async () => {
                 Promise.all(images.map(async (image) => {
                     const formData = new FormData();
-    
+
                     formData.append(`image`, image);
-    
+
                     Axios.post(backendServer(`/attraction/${id}/photos`), formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
@@ -59,7 +66,7 @@ function AddAttraction() {
             }
 
             sendImages()
-            
+
             alert("The attraction was successfully added!")
             setValidated(true);
             navigate(`/Attractions/${id}`)
@@ -74,7 +81,7 @@ function AddAttraction() {
                 validated={validated} />
         );
     } else {
-        return(
+        return (
             <LoginFirstCard />
         );
     }

@@ -1,16 +1,8 @@
 import './styling/addThemePark.css'
 import React, { useState } from 'react';
-import { Card, Dropdown } from "react-bootstrap";
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
 import { backendServer } from '../helpers';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import { setSyntheticTrailingComments } from 'typescript';
 import axios from 'axios';
-import { allowedNodeEnvironmentFlags } from 'process';
 import { loggedIn } from '../localStorageProcessing'
 import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 import ThemeParkInputForm from './themeParkInputForm';
@@ -20,9 +12,14 @@ function AddThemePark() {
     const navigate = useNavigate()
 
     var user: Boolean = loggedIn();
-
-
     const [validated, setValidated] = useState(false);
+
+    function checkErrors(data: any): boolean {
+        if (data) {
+            alert(data);
+            return true;
+        } else return false;
+    }
 
     function submit(themepark: ThemePark) {
         const handleSubmit: React.FormEventHandler<HTMLFormElement> =
@@ -42,6 +39,9 @@ function AddThemePark() {
                     }).catch(function (error) {
                         if (error.response.status === 418) {
                             alert("Address not found")
+                            setValidated(false);
+                        } else if (checkErrors(error.error)) {
+                            setValidated(false);
                         }
                     })
                 }
