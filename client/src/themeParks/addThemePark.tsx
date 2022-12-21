@@ -12,7 +12,7 @@ import { setSyntheticTrailingComments } from 'typescript';
 import axios from 'axios';
 import { allowedNodeEnvironmentFlags } from 'process';
 import { loggedIn } from '../localStorageProcessing'
-import { LoginFirstCard }  from '../higherOrderComponents/cardWithLinkTo';
+import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 import ThemeParkInputForm from './themeParkInputForm';
 import { ThemePark } from './themePark';
 
@@ -25,29 +25,30 @@ function AddThemePark() {
     const [validated, setValidated] = useState(false);
 
     function submit(themepark: ThemePark) {
-        const handleSubmit : React.FormEventHandler<HTMLFormElement> = 
-        (event: React.FormEvent<HTMLFormElement>) => {
-            const form = event.currentTarget
-            
-            if (form.checkValidity() === false) {
-                event.preventDefault();
-                event.stopPropagation();
-            } else {
-                axios.post(backendServer("/themepark"), themepark.toJSON()).then((response) => {
-                    alert("Theme park was succesfully added")
-                    if (response.data.recognised) {
-                        navigate("/home")
-                    }
-                }).catch(function (error) {
-                    if (error.response.status === 418) {
-                        alert("Address not found")
-                    }
-                })
-            }
-            event.preventDefault();
-            setValidated(true);
+        const handleSubmit: React.FormEventHandler<HTMLFormElement> =
+            (event: React.FormEvent<HTMLFormElement>) => {
+                const form = event.currentTarget
 
-        }
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                } else {
+                    axios.post(backendServer("/themepark"), themepark.toJSON()).then((response) => {
+                        alert("Theme park was succesfully added")
+                        if (response.data.recognised) {
+                            navigate("/home")
+                        }
+
+                    }).catch(function (error) {
+                        if (error.response.status === 418) {
+                            alert("Address not found")
+                        }
+                    })
+                }
+                event.preventDefault();
+                setValidated(true);
+
+            }
         return handleSubmit
     }
 
@@ -59,12 +60,12 @@ function AddThemePark() {
         return (
             <div className="ContentOfPage">
                 <h1>Add a theme park</h1>
-                <ThemeParkInputForm 
-                    title={"Add a new theme park"} 
+                <ThemeParkInputForm
+                    title={"Add a new theme park"}
                     text={"Fill in the form to add a new theme park. Please check first if the theme park is not a duplicate."}
                     validated={validated}
                     onFormSubmit={submit}
-                    />
+                />
             </div >);
     } else {
         return (
