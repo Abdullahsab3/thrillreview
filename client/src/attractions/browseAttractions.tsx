@@ -25,13 +25,13 @@ interface AttractionPreviewInfoInterface {
 
 function AttractionPreviewCard(props: attractionPreviewInterface) {
     const attractionProp = props.attractionInfo
-    const [rating, setRating] = useState(0) 
- /*   useEffect(() => {
+    const [rating, setRating] = useState(0)
+    useEffect(() => {
         getAttractionRating(attractionProp.id, function (rating, total, error) {
             setRating(rating)
         })
 
-    }, []) */    
+    }, [])
 
     if (props.refs) {
         return (
@@ -181,18 +181,18 @@ function BrowseAttractions() {
                 </Card.Body>
             </Card>
 
-            {attractions.length ?  
-            attractions.map((attraction: AttractionPreviewInfoInterface, i: number) => {
-                if (attractions.length === i + 1) {
-                    return (
-                        <AttractionPreviewCard refs={lastAttractionRef} key={attraction.id} attractionInfo={attraction} />
-                    );
-                } else {
-                    return (
-                        <AttractionPreviewCard key={attraction.id} attractionInfo={attraction} />
-                    );
-                }
-            }) : <NoMatchesCard topic={"attractions"} topicSingular={"attraction"}/> }
+            {attractions.length ?
+                attractions.map((attraction: AttractionPreviewInfoInterface, i: number) => {
+                    if (attractions.length === i + 1) {
+                        return (
+                            <AttractionPreviewCard refs={lastAttractionRef} key={attraction.id} attractionInfo={attraction} />
+                        );
+                    } else {
+                        return (
+                            <AttractionPreviewCard key={attraction.id} attractionInfo={attraction} />
+                        );
+                    }
+                }) : <NoMatchesCard topic={"attractions"} topicSingular={"attraction"} />}
             {loading ? <LoadingCard topic={"attractions"} /> : ""}
             {error ? <ErrorCard topic={"attractions"} /> : ""}
 
