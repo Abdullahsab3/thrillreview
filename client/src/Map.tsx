@@ -35,7 +35,7 @@ async function AskWeather(lat: string, lon: string) {
   const mainInfo = res.data.main;
   const feelsLike = (mainInfo.feels_like / 10).toFixed(1);
   const weatherInfo: weatherInterface = {
-    imgSrc: `http://openweathermap.org/img/wn/${icon}@2x.png`,
+    imgSrc: `https://openweathermap.org/img/wn/${icon}@2x.png`,
     description: weatherDescription,
     feelsTemp: `${feelsLike}`,
   };
