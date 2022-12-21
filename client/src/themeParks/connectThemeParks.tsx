@@ -82,7 +82,7 @@ function ConnectThemePark(props: connectThemeParkInterface) {
 
     return (
         <>
-        <Dropdown autoClose="outside">
+        <Dropdown>
             <Dropdown.Toggle>Select theme park</Dropdown.Toggle>
             <Dropdown.Menu>
                 <Dropdown.Item>
