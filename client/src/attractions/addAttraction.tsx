@@ -24,7 +24,6 @@ function AddAttraction() {
                 } else {
                     Axios.post(backendServer("/attraction"), attraction.toJSON()
                     ).then((response) => {
-                        alert("The attraction was successfully added!")
                         if (response.data.registered) {
                         }
                         if (images) {
@@ -47,9 +46,10 @@ function AddAttraction() {
                                 })
                                 i++;
                             }
-
-
                         }
+                        
+                        alert("The attraction was successfully added!")
+                        setValidated(true)
                     }).catch(function (error) {
                         if (error.response) {
                             //setError(error.response.data.error)
