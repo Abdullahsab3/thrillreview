@@ -1,5 +1,5 @@
 import { FormEventHandler, useState } from "react";
-import { Button, Card, Carousel, CarouselItem, Col, Form, InputGroup, Modal, Row } from "react-bootstrap";
+import { Button, Card, Form, InputGroup } from "react-bootstrap";
 import { Event } from './Event';
 import ConnectThemePark from "../themeParks/connectThemeParks";
 

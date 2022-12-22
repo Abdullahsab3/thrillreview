@@ -5,7 +5,6 @@ import { backendServer } from "../helpers"
 import { Button, Modal, Table } from "react-bootstrap"
 import { ThemePark } from "./themePark"
 import ThemeParkInputForm from "./themeParkInputForm"
-import { propTypes } from "react-bootstrap/esm/Image"
 
 export default function ThemeParkPage() {
     const [themePark, setThemePark] = useState<ThemePark>()

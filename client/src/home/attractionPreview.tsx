@@ -12,7 +12,6 @@ interface attractionpreviewProps {
 
 export function AttractionPreview(props: attractionpreviewProps) {
     const [userName, setUsername] = useState("")
-    const [attractionName, setAttractionName] = useState("")
     const [avatar, setAvatar] = useState(false)
 
     useEffect(() => {

@@ -23,7 +23,6 @@ function AddAttraction() {
         } else return false;
     }
 
-
     function submit(attraction: Attraction, images: File[]) {
         const handleSubmit: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
@@ -66,7 +65,6 @@ function AddAttraction() {
             }
 
             sendImages()
-
             alert("The attraction was successfully added!")
             setValidated(true);
             navigate(`/Attractions/${id}`)

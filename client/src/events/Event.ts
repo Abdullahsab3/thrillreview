@@ -17,7 +17,7 @@ class Event {
 
     toJSON(): any {
         return {"name": this.name, "date": this.date, "hour": this.hour,
-                "themepark":this.themepark, "description":this.description}; // , "id": this.id
+                "themepark":this.themepark, "description":this.description}; 
     }
 }
 
