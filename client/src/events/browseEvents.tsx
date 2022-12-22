@@ -6,6 +6,7 @@ import { Search } from 'react-bootstrap-icons';
 import "../styling/browsingPage.css";
 import { Event } from './Event';
 import { ErrorCard, LoadingCard, NoMatchesCard } from '../higherOrderComponents/generalCardsForBrowsing';
+import { backendServer } from '../helpers';
 
 interface eventPreviewInterface {
     id: number,
@@ -76,7 +77,7 @@ function GetEvents(query: string, pageNr: number) {
     useEffect(() => {
         setLoading(true)
         setError(false)
-        axios.get(`/events/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`).then(res => {
+        axios.get(backendServer(`/events/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`)).then(res => {
             console.log("res:", res);
             let prevEvents = events;
             if (pageNr <= 1) {

@@ -248,7 +248,7 @@ function findAttractionByName(req: any, res: any) {
 
 function findTop10Attractions(req: any, res: any){
   db.all(
-    "SELECT a.id, AVG(r.stars) as avg_rating FROM attractions a JOIN attractionreview r ON a.id = r.attractionID GROUP BY a.id ORDER BY avg_rating DESC LIMIT 10",
+    "SELECT a.id, a.name, a.themepark, AVG(r.stars) as avg_rating FROM attractions a JOIN attractionreview r ON a.id = r.attractionID GROUP BY a.id ORDER BY avg_rating DESC LIMIT 10",
     function (error: any, result: any) {
       if (error){
         return res.status(500).json({ error: "internal server error" });
