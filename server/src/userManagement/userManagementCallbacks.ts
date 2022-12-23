@@ -272,16 +272,20 @@ function updateEmail(req: any, res: any) {
   if (!newEmail) {
     return res.status(400).json({ newEmail: "No email provided" });
   }
-  checkForEmailExistence(newEmail, function (error: any) {
+  checkForEmailExistence(newEmail, function (exists: boolean, error: string) {
     if (error) {
-      res.status(400).json({ newEmail: error });
-    } else {
+      return res.status(500).json({ error: error });
+    } 
+    if(exists) {
+      return res.status(400).json({newEmail: "The email address already exists!"})
+    }
+     else {
       db.run(
         "UPDATE users set email = ? WHERE id = ?",
         [newEmail, userid],
         function (error: Error) {
           if (error) {
-            res.status(400).json({
+            res.status(500).json({
               newEmail: "Something went wrong while updating the user email.",
             });
           } else {

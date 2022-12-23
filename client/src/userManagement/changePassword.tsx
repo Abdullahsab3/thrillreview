@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Axios from 'axios'
 import { User } from './User'
-import { fetchUserFromLocalStorage } from '../localStorageProcessing'
+import { fetchUserFromLocalStorage, removeUserInLocalstorage } from '../localStorageProcessing'
 import { Link, useNavigate } from 'react-router-dom';
 import { backendServer } from '../helpers';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -65,7 +65,8 @@ export default function ChangePassword() {
                 }).then((res) => {
                     if ((res as any).data.updated) {
                         setValidated(true)
-                        navigate("/profile")
+                        removeUserInLocalstorage()
+                        window.location.replace("/")
 
                     } else {
                         setValidated(false)

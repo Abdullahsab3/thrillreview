@@ -60,6 +60,7 @@ export default function ChangeEmail() {
                         setValidated(false)
                     }
                 }).catch(function (error) {
+                    console.log(error)
                     if (checkForErrors(error.response.data)) {
                         setValidated(false)
                     }
