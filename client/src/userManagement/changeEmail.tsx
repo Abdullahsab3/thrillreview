@@ -4,14 +4,18 @@ import Card from 'react-bootstrap/Card';
 import Axios from 'axios'
 import { User } from './User'
 import { fetchUserFromLocalStorage } from '../localStorageProcessing'
-import { Link, useNavigate } from 'react-router-dom';
-import { isValidEmail, backendServer } from '../helpers';
+import { useNavigate } from 'react-router-dom';
+import { backendServer } from '../helpers';
 import InputGroup from 'react-bootstrap/InputGroup';
 import ButtonWithLoading from '../higherOrderComponents/buttonWithLoading';
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import './styling/userMangement.css';
 import { LoginFirstCard }  from '../higherOrderComponents/cardWithLinkTo';
 
+/**
+ * 
+ * @returns A page to change the email address of a user.
+ */
 
 export default function ChangeEmail() {
     const navigate = useNavigate()

@@ -10,6 +10,7 @@ interface attractionpreviewProps {
     themepark: string
 }
 
+
 export function AttractionPreview(props: attractionpreviewProps) {
     const [userName, setUsername] = useState("")
     const [avatar, setAvatar] = useState(false)

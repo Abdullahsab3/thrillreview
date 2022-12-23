@@ -7,6 +7,11 @@ import WriteReview from "./reviewForm"
 import StarRating from "./starRating"
 import "./styling/review.css"
 
+/**
+ * A Review needs the id of the user to fetch its avatar and name
+ * and the id of the attraction to let the user edit their review.
+ *
+ */
 interface ReviewProps {
     userID: number
     attractionID: number
@@ -19,14 +24,24 @@ export default function Review(props: ReviewProps) {
     const [Error, setError] = useState("")
     const [username, setUsername] = useState("")
     const [avatar, setAvatar] = useState(false)
+    /**
+     * Whether the review is posted by the logged in user.
+     * If it is, they will get to see the "edit" button.
+     */
     const [postedByUser, setPostedByUser] = useState(false)
+    /**
+     * If they clicked the edit button, the review will change to an input form
+     * to modify the review.
+     */
     const [editedClicked, setEditedClicked] = useState(false)
 
     const user: User | null = fetchUserFromLocalStorage()
 
+    /**
+     * Fetch te username, and check if the user has an avatar.
+     */
 
     useEffect(() => {
-
 
         if (user && ((user as User).id === props.userID)) {
             setPostedByUser(true)

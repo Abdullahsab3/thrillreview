@@ -5,7 +5,13 @@ import "./styling/starRating.css"
 interface ratingProps {
     getRating: (rating: number) => void
 }
-
+/**
+ * An array of stars from which the user can select one
+ * to rate an attraction.
+ * Based on: https://dev.to/michaelburrows/create-a-custom-react-star-rating-component-5o6
+ * @param props getRating to get the selected rating by the user.
+ * @returns an array of 5 star buttons
+ */
 export default function StarRatingForm(props: ratingProps) {
     const [rating, setRating] = useState(-1);
     const [hover, setHover] = useState(0);

@@ -14,6 +14,9 @@ const Home = () => {
 
 
     const [feeds, setFeeds] = useState<any[]>([])
+    /**
+     * Fetch the feeds from the server
+     */
     useEffect(() => {
         trackPromise(
             Axios.get(backendServer("/feed")).then((res) => {
@@ -25,6 +28,10 @@ const Home = () => {
 
     }, [])
 
+    /**
+     * 
+     * @returns an array of preview cards for each fetched feeds post
+     */
     function publishFeeds() {
         return feeds.map((value, i) => {
             switch (value.type) {

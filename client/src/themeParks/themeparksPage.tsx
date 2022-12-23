@@ -63,6 +63,9 @@ export default function ThemeParkPage() {
             </td>
         )
     }
+    /**
+     * Similar to the attraction information table.
+     */
     const info = [
         <th className="info">name: </th>,
         <th className="info">Opening Date: </th>,

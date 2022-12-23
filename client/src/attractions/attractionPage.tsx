@@ -26,6 +26,10 @@ export default function AttractionPage() {
 
     const { attractionID } = useParams()
 
+    /**
+     * Fetch the information of the attraction from the server
+     * and the rating and total reviews.
+     */
     function getAttractioninfo() {
         trackPromise(
             Axios.get(backendServer(`/attraction/${attractionID}`)).then((res) => {
@@ -49,6 +53,12 @@ export default function AttractionPage() {
         getAttractioninfo()
     }, [])
 
+    /**
+     * Submit the attraction modifications to the server.
+     * 
+     * @param attraction The newly modified attraction information
+     * @param images The newly added images.
+     */
     function submitEdits(attraction: Attraction, images: File[]) {
         const updateAttractionInfo: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
@@ -59,6 +69,9 @@ export default function AttractionPage() {
                     event.stopPropagation();
                 }
                 else {
+                    /**
+                     * send all uploaded images to the server.
+                     */
                     for(const image of images) {
                         const formData = new FormData();
                         formData.append(`image`, image);
@@ -71,6 +84,9 @@ export default function AttractionPage() {
                         })
                     }
                     
+                    /**
+                     * send the modified data to the server.
+                     */
                     Axios.put(backendServer(`/attraction/${attractionID}`), attraction.toJSON()).then((res) => {
                         if (res.data.updated) {
                             getAttractioninfo()
@@ -100,6 +116,10 @@ export default function AttractionPage() {
     }
 
 
+    /**
+     * Some sort of dictionary to make this part of the code
+     * easier to extend and maintain.
+     */
     const info = [
         <th className="info">Themepark: </th>,
         <th className="info">Opening Date: </th>,
@@ -121,6 +141,11 @@ export default function AttractionPage() {
         <TableData data={attraction?.duration} />
     ]
 
+    /**
+     * 
+     * using these arrays, make an array of rows
+     * @returns 
+     */
     function createDataRows() {
         const rows = []
         for (let i = 0; i < data.length; i++) {
@@ -133,6 +158,9 @@ export default function AttractionPage() {
         return (rows)
     }
 
+    /**
+     * View the information of the attraction in a table using the rows..
+     */
     function getInformationCard() {
         return (
             <div>
@@ -168,6 +196,11 @@ export default function AttractionPage() {
         )
     }
 
+    /**
+     * To modify the attraction info, a modal is used to display the modification form.
+     * The user is required to be logged in.
+     * @returns a modal with the form to modify the attraction.
+     */
     function getInformationForm() {
         return (
             <Modal show={edit} onHide={() => setEdit(false)}>
@@ -190,6 +223,10 @@ export default function AttractionPage() {
         )
     }
 
+    /**
+     * The divison components of the whole page
+     * @returns a div including all the page components
+     */
     function AttractionPageBody() {
         return (
             <div>

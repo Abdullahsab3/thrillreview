@@ -12,6 +12,12 @@ import ButtonWithLoading from '../higherOrderComponents/buttonWithLoading';
 import './styling/userMangement.css';
 import { LoginFirstCard }  from '../higherOrderComponents/cardWithLinkTo';
 
+/**
+ * 
+ * @returns A page to change the password of the user
+ * The user is requested to enter their old password
+ * along with their new desired password, making sure they repeat it again.
+ */
 export default function ChangePassword() {
 
     const navigate = useNavigate()

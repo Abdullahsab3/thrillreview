@@ -25,6 +25,19 @@ interface cardProps {
     imageMaxHeight?: number;
     promiseInProgress: boolean;
 }
+/**
+ * A card which allows for uploading an image, either by selecting it from the files
+ * or by dragging and dropping it.
+ * @param cardProps 
+ * title: the title of the card
+ * 
+ * description: the description of the card
+ * 
+ * onSubmit: a function which has in its argument the uploaded file, along with a call back for possible errors
+ * 
+ * serverValidated: whether the server had any errors while uploading the image to it
+ * 
+ */
 
 function CardWithImageUpload(cardProps: cardProps) {
 
@@ -34,6 +47,9 @@ function CardWithImageUpload(cardProps: cardProps) {
     const [fileError, setFileError] = useState("")
 
 
+    /**
+     * Check whether the uplaoded file is an image.
+     */
     var acceptedTypes: Array<string> = ['image/png', 'image/jpg', 'image/jpeg']
     function checkImageType(f: File | null, getErr: (error: string | null) => void) {
         if (!(f && acceptedTypes.includes(f.type))) {
@@ -42,7 +58,11 @@ function CardWithImageUpload(cardProps: cardProps) {
             getErr(null)
         }
     }
-
+/**
+ * Check whether the size of the image is smaller than the maximal constraint.
+ * @param f 
+ * @param getErr 
+ */
     function checkImageSize(f: File | null, getErr: (error: string | null) => void) {
         if (f && (f.size > cardProps.imageMaxSize)) {
             getErr("File size should not exceed 8 megabytes.")
@@ -51,6 +71,9 @@ function CardWithImageUpload(cardProps: cardProps) {
         }
     }
 
+    /**
+     * Check whether the image dimensions are within the defined range of dimensions in the prop.
+     */
     const exactDimError: string = `Images should have dimensions of ${cardProps.imageHeight} x ${cardProps.imageWidth}`
     const maxDimError: string = `images should have dimensions less than or equal to ${cardProps.imageMaxHeight} x ${cardProps.imageMaxWidth}`
     function checkImageDimensions(url: string, getErr: (error: string | null) => void) {
@@ -77,6 +100,16 @@ function CardWithImageUpload(cardProps: cardProps) {
         }
     }
 
+    /**
+     * Check all the previous constraints
+     * 
+     * These constraints are:
+     * 
+     * -  the type of image (jpg, jpeg or png)
+     * - the size of the image
+     * - the dimensions of the image
+     * 
+     */
     function checkAvatarProperties(f: File | null, url: string, cb: (error: string | null) => void) {
         checkImageType(f, (error: string | null) => {
             if (error) {
@@ -99,6 +132,10 @@ function CardWithImageUpload(cardProps: cardProps) {
         })
     }
 
+    /**
+     * Once the avatar is uploaded, show a preview
+     * and add the file to the state.
+     */
     function setUploadedAvatar(f: File | null) {
         const objectUrl = URL.createObjectURL((f as File))
         checkAvatarProperties(f, objectUrl, (error: string | null) => {
@@ -116,6 +153,12 @@ function CardWithImageUpload(cardProps: cardProps) {
             setUploadedAvatar(e.target.files[0]);
         }
     };
+
+    /**
+     * When the file is dropped, "catch" it.
+     * Only one file is allowed
+     * so dropping multiple file will select the first file.
+     */
     function dropHandler(e: any): void {
         e.preventDefault();
         e.stopPropagation();
@@ -140,7 +183,9 @@ function CardWithImageUpload(cardProps: cardProps) {
     }
 
 
-
+    /**
+     * If the user clicked the "remove" button, after the file being uploaded.
+     */
     function removeRetrievedAvatar() {
         setUploadedFile(null)
         setPreview("")

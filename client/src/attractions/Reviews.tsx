@@ -6,9 +6,22 @@ import Review from "./Review"
 import WriteReview from "./reviewForm"
 import "./styling/reviews.css"
 
+/**
+ * The id of the attraction for which the reviews should be fetched.
+ */
 interface ReviewsProps {
     attractionID: number
 }
+
+/**
+ * The reviews section.
+ * This includes a form to write a new review (or modify the existing one).
+ * The reviews section supports pagination, and ordering the reviews
+ * either by date, or by the amount of start
+ * ascending or descending.
+ * @param props consisting of the attraction id
+ * @returns 
+ */
 export default function Reviews(props: ReviewsProps) {
     const disabledPage = -1
     const initialLimit = 5
@@ -24,6 +37,10 @@ export default function Reviews(props: ReviewsProps) {
     const [order, setOrder] = useState("date")
     const [sort, setSort] = useState("desc")
 
+    /**
+     * Fetch all the reviews from the server
+     * that corresponds with the current active page.
+     */
     function getReviews() {
         setReviews([])
         Axios.get(backendServer(`/attraction/${props.attractionID}/reviews?limit=${limit}&page=${page}&orderBy=${order}&sort=${sort}`)).then((res) => {
@@ -68,7 +85,11 @@ export default function Reviews(props: ReviewsProps) {
     }, [page, order, sort])
 
 
-
+/**
+ * Order the reviews by date or stars
+ * ascending or descending.
+ * @returns A dropdown menu to select the order of the reviews
+ */
     function OrderMenu() {
         return (
           <Dropdown title="Sort by">
