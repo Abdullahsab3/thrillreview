@@ -14,6 +14,7 @@ function HighLightedAttraction() {
     const [randomId, setRandomId] = useState(0);
     const [error, setError] = useState("");
 
+    // request the number of attractions to pick a random id
     useEffect(() => {
         axios.get(backendServer('/attraction/count')).then((res) => {
             const maxId = res.data.result;
@@ -23,6 +24,7 @@ function HighLightedAttraction() {
 
     }, [])
 
+    // when there is a random id (not zero), render it
     useEffect(() => {
         if (randomId) {
             axios.get(backendServer(`/attraction/${randomId}`)).then((res) => {
@@ -37,7 +39,7 @@ function HighLightedAttraction() {
         }
     }, [randomId])
 
-
+    // create the data rows for the table of the attraction information
     function createDataRows() {
         const rows = [];
         const info = ["name", "themepark", "type", "height", "lenght", "inversions", "duration"];

@@ -1,6 +1,8 @@
 import { Card, ListGroup, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+
+// the information you need
 interface themeParkPreviewInterface {
     id: number,
     name: string,
@@ -9,6 +11,8 @@ interface themeParkPreviewInterface {
     refs?: (e: HTMLDivElement) => void,
 }
 
+// theme park preview card
+// last theme park gets a reference
 function ThemeParkPreviewCard(props: themeParkPreviewInterface) {
     if (props.refs) {
         return (

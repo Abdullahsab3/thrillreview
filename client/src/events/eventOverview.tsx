@@ -4,16 +4,9 @@ import { Card, ListGroup } from 'react-bootstrap'
 import { backendServer, getThrillreviewWebsiteLink } from '../helpers';
 import './styling/eventOverview.css';
 
-interface eventOverviewInterface {
-    userId: number;
-}
-
-interface eventInfoInterface {
-    id: number,
-    eventName: string,
-    themepark: string,
-    date: string,
-}
+   interface eventOverviewInterface {
+        userId: number;
+    }
 
 function EventOverviewCard(props: eventOverviewInterface) {
     // a couple of constants
@@ -23,6 +16,14 @@ function EventOverviewCard(props: eventOverviewInterface) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const LIMIT_RETURNS = 6;
+
+    // everything you need to know
+    interface eventInfoInterface {
+        id: number,
+        eventName: string,
+        themepark: string,
+        date: string,
+    }
 
     // whether the id is in the array
     function isIdInArray(a: eventInfoInterface[], i: number): Boolean {
@@ -61,13 +62,14 @@ function EventOverviewCard(props: eventOverviewInterface) {
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
         if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
         observer.current = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting && hasMore) {  
+            if (entries[0].isIntersecting && hasMore) {
                 setPageNr(prevPageNr => prevPageNr + 1);
             }
         })
         if (node) observer.current.observe(node)
     }, [loading, hasMore])
 
+    // show events
     return (
         <Card className="eventOverview">
             <Card.Title> An Overview of all your events</Card.Title>

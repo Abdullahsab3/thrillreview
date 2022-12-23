@@ -1,6 +1,8 @@
 import { Card, ListGroup, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+
+// information needed
 interface eventPreviewInterface {
     id: number,
     name: string,
@@ -10,6 +12,7 @@ interface eventPreviewInterface {
 }
 
 function EventPreviewCard(props: eventPreviewInterface) {
+    // last event needs a reference
     if (props.refs) {
         return (
             <Card ref={props.refs} className="browsingCard">
