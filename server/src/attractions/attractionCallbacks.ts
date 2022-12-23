@@ -255,7 +255,7 @@ function findTop10Attractions(req: any, res: any){
       }else if (result){
         return res.status(200).json({ result: result });
       }else {
-        return res.status(400).json({ error: "attractions not foung" });
+        return res.status(400).json({ error: "attractions not found" });
       }
     }
   );

@@ -1,14 +1,6 @@
 import { Event } from "./Event";
 import { db, getEvent, getEvents, getEventAttendees, getEventsJoinedByUser } from "../database";
 
-/*
--event aanmaken
--een event terug geven als je het id geeft
--events terug geven met pagination
--user laten deelnemen aan event
--de deelnemers van een event weergeven met pagination
--van een bepaalde user de events teug geven waaraan die meedoet
-*/
 
 // event toevoegen
 function addEvent(req: any, res: any){
