@@ -274,11 +274,11 @@ function findThemeParkByName(req: any, res: any) {
   }
   getThemeParksByName(themeParkName, page, limit, function (error, result) {
     if (error) {
-      res.status(400).json(error);
+      res.status(400).json({error: error});
     } else if (result) {
       res.status(200).json(result);
     } else {
-      res.status(400).json({ error: true, reviews: "No themeparks found" });
+      res.status(404).json({themeparks: "No themeparks found" });
     }
   });
 }

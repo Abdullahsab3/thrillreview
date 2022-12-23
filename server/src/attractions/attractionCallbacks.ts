@@ -237,11 +237,11 @@ function findAttractionByName(req: any, res: any) {
   }
   getAttractionsByName(attractionName, page, limit, function (error, result) {
     if (error) {
-      res.status(400).json(error);
+      res.status(500).json({error: error});
     } else if (result) {
       res.status(200).json(result);
     } else {
-      res.status(400).json({ error: true, reviews: "No attractions found" });
+      res.status(404).json({attractions: "No attractions found" });
     }
   });
 }

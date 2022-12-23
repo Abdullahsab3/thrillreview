@@ -38,12 +38,12 @@ function findEventByID(req: any, res: any){
     const id = req.params.eventID;
     getEvent(id, function (error: any, event: Event | null) {
         if (error) {
-            return res.status(400).json({ error: error });
+            return res.status(500).json({ error: error });
           }
           if (event) {
             return res.status(200).json(event.toJSON());
           } else {
-            return res.status(400).json({
+            return res.status(404).json({
               eventID: "No event found with the given ID",
             });
           }
@@ -66,11 +66,11 @@ function findEvents(req: any, res: any){
     }
     getEvents(eventName, page, limit, function (error, result) {
       if (error) {
-        res.status(400).json(error);
+        res.status(400).json({error: error});
       } else if (result) {
         res.status(200).json(result);
       } else {
-        res.status(400).json({ error: true, reviews: "No events found" });
+        res.status(404).json({events: "No events found" });
       }
     });
 }
@@ -87,7 +87,7 @@ function userJoinEvent(req: any, res: any){
         ],
         (error: Error, result: any) => {
             if (error) {
-                return res.status(400).json({ error: error.message });
+                return res.status(500).json({ error: "Something went wrong while trying to add the user to joing the event." });
             } else {
                 return res.json({ added: true });
             }
@@ -163,7 +163,7 @@ function eventAttendeesCount(req: any, res: any){
         [ eventID ],
         function (error, countResult) {
             if (error) {
-                return res.status(400).json({ error: "something whent wrong while getting the attendees" });
+                return res.status(500).json({ error: "something whent wrong while getting the attendees" });
             } else {
                 return res.status(200).json({ result: countResult["COUNT(*)"] });
             }
