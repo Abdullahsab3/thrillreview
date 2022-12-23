@@ -27,7 +27,7 @@ interface imageinfo {
  * and then display them in the gallery.
  * @param props an interface with attractionID,
  *  which is the id of the attraction of which the photos should be fetched.
- * @returns The gallery
+ * @returns The gallery if there are images, or a message indicating there are no images.
  */
 export default function AttractionImages(props: imageProps) {
 
