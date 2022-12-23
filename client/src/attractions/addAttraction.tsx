@@ -9,10 +9,10 @@ import { loggedIn } from '../localStorageProcessing';
 import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 
 function AddAttraction() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [validated, setValidated] = useState(false);
-    const [id, setId] = useState(-1)
-    const [images, setImages] = useState<File[]>([])
+    const [id, setId] = useState(-1);
+    const [images, setImages] = useState<File[]>([]);
     var user: Boolean = loggedIn();
 
 
@@ -27,15 +27,13 @@ function AddAttraction() {
         const handleSubmit: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault();
-                setImages(images)
+                setImages(images);
                 const form = event.currentTarget
                 if (!form.checkValidity() || !attraction.themepark) {
                     event.stopPropagation();
                 } else {
-                    Axios.post(backendServer("/attraction"), attraction.toJSON()
-                    ).then((response) => {
+                    Axios.post(backendServer("/attraction"), attraction.toJSON()).then((response) => {
                         setId(response.data.id)
-
                     }).catch(function (error) {
                         if (checkErrors(error.error)) {
                             setValidated(false)

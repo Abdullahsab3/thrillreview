@@ -78,7 +78,6 @@ function GetEvents(query: string, pageNr: number) {
         setLoading(true)
         setError(false)
         axios.get(backendServer(`/events/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`)).then(res => {
-            console.log("res:", res);
             let prevEvents = events;
             if (pageNr <= 1) {
                 prevEvents = [];
@@ -105,7 +104,6 @@ function GetEvents(query: string, pageNr: number) {
 
 function BrowseEvents() {
     const { initialQuery } = useParams()
-    console.log(initialQuery)
     const [query, setQuery] = useState("")
     const [intermediateQuery, setIntermediateQuery] = useState("")
     const [pageNr, setPageNr] = useState(1);

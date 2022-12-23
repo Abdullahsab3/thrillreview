@@ -96,11 +96,7 @@ function GetAttractions(query: string, pageNr: number) {
     useEffect(() => {
         setLoading(true)
         setError(false)
-        console.log("hasmoreVOORBACKENDS", hasMore)
-        console.log("VOOR BACKEND - query", query, "pnr", pageNr);
-        console.log("url", backendServer(`/attractions/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`))
         axios.get(backendServer(`/attractions/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`)).then(res => {
-            console.log("res:", res.data);
             let prevAttractions = attractions;
             if ((pageNr <= 1)) {
                 prevAttractions = [];
@@ -139,26 +135,22 @@ function BrowseAttractions() {
     const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
     const lastAttractionRef = useCallback((node: HTMLDivElement) => {
         if (loading) return; // otherwise will keep sending callbacks while loading
-        console.log("node", node)
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
         if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
-        console.log("disconn")
         observer.current = new IntersectionObserver(entries => {
             if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more
-                console.log("page nr aanpassen")
                 setPageNr(prevPageNr => prevPageNr + 1)
             }
         })
 
         if (node) observer.current.observe(node)
-        console.log("na")
     }, [loading, hasMore])
 
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         setPageNr(1);
         setQuery(intermediateQuery);
-        event.preventDefault()
+        event.preventDefault();
     }
 
     return (

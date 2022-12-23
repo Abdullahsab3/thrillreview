@@ -54,7 +54,7 @@ function checkAttractionInformation(input: any,): string {
     return("height not valid")
   }
   if(inversions &&  typeof inversions != 'string'){
-    return("inverseions not valid")
+    return("inversions not valid")
   }
   if(duration &&  typeof duration != 'string'){
     return("duration not valid")
@@ -65,7 +65,6 @@ function checkAttractionInformation(input: any,): string {
 // attractie toevoegen aan db
 async function addAttraction(req: any, res: any) {
   const validationError = checkAttractionInformation(req.body)
-  console.log(validationError)
   if(validationError) {
     return res.status(400).json({error: validationError})
   }
@@ -99,7 +98,6 @@ async function addAttraction(req: any, res: any) {
               themeparkID,
             ],
             (error: Error, result: any) => {
-              console.log(error)
               if (error) {
                 return res.status(400).json({ error: error.message });
               } else {

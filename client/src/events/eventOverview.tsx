@@ -8,7 +8,6 @@ interface eventOverviewInterface {
     userId: number;
 }
 
-
 interface eventInfoInterface {
     id: number,
     eventName: string,
@@ -17,14 +16,15 @@ interface eventInfoInterface {
 }
 
 function EventOverviewCard(props: eventOverviewInterface) {
+    // a couple of constants
     const [pageNr, setPageNr] = useState(1);
     const [events, setEvents] = useState<eventInfoInterface[]>([]);
     const [hasMore, setHasMore] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-
     const LIMIT_RETURNS = 6;
 
+    // whether the id is in the array
     function isIdInArray(a: eventInfoInterface[], i: number): Boolean {
         let res = false;
         a.forEach(t => {
@@ -33,6 +33,7 @@ function EventOverviewCard(props: eventOverviewInterface) {
         return res;
     }
 
+    // whenever page number changes, request new events
     useEffect(() => {
         axios.get(backendServer(`/events/userJoined?limit=${LIMIT_RETURNS}&page=${pageNr}`)).then((res) => {
             let prevEvents: eventInfoInterface[] = events;
@@ -40,10 +41,9 @@ function EventOverviewCard(props: eventOverviewInterface) {
                 prevEvents = [];
             }
             res.data.result.map((info: any) => {
-                console.log(info)
                 const { eventID, name, themepark, date } = info;
                 if (!isIdInArray(prevEvents, eventID))
-                    prevEvents.push({ id: eventID, eventName: name, themepark: themepark, date: date});
+                    prevEvents.push({ id: eventID, eventName: name, themepark: themepark, date: date });
             })
             setEvents(prevEvents);
             setHasMore(res.data.result.length === LIMIT_RETURNS);
@@ -54,13 +54,13 @@ function EventOverviewCard(props: eventOverviewInterface) {
         })
     }, [pageNr]);
 
-    const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
+    const observer = useRef<IntersectionObserver | null>(null);
     const lastEventRef = useCallback((node: HTMLAnchorElement) => {
         if (loading) return // otherwise will keep sending callbacks while loading
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
         if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
         observer.current = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more   
+            if (entries[0].isIntersecting && hasMore) {  
                 setPageNr(prevPageNr => prevPageNr + 1);
             }
         })
@@ -71,14 +71,14 @@ function EventOverviewCard(props: eventOverviewInterface) {
         <Card className="eventOverview">
             <Card.Title> An Overview of all your events</Card.Title>
             <Card id="eventLisScrollCard">
-            <ListGroup variant="flush" id="eventList">
-                {events.map((ev: eventInfoInterface, i: number) => {
-                    if (events.length === i + 1)
-                    return <ListGroup.Item  key={ev.id} ref={lastEventRef}>an event called <a href={getThrillreviewWebsiteLink('Events/' + ev.id)}>{ev.eventName}</a>, on the {ev.date} in {ev.themepark}</ListGroup.Item>;
-                    else return  <ListGroup.Item key={ev.id}>an event called <a href={getThrillreviewWebsiteLink('Events/' + ev.id)}>{ev.eventName}</a>, on the {ev.date} in {ev.themepark}</ListGroup.Item>;
-                })}
-          
-            </ListGroup>
+                <ListGroup variant="flush" id="eventList">
+                    {events.map((ev: eventInfoInterface, i: number) => {
+                        if (events.length === i + 1)
+                            return <ListGroup.Item key={ev.id} ref={lastEventRef}>an event called <a href={getThrillreviewWebsiteLink('Events/' + ev.id)}>{ev.eventName}</a>, on the {ev.date} in {ev.themepark}</ListGroup.Item>;
+                        else return <ListGroup.Item key={ev.id}>an event called <a href={getThrillreviewWebsiteLink('Events/' + ev.id)}>{ev.eventName}</a>, on the {ev.date} in {ev.themepark}</ListGroup.Item>;
+                    })}
+
+                </ListGroup>
             </Card>
         </Card>
     );
