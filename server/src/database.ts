@@ -980,7 +980,7 @@ function getEventsJoinedByUser(
           limit = countResult["COUNT(*)"];
         }
         db.all(
-          "Select * FROM eventjoin INNER JOIN events ON eventjoin.eventID=events.ID WHERE eventjoin.userID = ? ORDER BY events.date LIMIT ?,?;",
+          "Select events.id, eventjoin.userID, events.name, themeparks.name as themepark FROM eventjoin INNER JOIN events ON eventjoin.eventID=events.ID INNER JOIN themeparks ON events.themepark = themeparks.id  WHERE eventjoin.userID = ? ORDER BY events.date LIMIT ?,?;",
           [
             userID,
             startIndex,
