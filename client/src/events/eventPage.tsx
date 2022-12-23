@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Event } from "./Event";
 import { Table, Button } from "react-bootstrap";
 import { loggedIn } from '../localStorageProcessing';
-import { setConstantValue } from "typescript";
 import { backendServer } from "../helpers";
 
 function EventPage() {

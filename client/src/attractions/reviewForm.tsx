@@ -2,7 +2,6 @@ import Axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import { trackPromise, usePromiseTracker } from "react-promise-tracker";
-import { Link } from "react-router-dom";
 import { backendServer } from "../helpers";
 import ButtonWithLoading from "../higherOrderComponents/buttonWithLoading";
 import { fetchUserFromLocalStorage } from "../localStorageProcessing";

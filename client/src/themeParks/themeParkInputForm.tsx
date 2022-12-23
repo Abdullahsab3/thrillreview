@@ -1,6 +1,6 @@
 import './styling/addThemePark.css'
-import React, { FormEventHandler, useEffect, useState } from 'react';
-import { Card, Dropdown } from "react-bootstrap";
+import { FormEventHandler, useEffect, useState } from 'react';
+import { Card } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
@@ -14,7 +14,6 @@ interface ThemeParkInputFormProps {
     themepark?: ThemePark
     onFormSubmit: (a: ThemePark) => FormEventHandler<HTMLFormElement>
     validated: boolean
-
 }
 
 function ThemeParkInputForm(props: ThemeParkInputFormProps) {

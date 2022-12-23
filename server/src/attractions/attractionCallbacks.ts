@@ -226,7 +226,6 @@ function findAttractionByName(req: any, res: any) {
   var attractionName = req.query.query;
   var page = parseInt(req.query.page);
   var limit = parseInt(req.query.limit);
-  console.log("query", attractionName, "p", page)
   if (!attractionName) { //indien niet gegeven, lege string dus wildcard
     attractionName = "";
   }
@@ -245,6 +244,21 @@ function findAttractionByName(req: any, res: any) {
       res.status(400).json({ error: true, reviews: "No attractions found" });
     }
   });
+}
+
+function findTop10Attractions(req: any, res: any){
+  db.all(
+    "SELECT a.id, a.name, a.themepark, AVG(r.stars) as avg_rating FROM attractions a JOIN attractionreview r ON a.id = r.attractionID GROUP BY a.id ORDER BY avg_rating DESC LIMIT 10",
+    function (error: any, result: any) {
+      if (error){
+        return res.status(500).json({ error: "internal server error" });
+      }else if (result){
+        return res.status(200).json({ result: result });
+      }else {
+        return res.status(400).json({ error: "attractions not foung" });
+      }
+    }
+  );
 }
 
 function addAttractionReview(
@@ -614,6 +628,7 @@ export {
   findAttractionReviews,
   findReview,
   getAttractionName,
+  findTop10Attractions,
   getAverageRating,
   setAttractionReview,
   updateAttraction,

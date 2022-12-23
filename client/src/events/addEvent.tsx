@@ -1,16 +1,6 @@
-//import './styling/addThemePark.css'
 import React, { useState } from 'react';
-import { Card, Dropdown } from "react-bootstrap";
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Button from 'react-bootstrap/Button';
-import { useNavigate } from 'react-router-dom';
 import { backendServer } from '../helpers';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import { isEmptyStatement, NewLineKind, setSyntheticTrailingComments } from 'typescript';
 import axios from 'axios';
-import { allowedNodeEnvironmentFlags } from 'process';
 import EventInputForm from './eventInputForm';
 import { Event } from './Event';
 import { loggedIn } from '../localStorageProcessing'
@@ -18,8 +8,14 @@ import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 
 function AddEvent() {
     var user: Boolean = loggedIn();
-
     const [validated, setValidated] = useState(false);
+    function checkErrors(data: any): boolean {
+        if (data) {
+            alert(data);
+            return true;
+        } else return false;
+    }
+
     function submit(e: Event) {
         const handleSubmit: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
@@ -34,8 +30,9 @@ function AddEvent() {
                         }
                     }
                     ).catch(function (error) {
-                        alert(`something went wrong: ${error.message}`)
-                        console.log(error)
+                        if (checkErrors(error.error)) {
+                            setValidated(false);
+                        }
                     })
                 }
                 setValidated(true);
@@ -49,7 +46,7 @@ function AddEvent() {
                 <EventInputForm title="Add Event" text="Add your really fun event!" validated={validated} onFormSubmit={submit} />
             </div >);
     } else {
-        return (  <LoginFirstCard />);
+        return (<LoginFirstCard />);
     }
 }
 export default AddEvent;

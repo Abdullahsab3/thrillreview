@@ -1,14 +1,9 @@
 import { Col, ListGroup } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import { Search } from 'react-bootstrap-icons';
-import InputGroup from 'react-bootstrap/InputGroup';
 import { useEffect, useState } from 'react';
 import { CardWithLinkTo } from '../higherOrderComponents/cardWithLinkTo';
 import { Link } from 'react-router-dom';
-import { Attraction } from './Attraction';
 import axios from 'axios';
 import { backendServer } from '../helpers';
 
@@ -31,7 +26,8 @@ function Attractions() {
     const [topAttractions, setTopAttractions] = useState<AttractionPreviewInfoInterface[]>([]);
 
     useEffect(() => {
-        axios.get(backendServer(`/attractions/find?query=&page=0&limit=10`)).then((res) => {
+        axios.get(backendServer(`/attraction/top`)).then((res) => {
+            console.log(res)
             let prevtopAttractions: AttractionPreviewInfoInterface[] = [];
             res.data.result.map((attr: any) => {
                 const { name, themepark, id } = attr

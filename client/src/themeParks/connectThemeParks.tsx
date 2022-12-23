@@ -2,10 +2,12 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { MouseEventHandler } from "react";
 import axios from 'axios';
 import { useState, useEffect, useCallback, useRef } from 'react';
+
 import './styling/connectThemeParks.css';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
 import Portal from 'react-overlays/Portal';
+import { backendServer } from '../helpers';
 
 interface themeParkPreviewInfoInterface {
     id: number,
@@ -36,7 +38,7 @@ function ConnectThemePark(props: connectThemeParkInterface) {
     const LIMIT_RETURNS = 6;
     const containerRef = useRef(null);
     useEffect(() => {
-        axios.get(`/themeparks/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`).then(res => {
+        axios.get(backendServer(`/themeparks/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`)).then(res => {
             let prevThemeparks: themeParkPreviewInfoInterface[] = themeParkItems;
             if (pageNr <= 1) {
                 prevThemeparks = [];
