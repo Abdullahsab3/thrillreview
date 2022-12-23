@@ -133,7 +133,7 @@ export default function WriteReview(props: writReviewProps) {
         </div>)
 
     } else {
-        return (<LoginFirstCard />)
+        return (<div className="comment"> <LoginFirstCard/></div>)
     }
    
 }
