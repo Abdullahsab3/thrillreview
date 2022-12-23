@@ -1,5 +1,4 @@
-import { Container, Col, Card, Table, Button } from 'react-bootstrap';
-import AttractionImages from "./attractionImages";
+import {Card, Table, Button } from 'react-bootstrap';
 import StarRating from "./starRating";
 import { Attraction, getAttractionRating } from "./Attraction";
 import { backendServer } from "../helpers";
@@ -16,8 +15,6 @@ function HighLightedAttraction() {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        // hier komt nog een axiosRequest
-        setRandomId(5);
         axios.get(backendServer('/attraction/count')).then((res) => {
             const maxId = res.data.result;
             // random between 1 and max : random[0;1] * (max + 1 - 1) + min = random[0;1] * max + min

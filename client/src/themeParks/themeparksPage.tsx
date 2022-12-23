@@ -5,7 +5,8 @@ import { backendServer } from "../helpers"
 import { Button, Modal, Table } from "react-bootstrap"
 import { ThemePark } from "./themePark"
 import ThemeParkInputForm from "./themeParkInputForm"
-import { propTypes } from "react-bootstrap/esm/Image"
+import { loggedIn } from "../localStorageProcessing"
+import { LoginFirstCard } from "../higherOrderComponents/cardWithLinkTo"
 
 export default function ThemeParkPage() {
     const [themePark, setThemePark] = useState<ThemePark>()
@@ -23,9 +24,8 @@ export default function ThemeParkPage() {
             const { name, openingdate, street, streetNumber, postalCode, country, type, website, id } = res.data
             setThemePark(new ThemePark(name, openingdate, street, streetNumber, postalCode, country, type, website, id))
         }).catch(function (error: any) {
-            setError(error.response.data)
+            setError(error.response.data.error)
         })
-
     }
 
     useEffect(() => {
@@ -63,8 +63,6 @@ export default function ThemeParkPage() {
             </td>
         )
     }
-
-
     const info = [
         <th className="info">name: </th>,
         <th className="info">Opening Date: </th>,
@@ -79,7 +77,6 @@ export default function ThemeParkPage() {
     const url = themePark?.website
 
     const data = [
-
         <td>{themePark?.name}</td>,
         <TableData data={themePark?.openingdate} />,
         <TableData data={themePark?.street} />,
@@ -88,7 +85,6 @@ export default function ThemeParkPage() {
         <TableData data={themePark?.country} />,
         <TableData data={themePark?.type} />,
         <td>{url ? <a href={url}>{url}</a>: "No information found"}</td>,
-       
     ]
 
 
@@ -141,12 +137,12 @@ export default function ThemeParkPage() {
                     <Modal.Title>Edit the themepark</Modal.Title>
                 </Modal.Header>
 
-                {<ThemeParkInputForm
+                {loggedIn() ? <ThemeParkInputForm
                     title="Edit the themeparks information"
                     text="Here you can edit the information of this themepark"
                     themepark={themePark as ThemePark}
                     onFormSubmit={submitEdits}
-                    validated={validated} />}
+                    validated={validated} /> :  <LoginFirstCard/>}
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setEdit(false)}>
                         Close

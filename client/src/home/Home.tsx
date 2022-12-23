@@ -6,7 +6,7 @@ import { ReviewPreview } from "./reviewPreview";
 import { ThemeparkPreview } from "./themeparkPreview";
 import "./styling/feeds.css"
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
-import { Card, Row, Col, Container } from 'react-bootstrap'
+import { Row, Container } from 'react-bootstrap'
 import HighlightedAttraction from "../attractions/HighlightedAttraction";
 
 const Home = () => {

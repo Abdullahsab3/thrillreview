@@ -9,8 +9,6 @@ import logo from './media/logo.png'
 
 function Navigationbar() {
     const [user, setUser] = useState<User | null>(null)
-
-
     const savedUser: string | null = localStorage.getItem("user")
     if (savedUser && !user) {
         const found = JSON.parse(savedUser as string)
@@ -18,9 +16,7 @@ function Navigationbar() {
     }
 
     // why I use both navlink from bootstrap & router : https://stackoverflow.com/questions/56464444/collapseonselect-in-react-bootstrap-navbars-with-react-router-dom-navlinks 
-    // <Nav.Link as={RouterLink} className="pageLink" eventKey="1" to="/">Home</Nav.Link>
-    //  {!user && <Nav.Link as={RouterLink} className="pageLink" eventKey="6" to="/register">Register</Nav.Link>}
-    return (
+     return (
         <Navbar className='navigationbar' collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Navbar.Brand href="/">
                 <img

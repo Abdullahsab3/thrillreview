@@ -35,8 +35,6 @@ function EventOverviewCard(props: eventOverviewInterface) {
 
     useEffect(() => {
         axios.get(backendServer(`/events/userJoined?limit=${LIMIT_RETURNS}&page=${pageNr}`)).then((res) => {
-            console.log("lim then page", res)
-            // i get eventID en userID
             let prevEvents: eventInfoInterface[] = events;
             if (pageNr <= 1) {
                 prevEvents = [];

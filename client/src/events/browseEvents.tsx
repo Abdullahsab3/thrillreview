@@ -1,24 +1,24 @@
-import { useEffect, useState, useRef, useCallback, MutableRefObject } from 'react';
-import axios, { Canceler, CancelTokenSource } from 'axios';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import axios from 'axios';
 import { useParams, Link } from "react-router-dom";
 import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
 import "../styling/browsingPage.css";
 import { Event } from './Event';
-import { ErrorCard, LoadingCard, NoMatchesCard} from '../higherOrderComponents/generalCardsForBrowsing';
+import { ErrorCard, LoadingCard, NoMatchesCard } from '../higherOrderComponents/generalCardsForBrowsing';
 import { backendServer } from '../helpers';
 
 interface eventPreviewInterface {
     id: number,
     name: string,
     date: string,
-    key:number,
+    key: number,
     refs?: (e: HTMLDivElement) => void,
 }
 
 function EventPreviewCard(props: eventPreviewInterface) {
     if (props.refs) {
-        return ( 
+        return (
             <Card ref={props.refs} className="browsingCard">
                 <Card.Title>{props.name}</Card.Title>
                 <ListGroup className="list-group-flush">
@@ -34,7 +34,7 @@ function EventPreviewCard(props: eventPreviewInterface) {
             </Card>
         );
     } else {
-        return ( 
+        return (
             <Card className="browsingCard">
                 <Card.Title>{props.name}</Card.Title>
                 <ListGroup className="list-group-flush">
@@ -43,14 +43,14 @@ function EventPreviewCard(props: eventPreviewInterface) {
                 <Card.Body>
                     <Link to={`/Events/${props.id}`}>
                         <Button>
-                         View Event!
+                            View Event!
                         </Button>
                     </Link>
                 </Card.Body>
             </Card>
         );
     };
-    
+
 }
 
 function isIdInArray(a: Event[], i: number): Boolean {
@@ -84,9 +84,9 @@ function GetEvents(query: string, pageNr: number) {
                 prevEvents = [];
             }
             res.data.result.map((e: any) => {
-                const { name, date, hour, themepark, description, id } = e   
+                const { name, date, hour, themepark, description, id } = e
 
-                 if (!isIdInArray(prevEvents, id))
+                if (!isIdInArray(prevEvents, id))
                     prevEvents.push(new Event(id, name, date, hour, themepark, description));
             });
             setEvents(prevEvents);
@@ -95,7 +95,8 @@ function GetEvents(query: string, pageNr: number) {
         }).catch(e => {
             setLoading(false)
             setError(true);
-        })}, [query, pageNr]);
+        })
+    }, [query, pageNr]);
 
     return (
         { events, hasMore, loading, error }
@@ -110,22 +111,20 @@ function BrowseEvents() {
     const [pageNr, setPageNr] = useState(1);
     if (initialQuery) setQuery(initialQuery)
     let { events, hasMore, loading, error } = GetEvents(query, pageNr);
-    // HIER EEN PROBLEEM HEB AL VEEL GEKEKEN MAAR VIND HET NIET
     const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
     const lastEventRef = useCallback((node: HTMLDivElement) => {
         if (loading) return // otherwise will keep sending callbacks while loading
-        console.log(node)
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
-            if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
-          observer.current = new IntersectionObserver(entries => {
-              if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more
-                  setPageNr(prevPageNr => prevPageNr + 1)
-              }
-          })
-          if (node) observer.current.observe(node) 
+        if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
+        observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more
+                setPageNr(prevPageNr => prevPageNr + 1)
+            }
+        })
+        if (node) observer.current.observe(node)
     }, [loading, hasMore])
 
-   
+
 
     function handleSubmit(Event: React.FormEvent<HTMLFormElement>) {
         setPageNr(1);
@@ -151,23 +150,22 @@ function BrowseEvents() {
                 </Card.Body>
             </Card>
 
-            { events.length ?
-            events.map((event: Event, i: number) => {
-                if (events.length === i + 1) {
-                    // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
-                    return (
-                        <EventPreviewCard refs={lastEventRef} key={event.id} id={event.id} name={event.name} date={event.date} />
-                    );
-                } else {
-                    return(
-                        <EventPreviewCard key={event.id} id={event.id} name={event.name} date={event.date} />
-                    );
-                }
-            }) :
-            <NoMatchesCard topic={"events"} topicSingular={"event"}/>}
-            {loading ? <LoadingCard  topic={"events"}/> : ""}
-            {error ? <ErrorCard topic={"events"}/> : ""}
-           
+            {events.length ?
+                events.map((event: Event, i: number) => {
+                    if (events.length === i + 1) {
+                        return (
+                            <EventPreviewCard refs={lastEventRef} key={event.id} id={event.id} name={event.name} date={event.date} />
+                        );
+                    } else {
+                        return (
+                            <EventPreviewCard key={event.id} id={event.id} name={event.name} date={event.date} />
+                        );
+                    }
+                }) :
+                <NoMatchesCard topic={"events"} topicSingular={"event"} />}
+            {loading ? <LoadingCard topic={"events"} /> : ""}
+            {error ? <ErrorCard topic={"events"} /> : ""}
+
         </>
     );
 

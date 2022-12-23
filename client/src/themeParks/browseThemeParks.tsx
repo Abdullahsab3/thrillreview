@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef, useCallback, MutableRefObject } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import axios from 'axios';
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
 import "../styling/browsingPage.css";
@@ -104,13 +104,10 @@ function GetThemeParks(query: string, pageNr: number) {
 
 
 function BrowseThemeparks() {
-    //const { initialQuery } = useParams();
-    //console.log("query:", initialQuery);
     const [query, setQuery] = useState("");
     const [intermediateQuery, setIntermediateQuery] = useState("");
     const [pageNr, setPageNr] = useState(1);
-    //if (initialQuery) setQuery(initialQuery);
-    let { themeparks, hasMore, loading, error } = GetThemeParks(query, pageNr); //
+    let { themeparks, hasMore, loading, error } = GetThemeParks(query, pageNr);
     const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
     const lastThemeParkRef = useCallback((node: HTMLDivElement) => {
         if (loading) return // otherwise will keep sending callbacks while loading
@@ -151,7 +148,6 @@ function BrowseThemeparks() {
             {themeparks.length ?
                 themeparks.map((themePark: ThemePark, i: number) => {
                     if (themeparks.length === i + 1) {
-                        // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
                         return (
                             <ThemeParkPreviewCard refs={lastThemeParkRef} key={themePark.id} id={themePark.id} name={themePark.name} country={themePark.country} />
                         );
