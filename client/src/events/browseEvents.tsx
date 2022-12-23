@@ -90,6 +90,8 @@ function BrowseEvents() {
         setQuery(intermediateQuery);
     }
 
+    // if loading/error: show the corresponding card, show all events
+    // otherwise show the event previews
     return (
         <>
             <Card className="browsingCard">

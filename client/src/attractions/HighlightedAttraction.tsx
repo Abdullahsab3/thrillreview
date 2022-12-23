@@ -9,6 +9,7 @@ import './styling/HighlightedAttraction.css';
 
 
 function HighLightedAttraction() {
+    // some constants
     const [attraction, setAttraction] = useState<Attraction>();
     const [rating, setRating] = useState(0);
     const [randomId, setRandomId] = useState(0);

@@ -60,8 +60,6 @@ function GetThemeParks(query: string, pageNr: number) {
 }
 
 
-
-
 function BrowseThemeparks() {
     // some constants
     const [query, setQuery] = useState("");

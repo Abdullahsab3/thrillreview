@@ -9,16 +9,14 @@ import { loggedIn } from "../localStorageProcessing"
 import { LoginFirstCard } from "../higherOrderComponents/cardWithLinkTo"
 
 export default function ThemeParkPage() {
+
     const [themePark, setThemePark] = useState<ThemePark>()
     const [error, setError] = useState("")
     const [validated, setValidated] = useState(false)
     const [edit, setEdit] = useState(false)
-
-
     const { themeParkID } = useParams()
 
     function getThemeparkInfo() {
-
         Axios.get(backendServer(`/themePark/${themeParkID}`)).then((res) => {
             console.log(res)
             const { name, openingdate, street, streetNumber, postalCode, country, type, website, id } = res.data

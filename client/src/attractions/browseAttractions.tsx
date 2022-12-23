@@ -26,6 +26,7 @@ interface AttractionPreviewInfoInterface {
 }
 
 function AttractionPreviewCard(props: attractionPreviewInterface) {
+    // some constants
     const attractionProp = props.attractionInfo;
     const [rating, setRating] = useState(0);
 
@@ -77,6 +78,7 @@ function AttractionPreviewCard(props: attractionPreviewInterface) {
     }
 }
 
+// check whether the id is in the array
 function isIdInArray(a: AttractionPreviewInfoInterface[], i: number): Boolean {
     let res = false;
     a.forEach(t => {
@@ -137,7 +139,9 @@ function BrowseAttractions() {
     const [intermediateQuery, setIntermediateQuery] = useState("")
     const [pageNr, setPageNr] = useState(1);
     let { attractions, hasMore, loading, error } = GetAttractions(query, pageNr);
-    const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
+
+    // last element reference
+    const observer = useRef<IntersectionObserver | null>(null);
     const lastAttractionRef = useCallback((node: HTMLDivElement) => {
         if (loading) return; // otherwise will keep sending callbacks while loading
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
@@ -151,13 +155,14 @@ function BrowseAttractions() {
         if (node) observer.current.observe(node)
     }, [loading, hasMore])
 
-
+    // handle submit of attraction
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         setPageNr(1);
         setQuery(intermediateQuery);
         event.preventDefault();
     }
 
+    // if loading/error : show those cards, otherwise, show the attraction previews, always show browsing cards
     return (
         <>
             <Card className="browsingCard">
