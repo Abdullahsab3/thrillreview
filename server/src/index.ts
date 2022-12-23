@@ -110,12 +110,24 @@ app.post("/attraction", validateTokens, addAttraction); // basic add van een att
  * @apiGroup Attraction
  *  
  * @apiSuccess (Success 200) {Object[]} result An array containing the top 10 attractions
+ * @apiSuccess (Success 200) {string} result.id The id of the attraction
+ * @apiSuccess (Success 200) {string} result.name The name of the attraction
+ * @apiSuccess (Success 200) {string} result.themepark The name of the themepark the attracion is located
+ * @apiSuccess (Success 200) {string} result.avg_rating The avarege rating of the attraction
  * 
- * @apiError (Error 404) {String} review The review was not found
- * @apiError (Error 500) {String} error The server encountered an error while fetching the reviw
+ * @apiError (Error 400) {String} error The server encountered an error while fetching the attractions
  */
 app.get("/attraction/top", findTop10Attractions);
-//
+/**
+ * @api {get} /attraction/count Get the number of attractions in our database
+ * @apiName GetAttractionCount
+ * @apiGroup Attraction
+ *  
+ * @apiSuccess (Success 200) {string} result An the number of attractions
+ * 
+ * @apiError (Error 400) {String} error No attractions fount
+ * @apiError (Error 400) {String} error The server encountered an error while fetching the attractions
+ */
 app.get("/attraction/count", AttractionCount);
 app.post("/attraction/:attractionID/photos", [validateTokens, upload.single("image")], addAttractionPhotos); // upload een afbeelding van een attracttie en sla op in db
 app.put("/attraction/:attractionID", validateTokens, updateAttraction);
@@ -225,8 +237,17 @@ app.get("/attraction/:attractionID/name", getAttractionName)
  * @apiQuery {String} query The query on what you want to search, attrractionName or themeparkName where the attraction is located
  * 
  * @apiSuccess (Success 200) {Object[]} result An array containing all the attractions
- * @apiSuccess (Success 200) {Object} The number and limit of the next page
+ * @apiSuccess (Success 200) {string} result.id The id of the attraction
+ * @apiSuccess (Success 200) {string} result.userID The id of the user who made the attraction
+ * @apiSuccess (Success 200) {string} result.name The name of the attraction
+ * @apiSuccess (Success 200) {string} result.themepark The name of the themepark where the attraction is located
+ * @apiSuccess (Success 200) {string} result.themeparkID The id of the themepark where the attraction is located
+ * @apiSuccess (Success 200) {Object} next The number and limit of the next page
+ * @apiSuccess (Success 200) {Number} next.page The number of the next page
+ * @apiSuccess (Success 200) {Number} next.limit The limit (amount of reviews) in the next page 
  * @apiSuccess (Success 200) {Object} previous The number and limit of the previous page
+ * @apiSuccess (Success 200) {Number} previous.page The number of the previous page
+ * @apiSuccess (Success 200) {Number} previous.limit The limit (amount of reviews) in the previous page
  * 
  * @apiError (Error 400) {String} result No events found
  * @apiError (Error 400) {String} error The server encountered an error while fecthing the attractions.
@@ -299,8 +320,21 @@ app.put("/themepark/:themeparkID", validateTokens, editThemePark)
  * @apiQuery {String} query The query on what you want to search, themeparkName or country of the themepark
  * 
  * @apiSuccess (Success 200) {Object[]} result An array containing all the themeparks
- * @apiSuccess (Success 200) {Object} The number and limit of the next page
+ * @apiSuccess (Success 200) {Object} next The number and limit of the next page
+ * @apiSuccess (Success 200) {string} result.id The id of the themepark
+ * @apiSuccess (Success 200) {string} result.userID The id of the user who made the themepark
+ * @apiSuccess (Success 200) {string} result.name The name of the themepark
+ * @apiSuccess (Success 200) {string} result.street The street of the themepark
+ * @apiSuccess (Success 200) {string} result.streetnumber The streetnumber of the themepark
+ * @apiSuccess (Success 200) {string} result.postalcode The postalcode of the themepark
+ * @apiSuccess (Success 200) {string} result.country The country of the themepark
+ * @apiSuccess (Success 200) {string} result.lat The latitude coordinate of the themepark
+ * @apiSuccess (Success 200) {string} result.long The longitute coordinate of the themepark
+ * @apiSuccess (Success 200) {Number} next.page The number of the next page
+ * @apiSuccess (Success 200) {Number} next.limit The limit (amount of reviews) in the next page 
  * @apiSuccess (Success 200) {Object} previous The number and limit of the previous page
+ * @apiSuccess (Success 200) {Number} previous.page The number of the previous page
+ * @apiSuccess (Success 200) {Number} previous.limit The limit (amount of reviews) in the previous page
  * 
  * @apiError (Error 400) {String} result No events found
  * @apiError (Error 400) {String} error The server encountered an error while fecthing the themeparks.
@@ -339,10 +373,22 @@ app.get("/event/:eventID", findEventByID)
  * @apiQuery {String} query The query on what you want to search, eventName or themepark where the event takes place
  * 
  * @apiSuccess (Success 200) {Object[]} result An array containing all the events
- * @apiSuccess (Success 200) {Object} The number and limit of the next page
+ * @apiSuccess (Success 200) {String} result.themeparkname The name of the themepark where the evetn takes place
+ * @apiSuccess (Success 200) {String} result.hour The hour that the event starts in hh:mm
+ * @apiSuccess (Success 200) {String} result.description The description of the event
+ * @apiSuccess (Success 200) {String} result.date The date that the event takes palace
+ * @apiSuccess (Success 200) {String} result.themepark The id of the themepark where the event takes place
+ * @apiSuccess (Success 200) {String} result.name The name of the event
+ * @apiSuccess (Success 200) {String} result.userID The id of the user who made the event
+ * @apiSuccess (Success 200) {String} result.id The id of the event in the database
+ * @apiSuccess (Success 200) {Object} next The number and limit of the next page
+ * @apiSuccess (Success 200) {Number} next.page The number of the next page
+ * @apiSuccess (Success 200) {Number} next.limit The limit (amount of reviews) in the next page 
  * @apiSuccess (Success 200) {Object} previous The number and limit of the previous page
+ * @apiSuccess (Success 200) {Number} previous.page The number of the previous page
+ * @apiSuccess (Success 200) {Number} previous.limit The limit (amount of reviews) in the previous page
  * 
- * @apiError (Error 400) {String} events No events found
+ * @apiError (Error 400) {String} result events No events found
  * @apiError (Error 400) {String} error The server encountered an error while fecthing the events.
  */
 app.get("/events/find", findEvents) //search voor alle bestaande events zoals de find van attracties ?query=&limit=&page= allemaal optioneel
@@ -358,7 +404,7 @@ app.get("/event/:eventID/attendees", validateTokens, findEventUsers) // geeft ee
  * 
  * @apiSuccess (Success 200) {String} result The number of attendees
  * 
- * @apiError (Error 400) {String} No event found with the given ID.
+ * @apiError (Error 400) {String} result No event found with the given ID.
  * @apiError (Error 400) {String} error The server encountered an internal error while fetching the event.
  */
 app.get("/event/:eventID/attendees/count", eventAttendeesCount) // geeft het aantal deelnemers van een event terug bv result: 13
