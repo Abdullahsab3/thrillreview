@@ -145,7 +145,6 @@ function checkForUsernameExistence(
     [username],
     (err, result) => {
       if (err) {
-        console.log(err)
         getResult(
           false,
           "Something went wrong when checking for username existence",
@@ -407,7 +406,6 @@ function getAttractionsByName(
           ],
           function (error, Result) {
             if (error) {
-              console.log(error);
               getResult(
                 "Something went wrong while trying to get the attractions.",
                 null,
@@ -577,7 +575,6 @@ function getThemeParksByName(
           ],
           function (error, Result) {
             if (error) {
-              console.log(error);
               getResult(
                 "Something went wrong while trying to get the themeparks.",
                 null,
@@ -631,7 +628,6 @@ function getAttractionRating(
     }else if (result) {
       getAverage(null, result["avg(stars)"], result["COUNT(stars)"]);
     } else {
-      console.log(error);
       getAverage(
         "Something went wrong while calculating the average of rating of this attraction",
         null, null
@@ -868,7 +864,6 @@ function getEvents(
           ],
           function (error, Result) {
             if (error) {
-              console.log(error);
               getResult(
                 "Something went wrong while trying to get the events.",
                 null,
@@ -928,7 +923,6 @@ function getEventAttendees(
           ],
           function (error, Result) {
             if (error) {
-              console.log(error);
               getResult(
                 "Something went wrong while trying to get the events.",
                 null,
@@ -980,7 +974,7 @@ function getEventsJoinedByUser(
           limit = countResult["COUNT(*)"];
         }
         db.all(
-          "Select * FROM eventjoin INNER JOIN events ON eventjoin.eventID=events.ID WHERE eventjoin.userID = ? ORDER BY events.date LIMIT ?,?;",
+          "Select events.id, eventjoin.userID, events.name, themeparks.name as themepark FROM eventjoin INNER JOIN events ON eventjoin.eventID=events.ID INNER JOIN themeparks ON events.themepark = themeparks.id  WHERE eventjoin.userID = ? ORDER BY events.date LIMIT ?,?;",
           [
             userID,
             startIndex,
@@ -988,7 +982,6 @@ function getEventsJoinedByUser(
           ],
           function (error, Result) {
             if (error) {
-              console.log(error);
               getResult(
                 "Something went wrong while trying to get the events.",
                 null,
