@@ -358,7 +358,34 @@ app.get("/event/:eventID/attendees/count", eventAttendeesCount) // geeft het aan
 app.get("/events/userJoined", validateTokens, findUserJoinedEvents) // geeft een lijst van events mee waar een user aan deel neemt met pagination ?limit=&page=
 app.use("/API", express.static(__dirname + '/APIDocumentation/'))
 
-//feed requests
+/**
+ * @api {get} /feed Get the recent activities.
+ * @apiname GetFeed
+ * @apiGroup Feed
+ * 
+ * @apiDescription This method allows you to get the last 9 recent activities, randomly mixed within each other.
+ * The results will be an array consisting of objects. Each object has a type field which specifies what the preview is for.
+ * 
+ * @apiSuccess (Success 200) {Object[]} Previews An array with the previews
+ * @apiSuccess (Success 200) {String} Preview.type The type of the preview (attraction, themepark or review)
+ * 
+ * @apiSuccess (Success 200) {Number} Preview.attractionID If the preview is for a review, the ID of the attraction for which the review is posted is in the object.
+ * @apiSuccess (Success 200) {Number} Preview.userID If the preview is for a review, the ID of the user who posted the review is in the object.
+ * @apiSuccess (Success 200) {String} Preview.review If the preview is for a review, the text of the review will be sent in the object.
+ * @apiSuccess (Success 200) {Number} Preview.rating If the preview is for a review, the rating will be sent in the object.
+ * @apiSuccess (Success 200) {String} Preview.date If the preview is for a review, the date will be sent in the object.
+ * 
+ * @apiSuccess (Success 200) {String} Preview.name If the preview is for an attraction or a themepark, the name of the attraction or the themepark will be sent.
+ * @apiSuccess (Success 200) {Number} Preview.id If the preview is for an attraction or a themepark, the ID of that attraction or a themepark will be sent.
+ * @apiSuccess (Success 200) {Number} Preview.userID If the preview is for an attraction or a themepark, the ID of the user who made or updated the attraction or themepark will be sent.
+ * 
+ * @apiSuccess (Success 200) {String} Preview.themepark If the preview is for an attraction, the name of the themepark to which that attraction belongs will be sent.
+ * 
+ * 
+ * @apiSuccess (Success 200) {String} Preview.country If the preview is for a themepark, the name of the country in which the themepark is located will be sent.
+ * 
+ * 
+ */
 app.get("/feed", sendFeeds);
 
 
