@@ -171,8 +171,15 @@ app.get("/attraction/:attractionID/review", findReview)
  * @apiQuery {String} sort How to sort the reviews (asc or desc)
  * 
  * @apiSuccess (Success 200) {Object[]} reviews An array containing all the reviews
- * @apiSuccess (Success 200) {Object} The number and limit of the next page
+ * @apiSuccess (Success 200) {string} review.review The review text
+ * @apiSuccess (Success 200) {Number} review.rating The rating that the user gave to the attraction
+ * @apiSuccess (Success 200) {String} review.date The date this review was placed/modified
+ * @apiSuccess (Success 200) {Object} next The number and limit of the next page
+ * @apiSuccess (Success 200) {Number} next.page The number of the next page
+ * @apiSuccess (Success 200) {Number} next.limit The limit (amount of reviews) in the next page 
  * @apiSuccess (Success 200) {Object} previous The number and limit of the previous page
+ * @apiSuccess (Success 200) {Number} previous.page The number of the previous page
+ * @apiSuccess (Success 200) {Number} previous.limit The limit (amount of reviews) in the previous page
  * 
  * @apiError (Error 404) {String} reviews No reviews found
  * @apiError (Error 500) {String} error The server encountered an error while fecthing the reviews.
