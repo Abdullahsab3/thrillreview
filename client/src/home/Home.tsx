@@ -6,7 +6,7 @@ import { ReviewPreview } from "./reviewPreview";
 import { ThemeparkPreview } from "./themeparkPreview";
 import "./styling/feeds.css"
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
-import { Card, Row, Col, Container } from 'react-bootstrap'
+import { Row, Container } from 'react-bootstrap'
 import HighlightedAttraction from "../attractions/HighlightedAttraction";
 
 const Home = () => {
@@ -14,6 +14,9 @@ const Home = () => {
 
 
     const [feeds, setFeeds] = useState<any[]>([])
+    /**
+     * Fetch the feeds from the server
+     */
     useEffect(() => {
         trackPromise(
             Axios.get(backendServer("/feed")).then((res) => {
@@ -25,6 +28,10 @@ const Home = () => {
 
     }, [])
 
+    /**
+     * 
+     * @returns an array of preview cards for each fetched feeds post
+     */
     function publishFeeds() {
         return feeds.map((value, i) => {
             switch (value.type) {

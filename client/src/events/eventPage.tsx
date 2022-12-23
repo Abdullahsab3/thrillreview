@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { Event } from "./Event";
 import { Table, Button } from "react-bootstrap";
 import { loggedIn } from '../localStorageProcessing';
-import { setConstantValue } from "typescript";
 import { backendServer } from "../helpers";
 
 function EventPage() {
+    // some constants
     const [event, setEvent] = useState<Event>();
     const [error, setError] = useState("");
     const [joined, setJoined] = useState(false);
@@ -15,7 +15,7 @@ function EventPage() {
     var user: Boolean = loggedIn();
     const [numberOfUsers, setNumberOfUsers] = useState(0);
 
-
+    // check whether the user already joined
     useEffect(() => {
         getEventInfo()
         axios.get(backendServer(`/event/${eventId}/userjoined`)).then((res) => {
@@ -23,14 +23,14 @@ function EventPage() {
         });
     }, [])
 
+    // get number of users
     useEffect(() => {
-        console.log("get number")
         getNumberOfUsers();
     }, [joined]);
 
+    // get the info about the event
     function getEventInfo() {
         axios.get(backendServer(`/event/${eventId}`)).then((res) => {
-            console.log("event:", res)
             const { date, description, hour, id, name, themepark } = res.data
             setEvent(new Event(id, name, date, hour, themepark, description));
         }).catch(function (error: any) {
@@ -38,12 +38,14 @@ function EventPage() {
         })
     };
 
+    // get the number of users that already joined
     function getNumberOfUsers() {
         axios.get(backendServer(`/event/${eventId}/attendees/count`)).then((res) => {
             setNumberOfUsers(res.data.result);
         });
     }
 
+    // create the data rows for the theme park card
     function createDataRows() {
         const rows = [];
         const info = ["name", "date", "hour", "themepark", "description"];
@@ -59,14 +61,17 @@ function EventPage() {
         return rows;
     }
 
+    // handle submit of join event
     function joinEventHandler() {
-        setNumberOfUsers(numberOfUsers + 1);
         axios.post(backendServer(`/event/${eventId}/join`)).then((res) => {
-            if (res.data.added) setJoined(res.data.added);
-            else alert("Something went wrong and you were not added.")
+            if (res.data.added) {
+                setJoined(res.data.added);
+                setNumberOfUsers(numberOfUsers + 1);
+            } else alert("Something went wrong and you were not added.")
         }).catch((error) => { alert("Something went wrong and you were not added.") })
     }
 
+    // if there is an event, show it, otherwise say there is no event
     if (event) {
         return (
             <div className="ContentOfPage">

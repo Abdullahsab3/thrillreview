@@ -9,12 +9,14 @@ import "../styling/browsingPage.css";
 import { ErrorCard, LoadingCard, NoMatchesCard } from '../higherOrderComponents/generalCardsForBrowsing';
 import { backendServer } from '../helpers';
 
+// information needed to make the preview card
 interface attractionPreviewInterface {
     attractionInfo: AttractionPreviewInfoInterface,
     key: number,
     refs?: (e: HTMLDivElement) => void,
 }
 
+// the info for the attraction
 interface AttractionPreviewInfoInterface {
     id: number,
     name: string,
@@ -24,15 +26,19 @@ interface AttractionPreviewInfoInterface {
 }
 
 function AttractionPreviewCard(props: attractionPreviewInterface) {
-    const attractionProp = props.attractionInfo
-    const [rating, setRating] = useState(0)
+    // some constants
+    const attractionProp = props.attractionInfo;
+    const [rating, setRating] = useState(0);
+
+    // get the rating 
     useEffect(() => {
         getAttractionRating(attractionProp.id, function (rating, total, error) {
             setRating(rating)
         })
 
-    }, [])
+    }, []);
 
+    // last element reference
     if (props.refs) {
         return (
             <Card className="browsingCard" ref={props.refs}>
@@ -72,6 +78,7 @@ function AttractionPreviewCard(props: attractionPreviewInterface) {
     }
 }
 
+// check whether the id is in the array
 function isIdInArray(a: AttractionPreviewInfoInterface[], i: number): Boolean {
     let res = false;
     a.forEach(t => {
@@ -96,11 +103,7 @@ function GetAttractions(query: string, pageNr: number) {
     useEffect(() => {
         setLoading(true)
         setError(false)
-        console.log("hasmoreVOORBACKENDS", hasMore)
-        console.log("VOOR BACKEND - query", query, "pnr", pageNr);
-        console.log("url", backendServer(`/attractions/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`))
         axios.get(backendServer(`/attractions/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`)).then(res => {
-            console.log("res:", res.data);
             let prevAttractions = attractions;
             if ((pageNr <= 1)) {
                 prevAttractions = [];
@@ -136,31 +139,30 @@ function BrowseAttractions() {
     const [intermediateQuery, setIntermediateQuery] = useState("")
     const [pageNr, setPageNr] = useState(1);
     let { attractions, hasMore, loading, error } = GetAttractions(query, pageNr);
-    const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
+
+    // last element reference
+    const observer = useRef<IntersectionObserver | null>(null);
     const lastAttractionRef = useCallback((node: HTMLDivElement) => {
         if (loading) return; // otherwise will keep sending callbacks while loading
-        console.log("node", node)
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
         if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
-        console.log("disconn")
         observer.current = new IntersectionObserver(entries => {
             if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more
-                console.log("page nr aanpassen")
                 setPageNr(prevPageNr => prevPageNr + 1)
             }
         })
 
         if (node) observer.current.observe(node)
-        console.log("na")
     }, [loading, hasMore])
 
-
+    // handle submit of attraction
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         setPageNr(1);
         setQuery(intermediateQuery);
-        event.preventDefault()
+        event.preventDefault();
     }
 
+    // if loading/error : show those cards, otherwise, show the attraction previews, always show browsing cards
     return (
         <>
             <Card className="browsingCard">

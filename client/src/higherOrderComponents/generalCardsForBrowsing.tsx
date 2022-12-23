@@ -1,11 +1,13 @@
 import { Card } from 'react-bootstrap';
 import "../styling/browsingPage.css";
 
+// information needed
 interface browsingInfoCardInterface{
     topic:string;
     topicSingular?:string;
 }
 
+// when the results are still loading
 export function LoadingCard(props: browsingInfoCardInterface) {
     return (
         <Card className="browsingCard mb-2">
@@ -15,6 +17,7 @@ export function LoadingCard(props: browsingInfoCardInterface) {
     );
 }
 
+// when there is an error
 export function ErrorCard(props: browsingInfoCardInterface) {
     return (
         <Card bg="danger" className="browsingCard mb-2" >
@@ -24,6 +27,7 @@ export function ErrorCard(props: browsingInfoCardInterface) {
     );
 }
 
+// when there are not matches to the query
 export function NoMatchesCard(props: browsingInfoCardInterface) {
     return(
         <Card className="browsingCard mb-2">

@@ -1,4 +1,5 @@
 class ThemePark {
+    // fields
     name: string;
     openingdate: string;
     street: string;
@@ -9,6 +10,7 @@ class ThemePark {
     website: string;
     id: number;
     
+    // constructor
     constructor(name: string, opingdate: string, street: string, streetNumber: number, postalCode: string, country: string,  type: string, website: string, id: number) {
         this.name = name;
         this.openingdate = opingdate;
@@ -21,6 +23,7 @@ class ThemePark {
         this.id = id;
     }
 
+    // to json
     toJSON(): any {
         const jsonObj: any = {"name": this.name, "street": this.street, "type" : this.type, "streetNumber": this.streetNumber, "postalCode": this.postalCode, "country": this.country, "id": this.id}
         if(this.openingdate) {

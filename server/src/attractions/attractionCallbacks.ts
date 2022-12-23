@@ -54,7 +54,7 @@ function checkAttractionInformation(input: any,): string {
     return("height not valid")
   }
   if(inversions &&  typeof inversions != 'string'){
-    return("inverseions not valid")
+    return("inversions not valid")
   }
   if(duration &&  typeof duration != 'string'){
     return("duration not valid")
@@ -65,7 +65,6 @@ function checkAttractionInformation(input: any,): string {
 // attractie toevoegen aan db
 async function addAttraction(req: any, res: any) {
   const validationError = checkAttractionInformation(req.body)
-  console.log(validationError)
   if(validationError) {
     return res.status(400).json({error: validationError})
   }
@@ -99,7 +98,6 @@ async function addAttraction(req: any, res: any) {
               themeparkID,
             ],
             (error: Error, result: any) => {
-              console.log(error)
               if (error) {
                 return res.status(400).json({ error: error.message });
               } else {
@@ -237,30 +235,38 @@ function findAttractionByName(req: any, res: any) {
   }
   getAttractionsByName(attractionName, page, limit, function (error, result) {
     if (error) {
-      res.status(400).json(error);
+      res.status(500).json({error: error});
     } else if (result) {
       res.status(200).json(result);
     } else {
-      res.status(400).json({ error: true, reviews: "No attractions found" });
+      res.status(404).json({attractions: "No attractions found" });
     }
   });
 }
 
 function findTop10Attractions(req: any, res: any){
   db.all(
-    "SELECT a.id, AVG(r.stars) as avg_rating FROM attractions a JOIN attractionreview r ON a.id = r.attractionID GROUP BY a.id ORDER BY avg_rating DESC LIMIT 10",
+    "SELECT a.id, a.name, a.themepark, AVG(r.stars) as avg_rating FROM attractions a JOIN attractionreview r ON a.id = r.attractionID GROUP BY a.id ORDER BY avg_rating DESC LIMIT 10",
     function (error: any, result: any) {
       if (error){
         return res.status(500).json({ error: "internal server error" });
       }else if (result){
         return res.status(200).json({ result: result });
       }else {
-        return res.status(400).json({ error: "attractions not foung" });
+        return res.status(400).json({ error: "attractions not found" });
       }
     }
   );
 }
 
+/**
+ * 
+ * @param attractionID the id of the attraction for which the review is placed
+ * @param userID the id of the user who placed the review
+ * @param review the review text
+ * @param stars the rating the user gave for that attraction
+ * @param getErr callback to get any errors the server encounters.
+ */
 function addAttractionReview(
   attractionID: number,
   userID: number,
@@ -281,6 +287,15 @@ function addAttractionReview(
   );
 }
 
+/**
+ * Updates a review on the database.
+* @param attractionID the id of the attraction for which the review is placed
+ * @param userID the id of the user who placed the review
+ * @param review the review text
+ * @param stars the rating the user gave for that attraction
+ * @param getErr callback to get any errors the server encounters.
+ * 
+ */
 function updateAttractionReview(
   attractionID: number,
   userID: number,
@@ -362,6 +377,9 @@ function setAttractionReview(req: any, res: any) {
   });
 }
 
+/**
+ * Find a review in the database given the userid (in a query string) and the attractionid (in a parameter)
+ */
 function findReview(req: any, res: any) {
   const attractionID = parseInt(req.params.attractionID);
   const userID = parseInt(req.query.userid);
@@ -385,7 +403,9 @@ function findReview(req: any, res: any) {
     }
   });
 }
-
+/**
+ * Get the average rating of all ratings of an attraction.
+ */
 function getAverageRating(req: any, res: any) {
   const attractionID = parseInt(req.params.attractionID);
   if(isNaN(attractionID)) {
@@ -401,6 +421,7 @@ function getAverageRating(req: any, res: any) {
     }
   });
 }
+
 
 function findAttractionReviews(req: any, res: any) {
   const attractionID = parseInt(req.params.attractionID);
@@ -449,7 +470,6 @@ function updateAttraction(req: any, res: any) {
   }
     const {
       name,
-      themepark,
       opening,
       builder,
       type,
@@ -562,6 +582,12 @@ function getAttractionName(req: any, res: any) {
   });
 }
 
+/**
+ * 
+ * Fetch an attraction photo from the database, given the attractionID and the photo ID.
+ * The database stores the image and its type.
+ * content-type will be set to the image type.
+ */
 function getAttractionPhoto(req: any, res: any) {
   const attractionID = parseInt(req.params.attractionID)
   const imageID = parseInt(req.query.id)

@@ -45,7 +45,6 @@ function Profile() {
                         setAvatarError("No avatar available")
                     }
                 });
-
         }
     }, [])
 

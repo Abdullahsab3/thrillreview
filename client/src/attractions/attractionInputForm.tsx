@@ -4,6 +4,17 @@ import { Attraction } from "./Attraction";
 import ConnectThemePark from "../themeParks/connectThemeParks";
 
 
+/**
+ * The props that should be provided when using this component.
+ * The title will will be the title of the input form card
+ * The text would be the description of the input form
+ * The attraction is optional. When modifying an attraction, it should be provided. 
+ * When it is provided, the fields will then be automatically filled in.
+ * onFormSubmit returns the function that should be executed when submitting the form
+ * The two arguments that the function takes would be the data about the attraction that the user filled in,
+ * and the images the user uplaoded.
+ * Validated is used to check wheter
+ */
 interface AttractionInputProps {
     title: string;
     text: string;
@@ -12,7 +23,6 @@ interface AttractionInputProps {
     validated: boolean;
 
 }
-
 
 
 export default function AttractionInputForm(props: AttractionInputProps) {
@@ -35,6 +45,10 @@ export default function AttractionInputForm(props: AttractionInputProps) {
     const [imagesSelected, setImagesSelected] = useState(false);
 
 
+    /**
+     * If the attraction is provided, set all the corresponding states
+     * to the attraction info.
+     */
     useEffect(() => {
         if (props.attraction) {
             setName(props.attraction.name);
@@ -56,10 +70,7 @@ export default function AttractionInputForm(props: AttractionInputProps) {
             const types = props.attraction.type
             if (types) setType(types.split(",")); 
         }
-
-
     }, [])
-
 
 
     function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -99,10 +110,15 @@ export default function AttractionInputForm(props: AttractionInputProps) {
         )
     }
 
+    /**
+     * 
+     * @returns the attraction id, if an attraction is provided
+     * Otherwise -1, as the id will not be used.
+     */
     function getId() {
         if (props.attraction) {
             return props.attraction.id
-        } else return 0
+        } else return -1
     }
 
     function connectedThemepark(id: number, thmprk: string) {

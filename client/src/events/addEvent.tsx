@@ -1,24 +1,17 @@
-//import './styling/addThemePark.css'
 import React, { useState } from 'react';
-import { Card, Dropdown } from "react-bootstrap";
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Button from 'react-bootstrap/Button';
-import { useNavigate } from 'react-router-dom';
 import { backendServer } from '../helpers';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import { isEmptyStatement, NewLineKind, setSyntheticTrailingComments } from 'typescript';
 import axios from 'axios';
-import { allowedNodeEnvironmentFlags } from 'process';
 import EventInputForm from './eventInputForm';
 import { Event } from './Event';
 import { loggedIn } from '../localStorageProcessing'
 import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 
 function AddEvent() {
+    // some constants
     var user: Boolean = loggedIn();
     const [validated, setValidated] = useState(false);
+
+    // show an alert with the error, when server sends an error
     function checkErrors(data: any): boolean {
         if (data) {
             alert(data);
@@ -26,6 +19,7 @@ function AddEvent() {
         } else return false;
     }
 
+    // event added - if so: "successfully added" alert
     function submit(e: Event) {
         const handleSubmit: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
@@ -49,6 +43,8 @@ function AddEvent() {
             }
         return handleSubmit;
     }
+
+    // only able to add event when logged in, otherwise log in first
     if (user) {
         return (
             <div className="ContentOfPage">

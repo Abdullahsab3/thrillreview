@@ -1,5 +1,4 @@
-import { Container, Col, Card, Table, Button } from 'react-bootstrap';
-import AttractionImages from "./attractionImages";
+import {Card, Table, Button } from 'react-bootstrap';
 import StarRating from "./starRating";
 import { Attraction, getAttractionRating } from "./Attraction";
 import { backendServer } from "../helpers";
@@ -10,14 +9,14 @@ import './styling/HighlightedAttraction.css';
 
 
 function HighLightedAttraction() {
+    // some constants
     const [attraction, setAttraction] = useState<Attraction>();
     const [rating, setRating] = useState(0);
     const [randomId, setRandomId] = useState(0);
     const [error, setError] = useState("");
 
+    // request the number of attractions to pick a random id
     useEffect(() => {
-        // hier komt nog een axiosRequest
-        setRandomId(5);
         axios.get(backendServer('/attraction/count')).then((res) => {
             const maxId = res.data.result;
             // random between 1 and max : random[0;1] * (max + 1 - 1) + min = random[0;1] * max + min
@@ -26,6 +25,7 @@ function HighLightedAttraction() {
 
     }, [])
 
+    // when there is a random id (not zero), render it
     useEffect(() => {
         if (randomId) {
             axios.get(backendServer(`/attraction/${randomId}`)).then((res) => {
@@ -40,7 +40,7 @@ function HighLightedAttraction() {
         }
     }, [randomId])
 
-
+    // create the data rows for the table of the attraction information
     function createDataRows() {
         const rows = [];
         const info = ["name", "themepark", "type", "height", "lenght", "inversions", "duration"];

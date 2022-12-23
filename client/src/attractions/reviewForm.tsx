@@ -2,7 +2,6 @@ import Axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import { trackPromise, usePromiseTracker } from "react-promise-tracker";
-import { Link } from "react-router-dom";
 import { backendServer } from "../helpers";
 import ButtonWithLoading from "../higherOrderComponents/buttonWithLoading";
 import { fetchUserFromLocalStorage } from "../localStorageProcessing";
@@ -16,6 +15,10 @@ interface writReviewProps {
     attractionID: number
     edit?: boolean
 }
+/**
+ * Write or edit a review
+ * @param props an attractionID, which is the id of the attraction for which the review is being placed, edited
+ */
 export default function WriteReview(props: writReviewProps) {
     const user: User | null = fetchUserFromLocalStorage()
 
@@ -41,6 +44,9 @@ export default function WriteReview(props: writReviewProps) {
         }
     }
 
+    /**
+     * fetch the review from the server.
+     */
     function getUserReview() {
         Axios.get(backendServer(`/attraction/${props.attractionID}/review?userid=${(user as User).id}`))
         .then((res) => {
@@ -51,8 +57,11 @@ export default function WriteReview(props: writReviewProps) {
                 setnotAllowed(true)
             }
             
-            
             }).catch((error) => {
+                /**
+                 * If there are any errors, disable the validation,
+                 * and display the error
+                 */
                 if(error.status === 404) {
                     setValidated(false)
                 } else {
@@ -62,6 +71,11 @@ export default function WriteReview(props: writReviewProps) {
             }
             })
     }
+
+    /**
+     * Post a review to the server
+     * This could be either a new review, or updating an old review of the user.
+     */
     const handleUploadingReview: React.FormEventHandler<HTMLFormElement> =
         (event: React.FormEvent<HTMLFormElement>) => {
             setReviewError("");
@@ -75,7 +89,9 @@ export default function WriteReview(props: writReviewProps) {
                         setValidated(false)
                     } else {
                         setValidated(true)
-                        
+                        /**
+                         * Once it is posted, reload the page to change the information.
+                         */
                          window.location.reload();
                     }
                 }).catch(function (error) {
@@ -134,7 +150,7 @@ export default function WriteReview(props: writReviewProps) {
         </div>)
 
     } else {
-        return (<LoginFirstCard />)
+        return (<div className="comment"> <LoginFirstCard/></div>)
     }
    
 }

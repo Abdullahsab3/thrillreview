@@ -1,6 +1,6 @@
 import './styling/addThemePark.css'
-import React, { FormEventHandler, useEffect, useState } from 'react';
-import { Card, Dropdown } from "react-bootstrap";
+import { FormEventHandler, useEffect, useState } from 'react';
+import { Card } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
@@ -8,17 +8,17 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { ThemePark } from './themePark';
 
+// information needed
 interface ThemeParkInputFormProps {
     title: string;
     text: string;
     themepark?: ThemePark
     onFormSubmit: (a: ThemePark) => FormEventHandler<HTMLFormElement>
     validated: boolean
-
 }
 
 function ThemeParkInputForm(props: ThemeParkInputFormProps) {
-
+    // constants
     const [name, setName] = useState("")
     const [opening, setOpening] = useState("")
     const [street, setStreet] = useState("")
@@ -29,14 +29,15 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
     const [outdoor, setOutdoor] = useState(false)
     const [themeParkurl, setUrl] = useState("")
 
-
+    // if a theme park already exists, fill in the form
     useEffect(() => {
         if (props.themepark) {
-            setName(props.themepark.name) 
+            setName(props.themepark.name)
             setStreet(props.themepark.street)
             setStreetNr(props.themepark.streetNumber.toString())
             setPostalCode(props.themepark.postalCode)
             setCountry(props.themepark.country)
+            setTypes(props.themepark.type)
             const opn = props.themepark.openingdate
             if (opn) setOpening(opn)
             const rl = props.themepark.website
@@ -45,11 +46,13 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
         }
     }, [])
 
+    // set the right types
     function setTypes(types: string) {
         if (types.includes("indoor")) setIndoor(true);
         if (types.includes("outdoor")) setOutdoor(true);
     }
 
+    // get the right types
     function getTypesAsString() {
         let res = ""
         if (indoor && outdoor) {
@@ -62,10 +65,6 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
         return res;
     }
 
-
-
-    // length, height, duration : zal nog gevalideerd worden dat echt cijfer is  : https://codesandbox.io/s/9zjo1lp86w?file=/src/Components/InputDecimal.jsx
-    // row moet rond card want anders krijg je een lelijke gap tussen header en de card
     return (
         <div className="ContentOfPage">
             <Row>
@@ -119,7 +118,7 @@ function ThemeParkInputForm(props: ThemeParkInputFormProps) {
                                         </div>
                                         <div id="country">
                                             Country*
-                                            <Form.Control required pattern ="[a-zA-Z_.-]*" type="text" placeholder="Country" onChange={(e) => setCountry(e.target.value)} value={country} />
+                                            <Form.Control required pattern="[a-zA-Z_.-]*" type="text" placeholder="Country" onChange={(e) => setCountry(e.target.value)} value={country} />
                                             <Form.Control.Feedback type="invalid">
                                                 Country is required, and may consist of only letters and the following characters: _ . -
                                             </Form.Control.Feedback>

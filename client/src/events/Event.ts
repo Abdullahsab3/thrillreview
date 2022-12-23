@@ -1,4 +1,5 @@
 class Event {
+    // fields
     name: string;
     date: string;
     hour: string;
@@ -6,6 +7,7 @@ class Event {
     description: string;
     id: number;
 
+    // constructor
     constructor(id:number, name: string, date:string, hour:string, themepark:string, description:string){
         this.name=name;
         this.date=date;
@@ -15,9 +17,10 @@ class Event {
         this.id=id;
     }
 
+    // to json
     toJSON(): any {
         return {"name": this.name, "date": this.date, "hour": this.hour,
-                "themepark":this.themepark, "description":this.description}; // , "id": this.id
+                "themepark":this.themepark, "description":this.description}; 
     }
 }
 

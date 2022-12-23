@@ -9,13 +9,14 @@ import { loggedIn } from '../localStorageProcessing';
 import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 
 function AddAttraction() {
-    const navigate = useNavigate()
+    // some constants
+    const navigate = useNavigate();
     const [validated, setValidated] = useState(false);
-    const [id, setId] = useState(-1)
-    const [images, setImages] = useState<File[]>([])
+    const [id, setId] = useState(-1);
+    const [images, setImages] = useState<File[]>([]);
     var user: Boolean = loggedIn();
 
-
+    // check the errors of back end validation 
     function checkErrors(data: any): boolean {
         if (data) {
             alert(data);
@@ -23,20 +24,18 @@ function AddAttraction() {
         } else return false;
     }
 
-
+    // submit the attraction and images you get
     function submit(attraction: Attraction, images: File[]) {
         const handleSubmit: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault();
-                setImages(images)
+                setImages(images);
                 const form = event.currentTarget
                 if (!form.checkValidity() || !attraction.themepark) {
                     event.stopPropagation();
                 } else {
-                    Axios.post(backendServer("/attraction"), attraction.toJSON()
-                    ).then((response) => {
+                    Axios.post(backendServer("/attraction"), attraction.toJSON()).then((response) => {
                         setId(response.data.id)
-
                     }).catch(function (error) {
                         if (checkErrors(error.error)) {
                             setValidated(false)
@@ -48,6 +47,7 @@ function AddAttraction() {
         return (handleSubmit)
     }
 
+    // send the images
     useEffect(() => {
         if (id > -1) {
             const sendImages = async () => {
@@ -66,12 +66,13 @@ function AddAttraction() {
             }
 
             sendImages()
-
             alert("The attraction was successfully added!")
             setValidated(true);
             navigate(`/Attractions/${id}`)
         }
     }, [id])
+
+    // only show the add an attraction when user is logged in
     if (user) {
         return (
             <AttractionInputForm

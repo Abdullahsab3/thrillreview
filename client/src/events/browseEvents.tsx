@@ -1,91 +1,51 @@
-import { useEffect, useState, useRef, useCallback, MutableRefObject } from 'react';
-import axios, { Canceler, CancelTokenSource } from 'axios';
-import { useParams, Link } from "react-router-dom";
-import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import axios from 'axios';
+import { Card, Button, InputGroup, Form } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
 import "../styling/browsingPage.css";
 import { Event } from './Event';
-import { ErrorCard, LoadingCard, NoMatchesCard} from '../higherOrderComponents/generalCardsForBrowsing';
+import { ErrorCard, LoadingCard, NoMatchesCard } from '../higherOrderComponents/generalCardsForBrowsing';
+import { backendServer } from '../helpers';
+import EventPreviewCard from './eventPreviewCard';
 
-interface eventPreviewInterface {
-    id: number,
-    name: string,
-    date: string,
-    key:number,
-    refs?: (e: HTMLDivElement) => void,
-}
 
-function EventPreviewCard(props: eventPreviewInterface) {
-    if (props.refs) {
-        return ( 
-            <Card ref={props.refs} className="browsingCard">
-                <Card.Title>{props.name}</Card.Title>
-                <ListGroup className="list-group-flush">
-                    <ListGroup.Item>Date: {props.date}</ListGroup.Item>
-                </ListGroup>
-                <Card.Body>
-                    <Link to={`/Events/${props.id}`}>
-                        <Button>
-                            View Event!
-                        </Button>
-                    </Link>
-                </Card.Body>
-            </Card>
-        );
-    } else {
-        return ( 
-            <Card className="browsingCard">
-                <Card.Title>{props.name}</Card.Title>
-                <ListGroup className="list-group-flush">
-                    <ListGroup.Item>Date: {props.date}</ListGroup.Item>
-                </ListGroup>
-                <Card.Body>
-                    <Link to={`/Events/${props.id}`}>
-                        <Button>
-                         View Event!
-                        </Button>
-                    </Link>
-                </Card.Body>
-            </Card>
-        );
-    };
-    
-}
-
-function isIdInArray(a: Event[], i: number): Boolean {
-    let res = false;
-    a.forEach(t => {
-        if (t.id === i) res = true;
-    });
-    return res;
-}
 
 // took inspiration from https://www.youtube.com/watch?v=NZKUirTtxcg
 function GetEvents(query: string, pageNr: number) {
+    // some constants
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [hasMore, setHasMore] = useState(false);
     const [events, setEvents] = useState<Event[]>([]);
     const LIMIT_RETURNS = 6;
 
-    // to set events to empty
+    // whether the id is in the array
+    function isIdInArray(a: Event[], i: number): Boolean {
+        let res = false;
+        a.forEach(t => {
+            if (t.id === i) res = true;
+        });
+        return res;
+    }
+
+    // set events to empty when there is a new query
     useEffect(() => {
         setEvents([]);
     }, [query])
-    // to load new events
+
+    // load new events
     useEffect(() => {
         setLoading(true)
         setError(false)
-        axios.get(`/events/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`).then(res => {
-            console.log("res:", res);
+        axios.get(backendServer(`/events/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`)).then(res => {
             let prevEvents = events;
             if (pageNr <= 1) {
                 prevEvents = [];
             }
             res.data.result.map((e: any) => {
-                const { name, date, hour, themepark, description, id } = e   
+                const { name, date, hour, themepark, description, id } = e
 
-                 if (!isIdInArray(prevEvents, id))
+                if (!isIdInArray(prevEvents, id))
                     prevEvents.push(new Event(id, name, date, hour, themepark, description));
             });
             setEvents(prevEvents);
@@ -94,7 +54,8 @@ function GetEvents(query: string, pageNr: number) {
         }).catch(e => {
             setLoading(false)
             setError(true);
-        })}, [query, pageNr]);
+        })
+    }, [query, pageNr]);
 
     return (
         { events, hasMore, loading, error }
@@ -102,36 +63,35 @@ function GetEvents(query: string, pageNr: number) {
 }
 
 function BrowseEvents() {
-    const { initialQuery } = useParams()
-    console.log(initialQuery)
+    // some constants
     const [query, setQuery] = useState("")
     const [intermediateQuery, setIntermediateQuery] = useState("")
     const [pageNr, setPageNr] = useState(1);
-    if (initialQuery) setQuery(initialQuery)
     let { events, hasMore, loading, error } = GetEvents(query, pageNr);
-    // HIER EEN PROBLEEM HEB AL VEEL GEKEKEN MAAR VIND HET NIET
-    const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
+
+    // reference to last element
+    const observer = useRef<IntersectionObserver | null>(null);
     const lastEventRef = useCallback((node: HTMLDivElement) => {
         if (loading) return // otherwise will keep sending callbacks while loading
-        console.log(node)
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
-            if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
-          observer.current = new IntersectionObserver(entries => {
-              if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more
-                  setPageNr(prevPageNr => prevPageNr + 1)
-              }
-          })
-          if (node) observer.current.observe(node) 
+        if (observer.current) observer.current.disconnect(); // disconnect current observer to connect a new one
+        observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && hasMore) { // ref is showing on the page + there is still more
+                setPageNr(prevPageNr => prevPageNr + 1)
+            }
+        })
+        if (node) observer.current.observe(node)
     }, [loading, hasMore])
 
-   
 
+    // handling the event submit
     function handleSubmit(Event: React.FormEvent<HTMLFormElement>) {
         setPageNr(1);
-        setQuery(intermediateQuery)
-        Event.preventDefault()
+        setQuery(intermediateQuery);
     }
 
+    // if loading/error: show the corresponding card, show all events
+    // otherwise show the event previews
     return (
         <>
             <Card className="browsingCard">
@@ -150,23 +110,22 @@ function BrowseEvents() {
                 </Card.Body>
             </Card>
 
-            { events.length ?
-            events.map((event: Event, i: number) => {
-                if (events.length === i + 1) {
-                    // HET KAN ZIJN DAT DE REF NIET WERKT, (zie error in console log, maar is v react router dom en ref is v react, dus idk - kan niet testen want moet dan iets v backend krijgen)
-                    return (
-                        <EventPreviewCard refs={lastEventRef} key={event.id} id={event.id} name={event.name} date={event.date} />
-                    );
-                } else {
-                    return(
-                        <EventPreviewCard key={event.id} id={event.id} name={event.name} date={event.date} />
-                    );
-                }
-            }) :
-            <NoMatchesCard topic={"events"} topicSingular={"event"}/>}
-            {loading ? <LoadingCard  topic={"events"}/> : ""}
-            {error ? <ErrorCard topic={"events"}/> : ""}
-           
+            {events.length ?
+                events.map((event: Event, i: number) => {
+                    if (events.length === i + 1) {
+                        return (
+                            <EventPreviewCard refs={lastEventRef} key={event.id} id={event.id} name={event.name} date={event.date} />
+                        );
+                    } else {
+                        return (
+                            <EventPreviewCard key={event.id} id={event.id} name={event.name} date={event.date} />
+                        );
+                    }
+                }) :
+                <NoMatchesCard topic={"events"} topicSingular={"event"} />}
+            {loading ? <LoadingCard topic={"events"} /> : ""}
+            {error ? <ErrorCard topic={"events"} /> : ""}
+
         </>
     );
 

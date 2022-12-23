@@ -2,8 +2,6 @@
 import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
-import { StringMappingType } from 'typescript';
-import { string } from 'yup';
 
 interface buttonProps {
     disabled: boolean;
@@ -11,10 +9,20 @@ interface buttonProps {
     message: string;
     className?: string
 }
+/**
+ * A button which will display loading animation while being disabled whenever PromiseInProgress is true
+ * @param props
+ * disabled: when the button should be disabled
+ * 
+ * promiseInProgress: is there a promise in progress (aka should the button show the loading animation)
+ * 
+ * message: the text in the button
+ * 
+ * className: optional className of the button.
+ * @returns a button with loading animation
+ */
 export default function ButtonWithLoading(props: buttonProps) {
     const [className, setClassName] = useState("")
-    
-
 
     useEffect(() => {
 

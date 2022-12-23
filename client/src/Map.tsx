@@ -55,9 +55,10 @@ const Map = () => {
   // set to user location
   function SetToUserLocation() {
     var map = useMap();
-    map.locate({ setView: true, maxZoom: 15 });
+    map.locate({ setView: true, maxZoom: 5 });
     return null;
   }
+
   // look if id is in array
   function isIdInArray(a: popUpInfoInterface[], i: number): Boolean {
     let res = false;
@@ -87,7 +88,7 @@ const Map = () => {
           if (!isIdInArray(prevPopUpInfo, id)) {
             prevPopUpInfo.push(popUpInfo);
             setAllPopupInfo(prevPopUpInfo);
-          }
+          } 
         });
 
       });
@@ -124,6 +125,7 @@ const Map = () => {
     )
   }
 
+  // de map
   return (
     <LeafletMap />
   );

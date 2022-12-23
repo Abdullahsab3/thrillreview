@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Axios from 'axios'
 import { User } from './User'
-import { fetchUserFromLocalStorage } from '../localStorageProcessing'
+import { fetchUserFromLocalStorage, removeUserInLocalstorage } from '../localStorageProcessing'
 import { Link, useNavigate } from 'react-router-dom';
 import { backendServer } from '../helpers';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -12,6 +12,12 @@ import ButtonWithLoading from '../higherOrderComponents/buttonWithLoading';
 import './styling/userMangement.css';
 import { LoginFirstCard }  from '../higherOrderComponents/cardWithLinkTo';
 
+/**
+ * 
+ * @returns A page to change the password of the user
+ * The user is requested to enter their old password
+ * along with their new desired password, making sure they repeat it again.
+ */
 export default function ChangePassword() {
 
     const navigate = useNavigate()
@@ -59,7 +65,8 @@ export default function ChangePassword() {
                 }).then((res) => {
                     if ((res as any).data.updated) {
                         setValidated(true)
-                        navigate("/profile")
+                        removeUserInLocalstorage()
+                        window.location.replace("/")
 
                     } else {
                         setValidated(false)
