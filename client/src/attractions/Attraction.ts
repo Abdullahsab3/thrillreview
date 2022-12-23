@@ -40,6 +40,9 @@ class Attraction {
         if(this.type) {
             jsonObj.type = this.type
         }
+        /**
+         * These are converted to strings, as the server is expecting strings.
+         */
         if(this.height) {
             jsonObj.height = this.height.toString()
         }
