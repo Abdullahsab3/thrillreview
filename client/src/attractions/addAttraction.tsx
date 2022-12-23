@@ -15,7 +15,7 @@ function AddAttraction() {
     const [images, setImages] = useState<File[]>([]);
     var user: Boolean = loggedIn();
 
-
+    // check the errors of back end validation 
     function checkErrors(data: any): boolean {
         if (data) {
             alert(data);
@@ -23,6 +23,7 @@ function AddAttraction() {
         } else return false;
     }
 
+    // submit the attraction and images you get
     function submit(attraction: Attraction, images: File[]) {
         const handleSubmit: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {

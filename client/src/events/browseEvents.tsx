@@ -7,51 +7,8 @@ import "../styling/browsingPage.css";
 import { Event } from './Event';
 import { ErrorCard, LoadingCard, NoMatchesCard } from '../higherOrderComponents/generalCardsForBrowsing';
 import { backendServer } from '../helpers';
+import EventPreviewCard from './eventPreviewCard';
 
-interface eventPreviewInterface {
-    id: number,
-    name: string,
-    date: string,
-    key: number,
-    refs?: (e: HTMLDivElement) => void,
-}
-
-function EventPreviewCard(props: eventPreviewInterface) {
-    if (props.refs) {
-        return (
-            <Card ref={props.refs} className="browsingCard">
-                <Card.Title>{props.name}</Card.Title>
-                <ListGroup className="list-group-flush">
-                    <ListGroup.Item>Date: {props.date}</ListGroup.Item>
-                </ListGroup>
-                <Card.Body>
-                    <Link to={`/Events/${props.id}`}>
-                        <Button>
-                            View Event!
-                        </Button>
-                    </Link>
-                </Card.Body>
-            </Card>
-        );
-    } else {
-        return (
-            <Card className="browsingCard">
-                <Card.Title>{props.name}</Card.Title>
-                <ListGroup className="list-group-flush">
-                    <ListGroup.Item>Date: {props.date}</ListGroup.Item>
-                </ListGroup>
-                <Card.Body>
-                    <Link to={`/Events/${props.id}`}>
-                        <Button>
-                            View Event!
-                        </Button>
-                    </Link>
-                </Card.Body>
-            </Card>
-        );
-    };
-
-}
 
 function isIdInArray(a: Event[], i: number): Boolean {
     let res = false;
@@ -69,11 +26,12 @@ function GetEvents(query: string, pageNr: number) {
     const [events, setEvents] = useState<Event[]>([]);
     const LIMIT_RETURNS = 6;
 
-    // to set events to empty
+    // set events to empty when there is a new query
     useEffect(() => {
         setEvents([]);
     }, [query])
-    // to load new events
+
+    // load new events
     useEffect(() => {
         setLoading(true)
         setError(false)
@@ -103,13 +61,14 @@ function GetEvents(query: string, pageNr: number) {
 }
 
 function BrowseEvents() {
-    const { initialQuery } = useParams()
+    // some constants
     const [query, setQuery] = useState("")
     const [intermediateQuery, setIntermediateQuery] = useState("")
     const [pageNr, setPageNr] = useState(1);
-    if (initialQuery) setQuery(initialQuery)
     let { events, hasMore, loading, error } = GetEvents(query, pageNr);
-    const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
+
+    // reference to last element
+    const observer = useRef<IntersectionObserver | null>(null);
     const lastEventRef = useCallback((node: HTMLDivElement) => {
         if (loading) return // otherwise will keep sending callbacks while loading
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
@@ -123,13 +82,12 @@ function BrowseEvents() {
     }, [loading, hasMore])
 
 
-
+    // handling the event submit
     function handleSubmit(Event: React.FormEvent<HTMLFormElement>) {
         setPageNr(1);
-        setQuery(intermediateQuery)
-        Event.preventDefault()
+        setQuery(intermediateQuery);
     }
-
+    
     return (
         <>
             <Card className="browsingCard">

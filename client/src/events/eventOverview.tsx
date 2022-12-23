@@ -54,6 +54,7 @@ function EventOverviewCard(props: eventOverviewInterface) {
         })
     }, [pageNr]);
 
+    // reference to the last element
     const observer = useRef<IntersectionObserver | null>(null);
     const lastEventRef = useCallback((node: HTMLAnchorElement) => {
         if (loading) return // otherwise will keep sending callbacks while loading

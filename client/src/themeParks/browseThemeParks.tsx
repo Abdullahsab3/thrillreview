@@ -7,49 +7,8 @@ import "../styling/browsingPage.css";
 import { ThemePark } from './themePark';
 import { ErrorCard, LoadingCard, NoMatchesCard } from '../higherOrderComponents/generalCardsForBrowsing';
 import { backendServer } from '../helpers';
+import ThemeParkPreviewCard  from './themeParkPreview';
 
-interface themeParkPreviewInterface {
-    id: number,
-    name: string,
-    country: string,
-    key: number,
-    refs?: (e: HTMLDivElement) => void,
-}
-
-function ThemeParkPreviewCard(props: themeParkPreviewInterface) {
-    if (props.refs) {
-        return (
-            <Card className="browsingCard" ref={props.refs}>
-                <Card.Title>{props.name}</Card.Title>
-                <ListGroup className="list-group-flush">
-                    <ListGroup.Item>Country: {props.country}</ListGroup.Item>
-                </ListGroup>
-                <Card.Body>
-                    <Link to={`/Themeparks/${props.id}`}>
-                        <Button>
-                            Go to themePark!
-                        </Button>
-                    </Link>
-                </Card.Body>
-            </Card>);
-    } else {
-        return (
-            <Card className="browsingCard">
-                <Card.Title>{props.name}</Card.Title>
-                <ListGroup className="list-group-flush">
-                    <ListGroup.Item>Country: {props.country}</ListGroup.Item>
-                </ListGroup>
-                <Card.Body>
-                    <Link to={`/Themeparks/${props.id}`}>
-                        <Button>
-                            Go to themePark!
-                        </Button>
-                    </Link>
-                </Card.Body>
-            </Card>
-        );
-    }
-}
 
 function isIdInArray(a: ThemePark[], i: number): Boolean {
     let res = false;
@@ -76,7 +35,6 @@ function GetThemeParks(query: string, pageNr: number) {
         setLoading(true)
         setError(false)
         axios.get(backendServer(`/themeparks/find?query=${query}&page=${pageNr}&limit=${LIMIT_RETURNS}`)).then(res => {
-            console.log("res:", res);
             let prevThemeparks = themeparks;
             if (pageNr <= 1) {
                 prevThemeparks = []
@@ -124,7 +82,6 @@ function BrowseThemeparks() {
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         setPageNr(1);
         setQuery(intermediateQuery)
-        console.log("thprk", themeparks)
         event.preventDefault()
     }
 

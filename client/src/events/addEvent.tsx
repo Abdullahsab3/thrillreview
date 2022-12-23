@@ -7,8 +7,11 @@ import { loggedIn } from '../localStorageProcessing'
 import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 
 function AddEvent() {
+    // some constants
     var user: Boolean = loggedIn();
     const [validated, setValidated] = useState(false);
+
+    // show an alert with the error, when server sends an error
     function checkErrors(data: any): boolean {
         if (data) {
             alert(data);
@@ -16,6 +19,7 @@ function AddEvent() {
         } else return false;
     }
 
+    // event added - if so: "successfully added" alert
     function submit(e: Event) {
         const handleSubmit: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
@@ -39,6 +43,8 @@ function AddEvent() {
             }
         return handleSubmit;
     }
+
+    // only able to add event when logged in, otherwise log in first
     if (user) {
         return (
             <div className="ContentOfPage">

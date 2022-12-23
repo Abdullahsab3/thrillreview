@@ -3,7 +3,7 @@ import { Button, Card, Form, InputGroup } from "react-bootstrap";
 import { Event } from './Event';
 import ConnectThemePark from "../themeParks/connectThemeParks";
 
-
+// information needed
 interface EventInputFormProps {
     title: string;
     text: string;
@@ -13,6 +13,7 @@ interface EventInputFormProps {
 }
 
 function EventInputForm(props: EventInputFormProps) {
+    // some constants
     const [name, setName] = useState("");
     const [themepark, setThemePark] = useState("");
     const [themeparkName, setThemeparkName] = useState("Not yet chosen");
@@ -21,6 +22,7 @@ function EventInputForm(props: EventInputFormProps) {
     const [hour, setHour] = useState("");
     const [description, setDescription] = useState("");
 
+    // when connecting a themepark to the event.
     function connectedThemepark(id: number, thmprk: string) {
         const mouseEventHandler: React.MouseEventHandler<HTMLElement> = (ev: React.MouseEvent) => {
             setThemePark(id.toString());
@@ -29,15 +31,15 @@ function EventInputForm(props: EventInputFormProps) {
         }
         return mouseEventHandler;
     }
-    
 
+    // get id if there is an event
     function getId() {
-        if(props.event){
-
+        if (props.event) {
             return props.event.id;
         } else return 0;
     }
 
+    // the form of events
     return (
         <div className="ContentOfPage">
             <Card>
@@ -53,15 +55,15 @@ function EventInputForm(props: EventInputFormProps) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
-                                    <Form.Label>Theme park*</Form.Label>
-                                    <InputGroup>
-                                    <ConnectThemePark onClick={connectedThemepark} />
-                                    <Form.Control  isValid={themeParkSelected} isInvalid={!themeParkSelected} required readOnly value={themeparkName}  />
-                                    <Form.Control.Feedback type="invalid" >
-                                        Theme park is required
-                                    </Form.Control.Feedback>
-                                    </InputGroup>
-                                </Form.Group>
+                            <Form.Label>Theme park*</Form.Label>
+                            <InputGroup>
+                                <ConnectThemePark onClick={connectedThemepark} />
+                                <Form.Control isValid={themeParkSelected} isInvalid={!themeParkSelected} required readOnly value={themeparkName} />
+                                <Form.Control.Feedback type="invalid" >
+                                    Theme park is required
+                                </Form.Control.Feedback>
+                            </InputGroup>
+                        </Form.Group>
                         <Form.Group>
                             <Form.Label>Date*</Form.Label>
                             <Form.Control required type="date" onChange={(e) => setDate(e.target.value)} value={date} />
@@ -71,14 +73,14 @@ function EventInputForm(props: EventInputFormProps) {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Hour*</Form.Label>
-                            <Form.Control required type="time" onChange={(e) => setHour(e.target.value)} value={hour}/>
+                            <Form.Control required type="time" onChange={(e) => setHour(e.target.value)} value={hour} />
                             <Form.Control.Feedback type="invalid">
                                 Adding a start date for your event is required
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Description*</Form.Label>
-                            <Form.Control required as="textarea" onChange={(e) => setDescription(e.target.value)} value={description}/>
+                            <Form.Control required as="textarea" onChange={(e) => setDescription(e.target.value)} value={description} />
                             <Form.Control.Feedback type="invalid">
                                 Adding a description for your event is required
                             </Form.Control.Feedback>
