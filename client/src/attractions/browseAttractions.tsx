@@ -9,12 +9,14 @@ import "../styling/browsingPage.css";
 import { ErrorCard, LoadingCard, NoMatchesCard } from '../higherOrderComponents/generalCardsForBrowsing';
 import { backendServer } from '../helpers';
 
+// information needed to make the preview card
 interface attractionPreviewInterface {
     attractionInfo: AttractionPreviewInfoInterface,
     key: number,
     refs?: (e: HTMLDivElement) => void,
 }
 
+// the info for the attraction
 interface AttractionPreviewInfoInterface {
     id: number,
     name: string,
@@ -24,15 +26,18 @@ interface AttractionPreviewInfoInterface {
 }
 
 function AttractionPreviewCard(props: attractionPreviewInterface) {
-    const attractionProp = props.attractionInfo
-    const [rating, setRating] = useState(0)
+    const attractionProp = props.attractionInfo;
+    const [rating, setRating] = useState(0);
+
+    // get the rating 
     useEffect(() => {
         getAttractionRating(attractionProp.id, function (rating, total, error) {
             setRating(rating)
         })
 
-    }, [])
+    }, []);
 
+    // last element reference
     if (props.refs) {
         return (
             <Card className="browsingCard" ref={props.refs}>

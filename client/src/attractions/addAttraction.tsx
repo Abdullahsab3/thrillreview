@@ -9,6 +9,7 @@ import { loggedIn } from '../localStorageProcessing';
 import { LoginFirstCard } from '../higherOrderComponents/cardWithLinkTo';
 
 function AddAttraction() {
+    // some constants
     const navigate = useNavigate();
     const [validated, setValidated] = useState(false);
     const [id, setId] = useState(-1);
@@ -46,6 +47,7 @@ function AddAttraction() {
         return (handleSubmit)
     }
 
+    // send the images
     useEffect(() => {
         if (id > -1) {
             const sendImages = async () => {
@@ -69,6 +71,8 @@ function AddAttraction() {
             navigate(`/Attractions/${id}`)
         }
     }, [id])
+
+    // only show the add an attraction when user is logged in
     if (user) {
         return (
             <AttractionInputForm

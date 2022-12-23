@@ -72,10 +72,8 @@ const Map = () => {
   useEffect(() => {
     axios.get(backendServer(`/themeparks/find?page=0&limit=0`)).then((res) => {
       const { result } = res.data
-      console.log("themeparks", result)
       let prevPopUpInfo: popUpInfoInterface[] = []
       result.map((info: any) => {
-        console.log("info", info)
         const { lat, long, name, id } = info;
         // ask weather for the coordinate
         AskWeather(lat, long).then((weatherInfo: weatherInterface) => {
@@ -88,11 +86,9 @@ const Map = () => {
           }
           // store as pop up if no duplicate
           if (!isIdInArray(prevPopUpInfo, id)) {
-            console.log("!id in array", id)
             prevPopUpInfo.push(popUpInfo);
             setAllPopupInfo(prevPopUpInfo);
           } 
-          console.log("na array", id);
         });
 
       });
@@ -110,7 +106,6 @@ const Map = () => {
         <SetToUserLocation />
 
         {allPopupInfo.map((p: popUpInfoInterface, i: number) => {
-          console.log("i", i, "p", p.themeParkId)
           return (
             <Marker key={p.themeParkId} icon={themeParkIcon} position={[parseFloat(p.markerLat), parseFloat(p.markerLong)]}>
               <Popup>
@@ -130,6 +125,7 @@ const Map = () => {
     )
   }
 
+  // de map
   return (
     <LeafletMap />
   );

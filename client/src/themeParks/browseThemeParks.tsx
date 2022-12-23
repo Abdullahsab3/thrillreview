@@ -7,16 +7,8 @@ import "../styling/browsingPage.css";
 import { ThemePark } from './themePark';
 import { ErrorCard, LoadingCard, NoMatchesCard } from '../higherOrderComponents/generalCardsForBrowsing';
 import { backendServer } from '../helpers';
-import ThemeParkPreviewCard  from './themeParkPreview';
+import ThemeParkPreviewCard from './themeParkPreview';
 
-
-function isIdInArray(a: ThemePark[], i: number): Boolean {
-    let res = false;
-    a.forEach(t => {
-        if (t.id === i) res = true;
-    });
-    return res;
-}
 
 // took inspiration from https://www.youtube.com/watch?v=NZKUirTtxcg
 function GetThemeParks(query: string, pageNr: number) {
@@ -25,6 +17,15 @@ function GetThemeParks(query: string, pageNr: number) {
     const [hasMore, setHasMore] = useState(false);
     const [themeparks, setThemeParks] = useState<ThemePark[]>([]);
     const LIMIT_RETURNS = 6;
+
+    // check whether the id is in the array
+    function isIdInArray(a: ThemePark[], i: number): Boolean {
+        let res = false;
+        a.forEach(t => {
+            if (t.id === i) res = true;
+        });
+        return res;
+    }
 
     // to set themeparks to empty
     useEffect(() => {
@@ -62,11 +63,14 @@ function GetThemeParks(query: string, pageNr: number) {
 
 
 function BrowseThemeparks() {
+    // some constants
     const [query, setQuery] = useState("");
     const [intermediateQuery, setIntermediateQuery] = useState("");
     const [pageNr, setPageNr] = useState(1);
     let { themeparks, hasMore, loading, error } = GetThemeParks(query, pageNr);
-    const observer = useRef<IntersectionObserver | null>(null);  // zonder de null (in type en in haakjes) werkte het niet, dit werkte ook niet : useRef() as React.MutableRefObject<HTMLDivElement>; 
+
+    // last element reference
+    const observer = useRef<IntersectionObserver | null>(null);
     const lastThemeParkRef = useCallback((node: HTMLDivElement) => {
         if (loading) return // otherwise will keep sending callbacks while loading
         // https://github.com/WebDevSimplified/React-Infinite-Scrolling/blob/master/src/App.js 
@@ -79,12 +83,14 @@ function BrowseThemeparks() {
         if (node) observer.current.observe(node)
     }, [loading, hasMore])
 
+    // handle the submit of the event
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         setPageNr(1);
         setQuery(intermediateQuery)
         event.preventDefault()
     }
 
+    // if there is an error, or it is still loading, show the loading/error card, otherwise show preview cards for each theme park.
     return (
         <>
             <Card className="browsingCard">
