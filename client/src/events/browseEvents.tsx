@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import axios from 'axios';
-import { useParams, Link } from "react-router-dom";
-import { Card, ListGroup, Button, InputGroup, Form } from 'react-bootstrap';
+import { Card, Button, InputGroup, Form } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
 import "../styling/browsingPage.css";
 import { Event } from './Event';
@@ -10,21 +9,24 @@ import { backendServer } from '../helpers';
 import EventPreviewCard from './eventPreviewCard';
 
 
-function isIdInArray(a: Event[], i: number): Boolean {
-    let res = false;
-    a.forEach(t => {
-        if (t.id === i) res = true;
-    });
-    return res;
-}
 
 // took inspiration from https://www.youtube.com/watch?v=NZKUirTtxcg
 function GetEvents(query: string, pageNr: number) {
+    // some constants
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [hasMore, setHasMore] = useState(false);
     const [events, setEvents] = useState<Event[]>([]);
     const LIMIT_RETURNS = 6;
+
+    // whether the id is in the array
+    function isIdInArray(a: Event[], i: number): Boolean {
+        let res = false;
+        a.forEach(t => {
+            if (t.id === i) res = true;
+        });
+        return res;
+    }
 
     // set events to empty when there is a new query
     useEffect(() => {
@@ -87,7 +89,7 @@ function BrowseEvents() {
         setPageNr(1);
         setQuery(intermediateQuery);
     }
-    
+
     return (
         <>
             <Card className="browsingCard">

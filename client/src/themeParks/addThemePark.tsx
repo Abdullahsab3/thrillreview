@@ -9,11 +9,12 @@ import ThemeParkInputForm from './themeParkInputForm';
 import { ThemePark } from './themePark';
 
 function AddThemePark() {
-    const navigate = useNavigate()
-
+    // some constants
+    const navigate = useNavigate();
     var user: Boolean = loggedIn();
     const [validated, setValidated] = useState(false);
 
+    // check the errors 
     function checkErrors(data: any): boolean {
         if (data) {
             alert(data);
@@ -21,11 +22,11 @@ function AddThemePark() {
         } else return false;
     }
 
+    // handle the submit of theme parks
     function submit(themepark: ThemePark) {
         const handleSubmit: React.FormEventHandler<HTMLFormElement> =
             (event: React.FormEvent<HTMLFormElement>) => {
-                const form = event.currentTarget
-
+                const form = event.currentTarget;
                 if (form.checkValidity() === false) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -52,10 +53,7 @@ function AddThemePark() {
         return handleSubmit
     }
 
-
-
-    // length, height, duration : zal nog gevalideerd worden dat echt cijfer is  : https://codesandbox.io/s/9zjo1lp86w?file=/src/Components/InputDecimal.jsx
-    // row moet rond card want anders krijg je een lelijke gap tussen header en de card
+    // if user is logged in, show the form, otherwise tell them to login first
     if (user) {
         return (
             <div className="ContentOfPage">

@@ -3,6 +3,8 @@ import { Card } from "react-bootstrap"
 import { backendServer } from "../helpers"
 import { userAvatarExists, getUsername } from "../userManagement/User"
 
+
+// all information you need
 interface attractionpreviewProps {
     name: string,
     attractionID: number,
@@ -15,6 +17,7 @@ export function AttractionPreview(props: attractionpreviewProps) {
     const [userName, setUsername] = useState("")
     const [avatar, setAvatar] = useState(false)
 
+    // get user name and avater
     useEffect(() => {
         getUsername(props.userID, function (error, result) {
             setUsername(result as string)
@@ -24,7 +27,7 @@ export function AttractionPreview(props: attractionpreviewProps) {
                 setAvatar(exists)
             }
         })
-    }, [])
+    }, []);
 
 
     return (

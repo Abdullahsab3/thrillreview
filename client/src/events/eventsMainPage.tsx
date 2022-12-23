@@ -2,6 +2,7 @@ import { CardWithLinkTo }  from '../higherOrderComponents/cardWithLinkTo';
 
 function EventsMainPage() {
 
+    // the main page of events
     return (
         <div className="ContentOfPage">
             <h1> Events</h1>
