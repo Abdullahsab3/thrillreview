@@ -10,6 +10,8 @@ import AttractionInputForm from "./attractionInputForm"
 import StarRating from "./starRating"
 import AttractionImages from "./attractionImages"
 import { trackPromise, usePromiseTracker } from "react-promise-tracker"
+import { loggedIn } from "../localStorageProcessing"
+import { LoginFirstCard } from "../higherOrderComponents/cardWithLinkTo"
 
 export default function AttractionPage() {
     const [attraction, setAttraction] = useState<Attraction>()
@@ -173,12 +175,12 @@ export default function AttractionPage() {
                     <Modal.Title>Edit the attraction</Modal.Title>
                 </Modal.Header>
 
-                <AttractionInputForm
+                {loggedIn() ? <AttractionInputForm
                     title="Edit the attractions information"
                     text="Here you can edit the information of this attraction"
                     attraction={attraction as Attraction}
                     onFormSubmit={submitEdits}
-                    validated={validated} />
+                    validated={validated}/> : <LoginFirstCard/>}
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setEdit(false)}>
                         Close

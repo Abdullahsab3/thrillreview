@@ -4,7 +4,7 @@
     "description": "Documentation for the Thrillreview API",
     "title": "Thrillreview API",
     "url" : "https://api.thrillreview.com",
-    "output": "../client/APIDocumentation",
+    "output": "../APIDocumentation",
     "input": [
       "index"
     ],
