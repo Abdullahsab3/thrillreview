@@ -2,15 +2,17 @@ import { Database } from "sqlite3";
 import { User } from "./userManagement/User";
 import bcrypt from "bcrypt";
 import { Attraction } from "./attractions/Attraction";
-import { AnyARecord } from "dns";
 import Review from "./attractions/Review";
-import { count } from "console";
-import { start } from "repl";
 import { ThemePark } from "./themeparks/ThemePark";
 import { Event } from "./events/Event";
-import { resolve } from "path";
 
+/**
+ * Create a new database
+ */
 const db = new Database("thrillreview.db");
+/**
+ * Create all the user tables
+ */
 
 /* User tables */
 db.run(
@@ -126,6 +128,14 @@ function getLastId() {
   });
 }
 
+/**
+ * 
+ * Check whether a username already exists in the database
+ * @param username The username for which the database should check for its uniqueness
+ * @param getResult a callback to get the results. 
+ * exists: a boolean to indicate whether it exists or not
+ * message: in case an error happened, an error message will be returned.
+ */
 function checkForUsernameExistence(
   username: string,
   getResult: (exists: boolean, message: string | null) => void,
@@ -147,6 +157,14 @@ function checkForUsernameExistence(
   );
 }
 
+/**
+ * 
+ * Check whether an email already exists in the database
+ * @param email The email for which the database should check for its uniqueness
+ * @param getResult a callback to get the results. 
+ * exists: a boolean to indicate whether it exists or not
+ * error: in case an error happened, an error message will be returned.
+ */
 function checkForEmailExistence(
   email: string,
   getResult: (exists: boolean, error: string) => void,
@@ -164,22 +182,14 @@ function checkForEmailExistence(
   );
 }
 
-function checkForUserExistence(
-  username: string,
-  email: string,
-  getResult: (error: any) => void,
-): void {
-  checkForUsernameExistence(username, function (exists: boolean, message: any) {
-    if (exists) {
-      checkForEmailExistence(email, function (emailError: any) {
-        getResult(emailError);
-      });
-    } else {
-      getResult(message);
-    }
-  });
-}
-
+/**
+ * Check whether the provided password matches the stored password (hashed and encrypted).
+ * since this is one way, bcrypt will be used to compare the passwords.
+ * 
+ * @param username the username for which the password is being validated
+ * @param password the password that was provided by the user
+ * @param getResult a callback to get the results
+ */
 function validateUserPassword(
   username: string,
   password: string,
@@ -454,6 +464,16 @@ function findAttractionName(
   );
 }
 
+/**
+ * 
+ * Get a themepark from the database given its id
+ * This function will check all the tables which have information about the themepark
+ * 
+ * @param themeParkID the id of the themepark
+ * @param getResult  The callback in which the results will be found
+ * If there is an error, the string describing the error will be returned,
+ * otherwise, the themepark will be returned.
+ */
 function getThemePark(
   themeParkID: number,
   getResult: (error: any, themepark: ThemePark | null) => void,
@@ -515,9 +535,6 @@ function getThemePark(
       );
     },
   );
-
-
-
 }
 
 function getThemeParks(
@@ -595,6 +612,13 @@ function getThemeParksByName(
 
 }
 
+/**
+ * 
+ * Get the average rating of an attraction.
+ * 
+ * @param attractionID the id of the attraction for which the rating should be returned.
+ * @param getAverage a callback to get the results.
+ */
 function getAttractionRating(
   attractionID: number,
   getAverage: (error: string | null, result: number | null, totalRatings: number | null) => void,
@@ -616,6 +640,12 @@ function getAttractionRating(
   });
 }
 
+/**
+ * 
+ * @param attractionID the id of the attraction
+ * @param userID the id of the user who posted the review
+ * @param getResult a callback to get the results
+ */
 function getReview(
   attractionID: number,
   userID: number,
@@ -756,7 +786,7 @@ function getAttractionReviews(
 /**
  * Check if a user has an avatar
  * @param id The id of the user
- * @param getErr 
+ * @param getErr a callback to get the results.
  */
 function checkForUserAvatar(
   id: number,
@@ -998,7 +1028,6 @@ function getEventsJoinedByUser(
 export {
   checkForEmailExistence,
   checkForUserAvatar,
-  checkForUserExistence,
   checkForUsernameExistence,
 
   addToken,

@@ -3,7 +3,6 @@ import { User } from "./User";
 import {
   checkForEmailExistence,
   checkForUserAvatar,
-  checkForUserExistence,
   checkForUsernameExistence,
   removeToken,
   db,

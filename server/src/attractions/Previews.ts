@@ -1,3 +1,9 @@
+/**
+ * Previews that will be used in the feeds to preview an attraction or a themepark
+ * that's added by a user.
+ */
+
+
 export class AttractionPreview {
   name: string;
   id: number;
